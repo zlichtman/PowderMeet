@@ -1,0 +1,35 @@
+# Xcode
+*.xcuserdata
+*.xcscmblueprint
+xcuserdata/
+DerivedData/
+build/
+
+# Secrets — Secrets.xcconfig is intentionally committed because the values
+# inside it (legacy Supabase anon JWT + pk Mapbox public token + project URL)
+# all ship in the client IPA anyway and are designed to be public. The only
+# truly-secret value (MAPBOX_DOWNLOADS_TOKEN, sk.…) lives in ~/.netrc locally
+# and as a Shared env var on Xcode Cloud — not in this file. Rotate the
+# committed values via the Supabase + Mapbox dashboards before launch.
+
+# macOS
+.DS_Store
+
+# Python tools
+__pycache__/
+*.pyc
+
+# Claude worktrees
+.claude/worktrees/
+
+# Cursor
+.cursor/
+
+# Local audit/scratch notes
+AUDIT_*.md
+
+# Supabase CLI scratch
+supabase/.temp/
+
+# Local-only screen captures
+Gallery/

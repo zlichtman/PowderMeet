@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>MBXAccessToken</key>
+	<string>$(MAPBOX_ACCESS_TOKEN)</string>
+	<key>SupabaseURL</key>
+	<string>$(SUPABASE_URL)</string>
+	<key>SupabaseAnonKey</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PowderMeet uses your location to share your position with friends on the mountain and find the best meeting spot.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>PowderMeet keeps sharing your position with friends while your phone is locked on a chairlift, so they can still see where you are mid-mountain.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSContactsUsageDescription</key>
+	<string>PowderMeet checks your contacts to suggest friends who are already on the app.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>PowderMeet uses your camera to take a profile photo.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>PowderMeet reads your downhill ski and snowboard workouts from Apple Health to calibrate your skill profile and recognize the runs you've already done. Your health data never leaves your device unencrypted — only matched run summaries (trail, time, speed) are uploaded.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>PowderMeet doesn't write to Apple Health by default. This permission is reserved for a future feature; you can leave it off.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict/>
+	</dict>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<!--
+	Custom .powdermeet file type — backup envelope (profile + stats + runs).
+	Declared so:
+	  - The share sheet preserves the .powdermeet extension on export.
+	  - The import file picker can filter to PowderMeet backups.
+	  - iOS shows the app as a handler when a user opens a .powdermeet
+	    file from Files / Mail / iMessage etc.
+	UTExportedTypeDeclarations registers the custom UTI; CFBundleDocumentTypes
+	tells iOS this app handles documents of that UTI.
+	-->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.powdermeet.backup</string>
+			<key>UTTypeDescription</key>
+			<string>PowderMeet Backup</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>powdermeet</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-powdermeet+json</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>PowderMeet Backup</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.powdermeet.backup</string>
+			</array>
+		</dict>
+	</array>
+	<!--
+	A .powdermeet file is a one-shot backup the importer reads into the
+	user's account — we don't edit the original. Setting this to `false`
+	makes iOS copy the file into the app sandbox before handing us the
+	URL, which is what `ActivityImporter.processFile` expects (it does
+	`startAccessingSecurityScopedResource` on the picked URL and reads
+	bytes once). Declaring it explicitly silences iOS's "doesn't declare
+	whether it supports opening in place" console warning.
+	-->
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<!--
+	App is exempt from US export-encryption documentation: only encryption
+	used is HTTPS/TLS via URLSession + SHA-256 via Apple's CryptoKit (the
+	Sign in with Apple nonce hash). Both are encryption "within Apple's
+	operating system" — no proprietary or non-OS standard crypto. Setting
+	this to false stops App Store Connect from asking on every submission.
+	-->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+</dict>
+</plist>
