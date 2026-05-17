@@ -1,0 +1,8 @@
+#!/bin/bash
+# Short-form wrapper for the playwright topsheet fetcher.
+# Runs from the venv at ~/topsheet-source/.venv/. Pass any flags through.
+#
+# Examples:
+#   ./tools/topsheets --auto
+#   ./tools/topsheets --auto --slug atomic-bent-90 --debug --headed
+exec ~/topsheet-source/.venv/bin/python "$(dirname "$0")/playwright_topsheets.py" "$@"
