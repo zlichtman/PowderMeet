@@ -1,0 +1,450 @@
+{
+  "resortId": "whistler",
+  "version": 2,
+  "trails": [
+    {
+      "name": "Dave Murray Downhill",
+      "difficulty": "black",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 3200,
+      "verticalDrop": 950
+    },
+    {
+      "name": "Peak to Creek",
+      "difficulty": "blue",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 11000,
+      "verticalDrop": 1609
+    },
+    {
+      "name": "Franz's Run",
+      "difficulty": "blue",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 2400,
+      "verticalDrop": 600
+    },
+    {
+      "name": "Burnt Stew Trail",
+      "difficulty": "green",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1200,
+      "verticalDrop": 200
+    },
+    {
+      "name": "Harmony Ridge",
+      "difficulty": "black",
+      "isGroomed": false,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1800,
+      "verticalDrop": 500
+    },
+    {
+      "name": "Couloir Extreme",
+      "difficulty": "doubleBlack",
+      "isGroomed": false,
+      "hasMoguls": true,
+      "isGladed": false,
+      "lengthMeters": 600,
+      "verticalDrop": 350
+    },
+    {
+      "name": "Spanky's Ladder",
+      "difficulty": "doubleBlack",
+      "isGroomed": false,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1500,
+      "verticalDrop": 500
+    },
+    {
+      "name": "Mogul's",
+      "difficulty": "black",
+      "isGroomed": false,
+      "hasMoguls": true,
+      "isGladed": false,
+      "lengthMeters": 800,
+      "verticalDrop": 300
+    },
+    {
+      "name": "Bear Cub",
+      "difficulty": "green",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 600,
+      "verticalDrop": 80
+    },
+    {
+      "name": "Olympic Station",
+      "difficulty": "green",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 900,
+      "verticalDrop": 150
+    },
+    {
+      "name": "Jolly Green Giant",
+      "difficulty": "green",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1600,
+      "verticalDrop": 300
+    },
+    {
+      "name": "Upper Whiskey Jack",
+      "difficulty": "blue",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1100,
+      "verticalDrop": 350
+    },
+    {
+      "name": "Lower Whiskey Jack",
+      "difficulty": "green",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 900,
+      "verticalDrop": 200
+    },
+    {
+      "name": "Jersey Cream",
+      "difficulty": "blue",
+      "isGroomed": true,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 1400,
+      "verticalDrop": 400
+    },
+    {
+      "name": "7th Heaven",
+      "difficulty": "black",
+      "isGroomed": false,
+      "hasMoguls": false,
+      "isGladed": false,
+      "lengthMeters": 2200,
+      "verticalDrop": 700
+    },
+    {
+      "name": "Crystal Ridge",
+      "difficulty": "black",
+      "isGroomed": false,
+      "hasMoguls": false,
+      "isGladed": true,
+      "lengthMeters": 1200,
+      "verticalDrop": 400
+    }
+  ],
+  "lifts": [
+    {
+      "name": "Whistler Village Gondola",
+      "osmWayIds": [
+        "l29166965"
+      ],
+      "liftType": "gondola",
+      "capacity": 8,
+      "rideTimeSeconds": 660,
+      "verticalRise": 653,
+      "weekdayWaitMinutes": 5,
+      "weekendWaitMinutes": 15
+    },
+    {
+      "name": "Creekside Gondola",
+      "osmWayIds": [
+        "l32775403"
+      ],
+      "liftType": "gondola",
+      "capacity": 10,
+      "rideTimeSeconds": 480,
+      "verticalRise": 600,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 8
+    },
+    {
+      "name": "Peak 2 Peak Gondola",
+      "osmWayIds": [
+        "l32774598"
+      ],
+      "liftType": "gondola",
+      "capacity": 28,
+      "rideTimeSeconds": 660,
+      "verticalRise": 0,
+      "weekdayWaitMinutes": 8,
+      "weekendWaitMinutes": 20
+    },
+    {
+      "name": "Excalibur Gondola",
+      "osmWayIds": [
+        "l29512562"
+      ],
+      "liftType": "gondola",
+      "capacity": 8,
+      "rideTimeSeconds": 420,
+      "verticalRise": 567,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 10
+    },
+    {
+      "name": "Blackcomb Gondola",
+      "osmWayIds": [
+        "l29362437"
+      ],
+      "liftType": "gondola",
+      "capacity": 10,
+      "rideTimeSeconds": 540,
+      "verticalRise": 1160,
+      "weekdayWaitMinutes": 5,
+      "weekendWaitMinutes": 12
+    },
+    {
+      "name": "Peak Express",
+      "osmWayIds": [
+        "l32775430"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 480,
+      "verticalRise": 518,
+      "weekdayWaitMinutes": 5,
+      "weekendWaitMinutes": 12
+    },
+    {
+      "name": "Harmony 6 Express",
+      "osmWayIds": [
+        "l32775428"
+      ],
+      "liftType": "chairLift",
+      "capacity": 6,
+      "rideTimeSeconds": 420,
+      "verticalRise": 440,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 8
+    },
+    {
+      "name": "Symphony Express",
+      "osmWayIds": [
+        "l32828959"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 420,
+      "verticalRise": 410,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Fitzsimmons Express",
+      "osmWayIds": [
+        "l47941929"
+      ],
+      "liftType": "chairLift",
+      "capacity": 8,
+      "rideTimeSeconds": 360,
+      "verticalRise": 396,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Garbanzo Express",
+      "osmWayIds": [
+        "l47941921"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 360,
+      "verticalRise": 432,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 7
+    },
+    {
+      "name": "Big Red Express",
+      "osmWayIds": [
+        "l32775404"
+      ],
+      "liftType": "chairLift",
+      "capacity": 6,
+      "rideTimeSeconds": 300,
+      "verticalRise": 407,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Emerald 6 Express",
+      "osmWayIds": [
+        "l29166968"
+      ],
+      "liftType": "chairLift",
+      "capacity": 6,
+      "rideTimeSeconds": 360,
+      "verticalRise": 345,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Magic Chair",
+      "osmWayIds": [
+        "l258644617"
+      ],
+      "liftType": "chairLift",
+      "capacity": 3,
+      "rideTimeSeconds": 240,
+      "verticalRise": 120,
+      "weekdayWaitMinutes": 0,
+      "weekendWaitMinutes": 2
+    },
+    {
+      "name": "7th Heaven Express",
+      "osmWayIds": [
+        "l29473069"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 480,
+      "verticalRise": 610,
+      "weekdayWaitMinutes": 5,
+      "weekendWaitMinutes": 12
+    },
+    {
+      "name": "Jersey Cream Express",
+      "osmWayIds": [
+        "l29473072"
+      ],
+      "liftType": "chairLift",
+      "capacity": 6,
+      "rideTimeSeconds": 360,
+      "verticalRise": 400,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Crystal Ridge Express",
+      "osmWayIds": [
+        "l244981854"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 300,
+      "verticalRise": 305,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 4
+    },
+    {
+      "name": "Glacier Express",
+      "osmWayIds": [
+        "l29512190"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 420,
+      "verticalRise": 500,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 7
+    },
+    {
+      "name": "Catskinner Express",
+      "osmWayIds": [
+        "l29473070"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 300,
+      "verticalRise": 340,
+      "weekdayWaitMinutes": 2,
+      "weekendWaitMinutes": 5
+    },
+    {
+      "name": "Excelerator Express",
+      "osmWayIds": [
+        "l29473068"
+      ],
+      "liftType": "chairLift",
+      "capacity": 4,
+      "rideTimeSeconds": 360,
+      "verticalRise": 450,
+      "weekdayWaitMinutes": 3,
+      "weekendWaitMinutes": 7
+    },
+    {
+      "name": "Olympic Chair",
+      "osmWayIds": [
+        "l32828960"
+      ],
+      "liftType": "chairLift",
+      "capacity": 3,
+      "rideTimeSeconds": 300,
+      "verticalRise": 200,
+      "weekdayWaitMinutes": 1,
+      "weekendWaitMinutes": 3
+    },
+    {
+      "name": "Franz's Chair",
+      "osmWayIds": [
+        "l48083140"
+      ],
+      "liftType": "chairLift",
+      "capacity": 3,
+      "rideTimeSeconds": 300,
+      "verticalRise": 250,
+      "weekdayWaitMinutes": 1,
+      "weekendWaitMinutes": 3
+    }
+  ],
+  "operatingHours": {
+    "openHour": 8,
+    "closeHour": 16,
+    "nightSkiingCloseHour": null
+  },
+  "trailWhitelist": [
+    "7th Heaven",
+    "Bear Cub",
+    "Burnt Stew Trail",
+    "Couloir Extreme",
+    "Crystal Ridge",
+    "Dave Murray Downhill",
+    "Franz's Run",
+    "Harmony Ridge",
+    "Jersey Cream",
+    "Jolly Green Giant",
+    "Lower Whiskey Jack",
+    "Mogul's",
+    "Olympic Station",
+    "Peak to Creek",
+    "Spanky's Ladder",
+    "Upper Whiskey Jack"
+  ],
+  "liftWhitelist": [
+    "7th Heaven Express",
+    "Big Red Express",
+    "Blackcomb Gondola",
+    "Catskinner Express",
+    "Creekside Gondola",
+    "Crystal Ridge Express",
+    "Emerald 6 Express",
+    "Excalibur Gondola",
+    "Excelerator Express",
+    "Fitzsimmons Express",
+    "Franz's Chair",
+    "Garbanzo Express",
+    "Glacier Express",
+    "Harmony 6 Express",
+    "Jersey Cream Express",
+    "Magic Chair",
+    "Olympic Chair",
+    "Peak 2 Peak Gondola",
+    "Peak Express",
+    "Symphony Express",
+    "Whistler Village Gondola"
+  ]
+}

@@ -1,0 +1,1161 @@
+{
+  "source_url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
+  "attribution": "OpenStreetMap contributors (ODbL), OpenSkiMap, Skimap.org",
+  "checked_at": "2026-09-21",
+  "scope": "Geographic identity/bounds corrections only; not canonical trail inventory or routing approval.",
+  "resorts": [
+    {
+      "resort_id": "crotched",
+      "source_name": "Crotched Mountain Ski & Ride",
+      "source_id": "414efa2c476272bdab8a3fa83688a01a1b3b3600",
+      "source_refs": [
+        {
+          "id": "relation/18511194",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 343,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.crotchedmtn.com/"
+      ],
+      "previous_bounds": [
+        43.04,
+        -71.89500000000001,
+        43.080000000000005,
+        -71.845
+      ],
+      "corrected_bounds": [
+        42.988739,
+        -71.903811,
+        43.028839,
+        -71.853711
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "mount-sunapee",
+      "source_name": "Mount Sunapee",
+      "source_id": "8107ea0d4b45b275d05b6566e2cf37be111e1ff7",
+      "source_refs": [
+        {
+          "id": "way/1230199887",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 357,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.mountsunapee.com/"
+      ],
+      "previous_bounds": [
+        43.355000000000004,
+        -72.08500000000001,
+        43.405,
+        -72.035
+      ],
+      "corrected_bounds": [
+        43.300768,
+        -72.099591,
+        43.350768,
+        -72.049491
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "laurel-mountain",
+      "source_name": "Laurel Mountain Ski Resort",
+      "source_id": "c4e2d22a88c1e1bf40138fece3f03c1b6fcda84b",
+      "source_refs": [
+        {
+          "id": "way/1026204281",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 4114,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.laurelmountainski.com/"
+      ],
+      "previous_bounds": [
+        39.98,
+        -79.245,
+        40.02,
+        -79.195
+      ],
+      "corrected_bounds": [
+        40.146736,
+        -79.194382,
+        40.186836,
+        -79.144282
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "jack-frost",
+      "source_name": "Jack Frost Mountain Resort",
+      "source_id": "4fbb65912b802e995555462c3a3952bce5cce852",
+      "source_refs": [
+        {
+          "id": "way/390163427",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 254,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://jfbb.com"
+      ],
+      "previous_bounds": [
+        41.059999999999995,
+        -75.7,
+        41.1,
+        -75.66000000000001
+      ],
+      "corrected_bounds": [
+        41.09055,
+        -75.672019,
+        41.13065,
+        -75.632019
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "big-boulder",
+      "source_name": "Big Boulder Ski Resort Area",
+      "source_id": "d80406be9f977e44ccd65c57449b9ec22da23855",
+      "source_refs": [
+        {
+          "id": "way/390166745",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 252,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://jfbb.com/"
+      ],
+      "previous_bounds": [
+        41.029999999999994,
+        -75.66,
+        41.07,
+        -75.62
+      ],
+      "corrected_bounds": [
+        41.028514,
+        -75.621302,
+        41.068614,
+        -75.581302
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hidden-valley-mo",
+      "source_name": "Hidden Valley",
+      "source_id": "05913b1b97919918fed5906bd52fa995e42a2acf",
+      "source_refs": [
+        {
+          "id": "way/990531013",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 377,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.hiddenvalleyski.com/"
+      ],
+      "previous_bounds": [
+        38.475,
+        -90.71,
+        38.505,
+        -90.67
+      ],
+      "corrected_bounds": [
+        38.521089,
+        -90.674349,
+        38.551189,
+        -90.634349
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "snow-creek",
+      "source_name": "Snow Creek",
+      "source_id": "88471079dc1586673396596c0f03e3c66ad128ba",
+      "source_refs": [
+        {
+          "id": "way/442940109",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 376,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://skisnowcreek.com/"
+      ],
+      "previous_bounds": [
+        39.379999999999995,
+        -94.885,
+        39.42,
+        -94.835
+      ],
+      "corrected_bounds": [
+        39.445372,
+        -94.994082,
+        39.485472,
+        -94.943982
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "paoli-peaks",
+      "source_name": "Paoli Peaks",
+      "source_id": "a3712cf80065932887fd5e1c84ea6a51c02a2e99",
+      "source_refs": [
+        {
+          "id": 468,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.paolipeaks.com/"
+      ],
+      "previous_bounds": [
+        38.545,
+        -86.49,
+        38.575,
+        -86.45
+      ],
+      "corrected_bounds": [
+        38.543341,
+        -86.530196,
+        38.573441,
+        -86.490196
+      ],
+      "method": "source viewport center with existing catalog span",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "nakiska",
+      "source_name": "Nakiska",
+      "source_id": "629f41736fe9e223bb92ecae332e0d736721da14",
+      "source_refs": [
+        {
+          "id": "relation/4080380",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 9,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.skinakiska.com"
+      ],
+      "previous_bounds": [
+        50.925000000000004,
+        -115.11,
+        50.975,
+        -115.05
+      ],
+      "corrected_bounds": [
+        50.923417,
+        -115.200041,
+        50.973417,
+        -115.139941
+      ],
+      "method": "source viewport center with existing catalog span",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "rusutsu",
+      "source_name": "\u30eb\u30b9\u30c4\u30ea\u30be\u30fc\u30c8\u30b9\u30ad\u30fc\u5834, Rusutsu Resort Ski Area",
+      "source_id": "24ee51415a84a991406320a88bd1bd2e7aa81030",
+      "source_refs": [
+        {
+          "id": "way/1081650975",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1322,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://rusutsu.com/"
+      ],
+      "previous_bounds": [
+        42.73,
+        140.525,
+        42.79,
+        140.595
+      ],
+      "corrected_bounds": [
+        42.698903,
+        140.880201,
+        42.763303,
+        140.950201
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "myoko-suginohara",
+      "source_name": "\u5999\u9ad8\u6749\u30ce\u539f\u30b9\u30ad\u30fc\u5834, Myoko Suginohara Ski Resort",
+      "source_id": "f80221da7a00e37b111e00be1d0432db5887d89f",
+      "source_refs": [
+        {
+          "id": "way/937086872",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1513,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.princehotels.co.jp/ski/myoko/"
+      ],
+      "previous_bounds": [
+        36.849999999999994,
+        138.835,
+        36.89,
+        138.88500000000002
+      ],
+      "corrected_bounds": [
+        36.843413,
+        138.108948,
+        36.883513,
+        138.165348
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "nekoma",
+      "source_name": "\u661f\u91ce\u30ea\u30be\u30fc\u30c8 \u732b\u9b54\u30b9\u30ad\u30fc\u5834, Hoshino Resorts Nekoma Mountain",
+      "source_id": "e8cdffc42141b9eb5c6721dc02e895c9aad3df7f",
+      "source_refs": [
+        {
+          "id": "way/322310180",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1413,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.nekoma.co.jp/"
+      ],
+      "previous_bounds": [
+        37.699999999999996,
+        139.935,
+        37.74,
+        139.985
+      ],
+      "corrected_bounds": [
+        37.576662,
+        140.01204,
+        37.633562,
+        140.06214
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "jiminy-peak",
+      "source_name": "Jiminy Peak Resort",
+      "source_id": "c72edda705173b26fcdc210933239a43de5fc7b9",
+      "source_refs": [
+        {
+          "id": "way/1021872776",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 443,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.jiminypeak.com/"
+      ],
+      "previous_bounds": [
+        42.489999999999995,
+        -73.305,
+        42.53,
+        -73.255
+      ],
+      "corrected_bounds": [
+        42.528765,
+        -73.310882,
+        42.568865,
+        -73.260782
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "wild-mountain",
+      "source_name": "Wild Mountain",
+      "source_id": "1befbcd1d42a0dab3c38d749a0dbed538d3b6071",
+      "source_refs": [
+        {
+          "id": "way/1240327159",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 380,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://wildmountain.com/"
+      ],
+      "previous_bounds": [
+        45.435,
+        -92.74,
+        45.465,
+        -92.7
+      ],
+      "corrected_bounds": [
+        45.473307,
+        -92.728401,
+        45.503407,
+        -92.688401
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "le-massif",
+      "source_name": "Le Massif",
+      "source_id": "ef6c8dc160b9330d799cf95bf76ae29b58d33c5c",
+      "source_refs": [
+        {
+          "id": "relation/8027590",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 96,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.lemassif.com/"
+      ],
+      "previous_bounds": [
+        47.25,
+        -70.57000000000001,
+        47.31,
+        -70.51
+      ],
+      "corrected_bounds": [
+        47.249561,
+        -70.626648,
+        47.309661,
+        -70.566548
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "appi",
+      "source_name": "\u5b89\u6bd4\u9ad8\u539f\u30b9\u30ad\u30fc\u5834, Appi Kogen Ski Resort",
+      "source_id": "a1014f93cfa79a80399253712be268ff44b50a0e",
+      "source_refs": [
+        {
+          "id": "way/1087368359",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1352,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.appi.co.jp/ski/"
+      ],
+      "previous_bounds": [
+        39.905,
+        140.97,
+        39.955,
+        141.03
+      ],
+      "corrected_bounds": [
+        39.962201,
+        140.935936,
+        40.012201,
+        140.998736
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "mt-t",
+      "source_name": "\u8c37\u5ddd\u5cb3\u5929\u795e\u5e73\u30b9\u30ad\u30fc\u5834, Mt. T",
+      "source_id": "d764592885db846086b2e701a8519bb27ca70e55",
+      "source_refs": [
+        {
+          "id": "way/1221235497",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1467,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://tanigawadake-joch.com/mt-t/"
+      ],
+      "previous_bounds": [
+        36.66,
+        139.525,
+        36.7,
+        139.57500000000002
+      ],
+      "corrected_bounds": [
+        36.805387,
+        138.928641,
+        36.845487,
+        138.97874
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "coronet-peak",
+      "source_name": "Coronet Peak",
+      "source_id": "8d51d2e1d9edbc3ea557af7bf0ebaba02c7f7ef8",
+      "source_refs": [
+        {
+          "id": "relation/6451819",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1116,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.coronetpeak.co.nz/"
+      ],
+      "previous_bounds": [
+        -45.055,
+        168.7,
+        -45.005,
+        168.76
+      ],
+      "corrected_bounds": [
+        -44.947286,
+        168.708151,
+        -44.897286,
+        168.768251
+      ],
+      "method": "source viewport center with existing catalog span",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "lotte-arai",
+      "source_name": "\u30a2\u30e9\u30a4\u30b9\u30ce\u30fc\u30ea\u30be\u30fc\u30c8, ARAI SNOW RESORT",
+      "source_id": "9d8adf255be42c6d09ad8dcb5c19ff34fa0f5908",
+      "source_refs": [
+        {
+          "id": "way/937101624",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1471,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.lottehotel.com/arai-resort/en.html"
+      ],
+      "previous_bounds": [
+        36.91,
+        138.155,
+        36.95,
+        138.205
+      ],
+      "corrected_bounds": [
+        36.969431,
+        138.128095,
+        37.009531,
+        138.185995
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "pila",
+      "source_name": "Pila ski",
+      "source_id": "80f1b9fb69d6d58d8c0211a019de956673e86a18",
+      "source_refs": [
+        {
+          "id": "relation/3545279",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 2086,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.pila.it/"
+      ],
+      "previous_bounds": [
+        45.699999999999996,
+        7.295,
+        45.74,
+        7.345000000000001
+      ],
+      "corrected_bounds": [
+        45.672721,
+        7.282215,
+        45.712821,
+        7.332315
+      ],
+      "method": "source viewport center with existing catalog span",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "wildcat",
+      "source_name": "Wildcat Mountain",
+      "source_id": "0df6f2636ac79f4cfabf19a4d6954d6b8e00d01a",
+      "source_refs": [
+        {
+          "id": "way/251260219",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 356,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.skiwildcat.com/"
+      ],
+      "previous_bounds": [
+        44.239999999999995,
+        -71.22500000000001,
+        44.28,
+        -71.175
+      ],
+      "corrected_bounds": [
+        44.237391,
+        -71.258412,
+        44.277491,
+        -71.208312
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "alpine-valley-ohio",
+      "source_name": "Alpine Valley",
+      "source_id": "209437aa417a69f51e4b5c8b4f7b96e7d1d816c0",
+      "source_refs": [
+        {
+          "id": "way/1432790358",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 277,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.alpinevalleyohio.com/"
+      ],
+      "previous_bounds": [
+        41.519999999999996,
+        -81.31500000000001,
+        41.56,
+        -81.265
+      ],
+      "corrected_bounds": [
+        41.508317,
+        -81.286319,
+        41.548417,
+        -81.236219
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "fernie",
+      "source_name": "Fernie Alpine Resort",
+      "source_id": "ecea3ea316650e534c05c56dca021977818dc214",
+      "source_refs": [
+        {
+          "id": "way/1388612283",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 30,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.skifernie.com"
+      ],
+      "previous_bounds": [
+        49.47,
+        -115.125,
+        49.53,
+        -115.055
+      ],
+      "corrected_bounds": [
+        49.425746,
+        -115.137893,
+        49.485846,
+        -115.067893
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hakuba-goryu",
+      "source_name": "\u767d\u99ac\u4e94\u7adc, Hakuba Goryu",
+      "source_id": "c841118d2b5eed99ac5e30f569bb0f2e6ba7892a",
+      "source_refs": [
+        {
+          "id": "way/771665618",
+          "type": "openstreetmap"
+        }
+      ],
+      "official_websites": [],
+      "previous_bounds": [
+        36.68,
+        137.825,
+        36.720000000000006,
+        137.875
+      ],
+      "corrected_bounds": [
+        36.644464,
+        137.800169,
+        36.684564,
+        137.850269
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hakuba-norikura",
+      "source_name": "\u767d\u99ac\u4e57\u978d\u30b9\u30ad\u30fc\u5834, Hakuba Norikura Onsen Ski Resort, \u306f\u304f\u3070\u306e\u308a\u304f\u3089\u30b9\u30ad\u30fc\u3058\u3087\u3046",
+      "source_id": "9e9a84ef97c366ed523b405845fa42051c9d578d",
+      "source_refs": [
+        {
+          "id": "way/546849385",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1605,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.hakubanorikura.jp/"
+      ],
+      "previous_bounds": [
+        36.714999999999996,
+        137.81,
+        36.745,
+        137.85000000000002
+      ],
+      "corrected_bounds": [
+        36.754477,
+        137.850352,
+        36.784577,
+        137.890452
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hakuba-sanosaka",
+      "source_name": "\u767d\u99ac\u3055\u306e\u3055\u304b, Hakuba Sanosaka Snow Resort",
+      "source_id": "ece5006c66d60ddde5df1f6ccf9d2f6a3e8bcb52",
+      "source_refs": [
+        {
+          "id": "way/936978931",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1674,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "http://www.sanosaka.com/"
+      ],
+      "previous_bounds": [
+        36.675,
+        137.82,
+        36.705,
+        137.86
+      ],
+      "corrected_bounds": [
+        36.607945,
+        137.816472,
+        36.638045,
+        137.856572
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hakuba47",
+      "source_name": "\u767d\u99ac47, Hakuba 47",
+      "source_id": "6d8c8a9a4114428e603d1c434b147d1217879f85",
+      "source_refs": [
+        {
+          "id": "way/771665619",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1598,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.hakuba47.co.jp"
+      ],
+      "previous_bounds": [
+        36.69,
+        137.815,
+        36.730000000000004,
+        137.865
+      ],
+      "corrected_bounds": [
+        36.652133,
+        137.796612,
+        36.692233,
+        137.846712
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "jiigatake",
+      "source_name": "\u723a\u30ac\u5cb3\u30b9\u30ad\u30fc\u5834, Jiigatake Snow Resort",
+      "source_id": "a49c1598156961b75dba1bdd98423521965cfe64",
+      "source_refs": [
+        {
+          "id": "way/324162841",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1614,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.jiigatake.com/"
+      ],
+      "previous_bounds": [
+        36.695,
+        137.84,
+        36.725,
+        137.88000000000002
+      ],
+      "corrected_bounds": [
+        36.545354,
+        137.778252,
+        36.575454,
+        137.818352
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "kashimayari",
+      "source_name": "\u9e7f\u5cf6\u69cd\u30b9\u30ad\u30fc\u5834, Kashimayari Snow Resort",
+      "source_id": "351e73f443295e581a711c45d697a82006f24352",
+      "source_refs": [
+        {
+          "id": "way/936980547",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1675,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.kashimayari.net/"
+      ],
+      "previous_bounds": [
+        36.695,
+        137.85,
+        36.725,
+        137.89000000000001
+      ],
+      "corrected_bounds": [
+        36.585805,
+        137.809164,
+        36.615905,
+        137.849264
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "tsugaike",
+      "source_name": "\u6802\u6c60\u9ad8\u539f, Tsugaike Kogen",
+      "source_id": "0cbcc6a3e3481cdc6750911f4cfe7c412563905f",
+      "source_refs": [
+        {
+          "id": "way/773558920",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1680,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.tsugaike.gr.jp/"
+      ],
+      "previous_bounds": [
+        36.76,
+        137.85999999999999,
+        36.800000000000004,
+        137.9
+      ],
+      "corrected_bounds": [
+        36.735179,
+        137.826039,
+        36.775279,
+        137.875439
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "furano",
+      "source_name": "\u5bcc\u826f\u91ce\u30b9\u30ad\u30fc\u5834, Furano ski resort, \u3075\u3089\u306e\u30b9\u30ad\u30fc\u5834",
+      "source_id": "e197429644be3ecdfd0d5ef7fb5703a1b2754a22",
+      "source_refs": [
+        {
+          "id": "way/598421263",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 1240,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.princehotels.com/en/ski/furano/"
+      ],
+      "previous_bounds": [
+        43.315000000000005,
+        142.34,
+        43.365,
+        142.4
+      ],
+      "corrected_bounds": [
+        43.307667,
+        142.309319,
+        43.357667,
+        142.369419
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "hintertuxer",
+      "source_name": "Hintertuxer Gletscher",
+      "source_id": "fd2502303c53c45c2a6c5dd332f5105bb3c95179",
+      "source_refs": [
+        {
+          "id": "way/539199305",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 644,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.hintertuxergletscher.at"
+      ],
+      "previous_bounds": [
+        47.025,
+        11.635,
+        47.074999999999996,
+        11.705
+      ],
+      "corrected_bounds": [
+        47.044325,
+        11.632217,
+        47.130025,
+        11.702317
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "the-highlands",
+      "source_name": "Boyne Highlands Resort",
+      "source_id": "d70a38efa1745a52727cf449eb7a657610ebab1c",
+      "source_refs": [
+        {
+          "id": "way/997160539",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 407,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.boynehighlands.com"
+      ],
+      "previous_bounds": [
+        45.445,
+        -84.94,
+        45.495,
+        -84.88
+      ],
+      "corrected_bounds": [
+        45.452145,
+        -84.969924,
+        45.502145,
+        -84.909824
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "tremblant",
+      "source_name": "Mont Tremblant Resort, Station Mont Tremblant",
+      "source_id": "b7cad93e857de92335debf15f4d0bfe9a04f4d1b",
+      "source_refs": [
+        {
+          "id": "way/671144531",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 101,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.tremblant.ca"
+      ],
+      "previous_bounds": [
+        46.18,
+        -74.62,
+        46.24,
+        -74.56
+      ],
+      "corrected_bounds": [
+        46.193764,
+        -74.596594,
+        46.256164,
+        -74.515894
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "yunding",
+      "source_name": "\u5bc6\u82d1\u4e91\u9876\u4e50\u56ed, Yunding Resort Secret Garden, \u4e91\u9876\u6ed1\u96ea\u516c\u56ed",
+      "source_id": "25d31b46a111dd776d81cee73adfc2a5e35aaae5",
+      "source_refs": [
+        {
+          "id": "way/533579023",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 3478,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.secretgardenresorts.com/"
+      ],
+      "previous_bounds": [
+        40.949999999999996,
+        115.425,
+        40.99,
+        115.47500000000001
+      ],
+      "corrected_bounds": [
+        40.927891,
+        115.394021,
+        40.967991,
+        115.444121
+      ],
+      "method": "source area envelope plus margin",
+      "canonical_routing_reviewed": false
+    },
+    {
+      "resort_id": "sun-valley",
+      "source_name": "Sun Valley - Bald Mountain + Dollar Mountain",
+      "source_ids": [
+        "1c76331ece5818c80d76890bc674c6687e89474d",
+        "b9ec1edd75823059c063c7c7b2a4078cf82542ab"
+      ],
+      "source_refs": [
+        {
+          "id": "way/1244098768",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 2293,
+          "type": "skimap.org"
+        },
+        {
+          "id": "way/1244099443",
+          "type": "openstreetmap"
+        },
+        {
+          "id": 480,
+          "type": "skimap.org"
+        }
+      ],
+      "official_websites": [
+        "https://www.sunvalley.com/the-mountain/maps-guides/"
+      ],
+      "previous_bounds": [
+        43.65,
+        -114.375,
+        43.71,
+        -114.305
+      ],
+      "corrected_bounds": [
+        43.63482,
+        -114.419557,
+        43.69462,
+        -114.330057
+      ],
+      "method": "combined envelopes of both officially identified ski mountains plus margin",
+      "canonical_routing_reviewed": false
+    }
+  ]
+}
