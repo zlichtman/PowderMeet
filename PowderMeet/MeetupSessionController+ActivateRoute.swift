@@ -84,20 +84,37 @@ extension MeetupSessionController {
             )
         }
 
+        // A pre-release test meet on a preview map needs the exact same
+        // preview map and no status; a live meet needs the exact canonical
+        // dataset plus fresh routable status. Neither ever substitutes for
+        // the other.
+        let isPreviewMeet = PreviewMeetupPolicy.isPreviewIdentity(request.datasetVersion)
         guard let requestedDatasetVersion = request.datasetVersion,
               let dataset = coord.resortManager.currentDataset,
-              dataset.source == .canonicalServer,
-              dataset.version.identifier == requestedDatasetVersion,
-              let status = coord.resortManager.currentStatus,
-              status.resortID == dataset.resortID,
-              status.datasetVersion == dataset.version,
-              status.isRoutable(),
+              isPreviewMeet
+                ? PreviewMeetupPolicy.canActivate(
+                    isPreRelease: BuildEnvironment.isPreRelease,
+                    requestDatasetVersion: requestedDatasetVersion,
+                    datasetSource: dataset.source,
+                    datasetVersion: dataset.version.identifier
+                  )
+                : Self.canActivateLive(
+                    dataset: dataset,
+                    requestedDatasetVersion: requestedDatasetVersion,
+                    status: coord.resortManager.currentStatus
+                  ),
               dataset.rendezvousCatalog.nodeIDs.contains(request.meetingNodeId),
               let myProfile = SupabaseManager.shared.currentUserProfile,
               let graph = coord.resortManager.currentGraph,
               let meetingNode = graph.nodes[request.meetingNodeId] else {
             AppLog.meet.error("activateRoute failed — no profile or graph (check resort catalog for id \(request.resortId))")
-            coord.setTransientMessage("SAFE ROUTE UNAVAILABLE — REFRESH MOUNTAIN STATUS")
+            if isPreviewMeet && !BuildEnvironment.isPreRelease {
+                coord.setTransientMessage("TEST MEETUPS NEED A TESTFLIGHT BUILD")
+            } else if isPreviewMeet {
+                coord.setTransientMessage("TEST MEETUP MAP DIFFERS — UPDATE BOTH APPS")
+            } else {
+                coord.setTransientMessage("SAFE ROUTE UNAVAILABLE — REFRESH MOUNTAIN STATUS")
+            }
             return
         }
 
@@ -159,6 +176,22 @@ extension MeetupSessionController {
             friendRoute: friendRoute,
             graph: graph
         )
+    }
+
+    /// Live activation gate: the exact canonical dataset the sender stamped,
+    /// with fresh dataset-matched status that permits routing now.
+    nonisolated static func canActivateLive(
+        dataset: MountainDataset,
+        requestedDatasetVersion: String,
+        status: MountainStatus?,
+        now: Date = .now
+    ) -> Bool {
+        guard dataset.source == .canonicalServer,
+              dataset.version.identifier == requestedDatasetVersion,
+              let status else { return false }
+        return status.resortID == dataset.resortID
+            && status.datasetVersion == dataset.version
+            && status.isRoutable(at: now)
     }
 
     // MARK: - Exact route contract
@@ -306,8 +339,14 @@ extension MeetupSessionController {
     ) {
         guard let coord = coordinator,
               let dataset = coord.resortManager.currentDataset,
-              dataset.source == .canonicalServer,
               let localUserID = SupabaseManager.shared.currentSession?.user.id else { return }
+        let isPreviewMeet = PreviewMeetupPolicy.canActivate(
+            isPreRelease: BuildEnvironment.isPreRelease,
+            requestDatasetVersion: request.datasetVersion,
+            datasetSource: dataset.source,
+            datasetVersion: dataset.version.identifier
+        )
+        guard dataset.source == .canonicalServer || isPreviewMeet else { return }
         let localRole: ActiveMeetParticipantRole
         if request.senderId == localUserID {
             localRole = .sender
@@ -332,7 +371,7 @@ extension MeetupSessionController {
             },
             etaStdSecondsA: myRoute.etaStdSeconds,
             etaStdSecondsB: friendRoute.etaStdSeconds,
-            solveAttempt: .live
+            solveAttempt: isPreviewMeet ? .nonCanonicalDataset : .live
         )
         lastFasterRerouteAt = .distantPast
         lastAppliedFasterRerouteAt = nil

@@ -41,7 +41,9 @@ extension ContentCoordinator {
         conditionsTask = nil
         // Flush any in-progress run before we tear realtime services
         // down — sign-out should not silently lose the run that was
-        // half in the buffer.
+        // half in the buffer. Detach the fix pump first so a fix landing
+        // during teardown cannot restart the recorder or broadcast.
+        locationManager.onFix = nil
         stopLiveRecording()
         friendQualityStore.stop()
         // SYNC gate: set `phase = .idle` and kick the off-main channel

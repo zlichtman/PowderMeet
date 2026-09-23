@@ -208,7 +208,7 @@ final class CanonicalGraphFetcher {
         if let cached {
             return CanonicalGraphResult(
                 dataset: cached,
-                status: nil,
+                status: await pinnedStatus(for: cached, manifestVersion: manifestVersion),
                 source: .crossVersionFetch
             )
         }
@@ -259,11 +259,35 @@ final class CanonicalGraphFetcher {
         // avoids a network dependency if another meet references the same
         // version later.
         await MountainRepository.shared.save(dataset)
+        // Status used to be dropped here, so accepting a meet pinned to the
+        // current publication failed until the next minute-tick refresh.
+        let status = try? await fetchLiveStatus(
+            url: response.liveStatusUrl,
+            dataset: dataset
+        )
         return CanonicalGraphResult(
             dataset: dataset,
-            status: nil,
+            status: status,
             source: CanonicalGraphResult.Source.crossVersionFetch
         )
+    }
+
+    /// Best-effort current status for a pinned dataset served from cache.
+    /// The sidecar only projects onto the manifest it was built for, so an
+    /// older pinned version correctly stays without status.
+    private func pinnedStatus(
+        for dataset: MountainDataset,
+        manifestVersion: Int
+    ) async -> MountainStatus? {
+        guard let response = try? await callGetResortGraph(
+            resortId: dataset.resortID,
+            cachedManifestVersion: dataset.version.manifestVersion,
+            cachedContentSHA256: dataset.version.contentSHA256,
+            forceManifestVersion: manifestVersion,
+            forceGraphVersion: dataset.version.graphVersion,
+            forceContentSHA256: dataset.version.contentSHA256
+        ) else { return nil }
+        return try? await fetchLiveStatus(url: response.liveStatusUrl, dataset: dataset)
     }
 
     // MARK: - Networking

@@ -49,6 +49,11 @@ struct IncomingMeetRequestCard: View {
         return requestSnapshot != currentSnapshot
     }
 
+    /// A pre-release test meetup solved on the sender's preview map.
+    private var isTestMeetup: Bool {
+        PreviewMeetupPolicy.isPreviewIdentity(request.datasetVersion)
+    }
+
     /// Display name of the request's resort (for the confirm alert
     /// copy). Falls back to the raw id when the resort isn't in
     /// the catalog.
@@ -92,6 +97,24 @@ struct IncomingMeetRequestCard: View {
             .padding(.horizontal, 12)
             .padding(.top, 12)
             .padding(.bottom, 10)
+
+            if isTestMeetup {
+                HStack(spacing: 6) {
+                    Image(systemName: "testtube.2")
+                        .font(.system(size: 9, weight: .bold))
+                    Text("TEST MEETUP \u{00B7} PREVIEW MAP \u{00B7} NOT FOR NAVIGATION")
+                        .hudType(.caption)
+                        .tracking(0.6)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Spacer(minLength: 0)
+                }
+                .foregroundColor(HUDTheme.accentAmber)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Test meetup on a preview map. Not for navigation.")
+            }
 
             // Snapshot mismatch warning — small inline badge above the
             // action buttons. Cross-resort path subsumes this (resort
@@ -221,6 +244,10 @@ struct IncomingMeetRequestCard: View {
             errorMessage = "This request uses a mountain that is not available in this app version."
             return
         }
+        guard !isTestMeetup || BuildEnvironment.isPreRelease else {
+            errorMessage = PreviewMeetupPolicy.unsupportedReceiverMessage
+            return
+        }
         isSyncingSnapshot = true
         Task {
             let alreadyExact = resortManager.currentEntry?.id == request.resortId
@@ -234,18 +261,35 @@ struct IncomingMeetRequestCard: View {
                 )
             }
 
+            // Live: exact canonical dataset plus routable status. Test (pre-
+            // release, preview map): the exact same preview map, no status.
+            let datasetMatches: Bool
+            if isTestMeetup {
+                datasetMatches = PreviewMeetupPolicy.canActivate(
+                    isPreRelease: BuildEnvironment.isPreRelease,
+                    requestDatasetVersion: requestedVersion,
+                    datasetSource: resortManager.currentDataset?.source,
+                    datasetVersion: resortManager.currentDataset?.version.identifier
+                )
+            } else {
+                datasetMatches = resortManager.currentDataset?.source == .canonicalServer
+                    && resortManager.currentDataset?.version.identifier == requestedVersion
+                    && resortManager.currentStatus?.isRoutable() == true
+            }
             guard resortManager.currentEntry?.id == request.resortId,
+                  datasetMatches,
                   let dataset = resortManager.currentDataset,
-                  dataset.source == .canonicalServer,
-                  dataset.version.identifier == requestedVersion,
                   let graph = resortManager.currentGraph,
                   graph.nodes[request.meetingNodeId] != nil,
-                  dataset.rendezvousCatalog.nodeIDs.contains(request.meetingNodeId),
-                  resortManager.currentStatus?.isRoutable() == true else {
+                  dataset.rendezvousCatalog.nodeIDs.contains(request.meetingNodeId) else {
                 isSyncingSnapshot = false
-                errorMessage = resortManager.currentStatus?.operatingMode == .offSeason
-                    ? "This mountain is off season, so the meet can't start."
-                    : "Couldn't verify the sender's live trail map. The request was not accepted."
+                if isTestMeetup {
+                    errorMessage = "Couldn't load the same preview map as the sender. Make sure you're both on the latest TestFlight build."
+                } else {
+                    errorMessage = resortManager.currentStatus?.operatingMode == .offSeason
+                        ? "This mountain is off season, so the meet can't start."
+                        : "Couldn't verify the sender's live trail map. The request was not accepted."
+                }
                 return
             }
             do {

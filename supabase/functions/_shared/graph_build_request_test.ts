@@ -1,4 +1,8 @@
-import { parseGraphBuildRequest } from "./graph_build_request.ts";
+import {
+  bearerRole,
+  manifestCountFailure,
+  parseGraphBuildRequest,
+} from "./graph_build_request.ts";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -41,4 +45,43 @@ Deno.test("graph build request rejects malformed runtime input", () => {
       "malformed build input must fail closed",
     );
   }
+});
+
+function jwtWith(claims: Record<string, unknown>): string {
+  const encode = (value: unknown) =>
+    btoa(JSON.stringify(value)).replace(/\+/g, "-").replace(/\//g, "_")
+      .replace(/=+$/, "");
+  return `${encode({ alg: "HS256", typ: "JWT" })}.${encode(claims)}.signature`;
+}
+
+Deno.test("bearer role reads only the verified token's role claim", () => {
+  const request = (authorization?: string) =>
+    new Request("https://example.test", {
+      method: "POST",
+      headers: authorization ? { Authorization: authorization } : {},
+    });
+  assert(
+    bearerRole(request(`Bearer ${jwtWith({ role: "service_role" })}`)) ===
+      "service_role",
+    "service role token should be recognised",
+  );
+  assert(
+    bearerRole(request(`Bearer ${jwtWith({ role: "anon" })}`)) === "anon",
+    "anon token must not read as service role",
+  );
+  assert(bearerRole(request()) === null, "missing header has no role");
+  assert(bearerRole(request("Bearer not-a-jwt")) === null, "garbage has no role");
+});
+
+Deno.test("manifest counts must match and cannot be empty", () => {
+  const manifest = { expected_trail_count: 3, expected_lift_count: 2 };
+  assert(manifestCountFailure(manifest, 3, 2) === null, "exact counts pass");
+  assert(manifestCountFailure(manifest, 0, 0) !== null, "a failed lookup never builds");
+  assert(manifestCountFailure(manifest, 2, 2) !== null, "a short trail set fails");
+  assert(manifestCountFailure(manifest, 3, 3) !== null, "an extra lift fails");
+  assert(
+    manifestCountFailure({ expected_trail_count: 0, expected_lift_count: 0 }, 0, 0) !==
+      null,
+    "a manifest with no identities is not canonical",
+  );
 });

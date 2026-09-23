@@ -16,13 +16,18 @@ struct PowderMeetActionButton: View {
     let hasFriend: Bool
     let hasResult: Bool
     let isNavigable: Bool
+    /// Pre-release only: the result is a strict solve on a preview map and
+    /// may be sent as a clearly labeled test meetup (`PreviewMeetupPolicy`).
+    var isTestSendable: Bool = false
     let hasSelection: Bool
     let isSolving: Bool
     let requestSent: Bool
     let action: () -> Void
 
+    private var canSend: Bool { isNavigable || isTestSendable }
+
     private var isArmed: Bool {
-        hasFriend && hasResult && isNavigable && hasSelection && !isSolving && !requestSent
+        hasFriend && hasResult && canSend && hasSelection && !isSolving && !requestSent
     }
 
     var body: some View {
@@ -66,7 +71,7 @@ struct PowderMeetActionButton: View {
             Image(systemName: "point.topleft.down.to.point.bottomright.curvepath")
                 .font(.system(size: 14, weight: .bold))
             label("TAP FRIEND TO SOLVE", size: 12)
-        } else if !isNavigable {
+        } else if !canSend {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 14, weight: .bold))
             label("PREVIEW ONLY — NO SAFE LIVE ROUTE", size: 11)
@@ -74,6 +79,10 @@ struct PowderMeetActionButton: View {
             Image(systemName: "hand.tap.fill")
                 .font(.system(size: 14, weight: .bold))
             label("SELECT A MEETING POINT", size: 12)
+        } else if !isNavigable {
+            Image(systemName: "testtube.2")
+                .font(.system(size: 14, weight: .bold))
+            label("SEND TEST MEETUP · PREVIEW MAP", size: 11)
         } else {
             Image(systemName: "bolt.fill")
                 .font(.system(size: 14, weight: .bold))
@@ -99,8 +108,11 @@ struct PowderMeetActionButton: View {
         return HUDTheme.secondaryText.opacity(0.5)
     }
 
+    // A sendable test meetup keeps the amber "not live" palette, with a
+    // stronger fill so it still reads as an armed button.
     private var background: Color {
         if requestSent { return HUDTheme.accentGreen.opacity(0.12) }
+        if isArmed && !isNavigable { return HUDTheme.accentAmber.opacity(0.22) }
         if hasResult && !isNavigable { return HUDTheme.accentAmber.opacity(0.10) }
         if hasFriend && hasResult && isNavigable && hasSelection { return HUDTheme.accent }
         return HUDTheme.cardBackground
@@ -108,6 +120,7 @@ struct PowderMeetActionButton: View {
 
     private var border: Color {
         if requestSent { return HUDTheme.accentGreen.opacity(0.4) }
+        if isArmed && !isNavigable { return HUDTheme.accentAmber }
         if hasResult && !isNavigable { return HUDTheme.accentAmber.opacity(0.45) }
         if hasFriend && hasResult && isNavigable && hasSelection { return HUDTheme.accent }
         return HUDTheme.cardBorder

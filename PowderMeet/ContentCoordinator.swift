@@ -232,7 +232,9 @@ final class ContentCoordinator {
         // Live recorder owns its own state machine; we just hand it
         // the three things it needs and `start()` once we know the
         // user has the feature on. The fix-pump comes through
-        // `handleLocationChange` (`onChange(of: fixGeneration)`).
+        // `handleLocationChange`, driven straight from the location
+        // delegate so it keeps running while the screen is locked.
+        locationManager.onFix = { [weak self] in self?.handleLocationChange() }
         if liveRunRecorder == nil {
             liveRunRecorder = LiveRunRecorder(
                 supabase: SupabaseManager.shared,
@@ -435,10 +437,10 @@ final class ContentCoordinator {
 
     // MARK: - Location change
 
-    /// Driven from the view's `onChange(of: locationManager.fixGeneration)`
-    /// — `fixGeneration` increments on every accepted fix, so this fires
-    /// even on pure-longitude moves and quantised duplicates that
-    /// produce the same `Double` bit-pattern twice.
+    /// Driven by `LocationManager.onFix` on every accepted fix — including
+    /// while backgrounded during a ski session, where SwiftUI `onChange`
+    /// would not run — so it fires even on pure-longitude moves and
+    /// quantised duplicates that produce the same `Double` bit-pattern twice.
     func handleLocationChange() {
         guard let coord = locationManager.currentLocation else { return }
         let isRoutingGrade = RoutingFixPolicy.isUsable(
@@ -457,10 +459,13 @@ final class ContentCoordinator {
             liveRunRecorder?.ingestCurrentFix()
         }
 
-        // Every GPS fix should hit the wire immediately — non-forced
+        // Every foreground GPS fix should hit the wire immediately — non-forced
         // `broadcastNow` coalesces up to 2s when "idle", which feels broken
-        // for a live friend-tracking product.
-        Task { await presenceCoordinator?.broadcastNow(force: true) }
+        // for a live friend-tracking product. Locked in a pocket (fixes now
+        // arrive in the background too), the speed- and power-adaptive
+        // cadence applies instead of one forced send per fix.
+        let forceBroadcast = UIApplication.shared.applicationState == .active
+        Task { await presenceCoordinator?.broadcastNow(force: forceBroadcast) }
 
         // Only auto-snap to a nearby resort if the user hasn't deliberately
         // picked one yet. Driving past another resort on your way to the
@@ -617,12 +622,12 @@ final class ContentCoordinator {
         if newPhase != .active {
             lastActiveAt = Date()
         }
-        // Pause the live recorder on background — without an active
-        // foreground we'd be storing fixes the user might never want
-        // turned into runs (the lock-screen pocket-tap problem). On
-        // resume below we re-start (idempotent) so a returning skier
-        // picks back up where they left off.
-        if newPhase == .background {
+        // A skier's phone is locked in a pocket for the whole run, so the
+        // recorder keeps going while a ski session holds background
+        // location (at a resort, with the system location indicator).
+        // Outside a session iOS stops delivering fixes anyway, so stop and
+        // flush; resume below re-starts (idempotent).
+        if newPhase == .background, !locationManager.sessionActive {
             stopLiveRecording()
         }
         guard newPhase == .active else { return }

@@ -98,7 +98,9 @@ nonisolated enum ImportedRunNameQuality {
 
 /// Superset row used when the observation-provenance migrations are present.
 /// Optional source fields also allow this one shape to serve backup restores.
-nonisolated struct ImportedRunWriteRow: Encodable {
+/// `Decodable` too so a live run whose save failed offline can wait on disk
+/// (`PendingLiveRunStore`) and be retried byte-for-byte.
+nonisolated struct ImportedRunWriteRow: Codable {
     let profile_id: String
     let resort_id: String?
     let edge_id: String?

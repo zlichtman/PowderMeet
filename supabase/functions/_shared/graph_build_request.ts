@@ -56,6 +56,50 @@ export function parseGraphBuildRequest(
   };
 }
 
+/**
+ * The `role` claim of the request's bearer JWT. The Supabase gateway has
+ * already verified the signature (JWT verification stays enabled), so the
+ * claim is trustworthy; this only reads it. Returns null when absent.
+ */
+export function bearerRole(req: Request): string | null {
+  const header = req.headers.get("Authorization") ?? "";
+  const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
+  const payload = token.split(".")[1];
+  if (!payload) return null;
+  try {
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+    const claims = JSON.parse(atob(padded));
+    return typeof claims?.role === "string" ? claims.role : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * A canonical build must apply exactly the identities the manifest promised.
+ * An empty or short row set would otherwise build a graph with no canonical
+ * authority (every source trail left open) that publish would accept.
+ */
+export function manifestCountFailure(
+  manifest: { expected_trail_count: number; expected_lift_count: number },
+  trailRows: number,
+  liftRows: number,
+): string | null {
+  if (trailRows + liftRows === 0) {
+    return "canonical manifest has no trail or lift identities";
+  }
+  if (
+    trailRows !== manifest.expected_trail_count ||
+    liftRows !== manifest.expected_lift_count
+  ) {
+    return `canonical manifest rows (${trailRows} trails, ${liftRows} lifts) ` +
+      `do not match expected counts (${manifest.expected_trail_count} trails, ` +
+      `${manifest.expected_lift_count} lifts)`;
+  }
+  return null;
+}
+
 function isCalendarDate(value: string): boolean {
   if (!SNAPSHOT_DATE.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number);

@@ -294,15 +294,14 @@ struct ProfileView: View {
                 try await supabase.setDisplayName(name)
                 isEditingName = false
             } catch {
-                // The pre-update `isDisplayNameTaken` check has a race
-                // window: between the check and the update, another
-                // device can claim the same name. The UNIQUE constraint
-                // on the column then rejects this update with a Postgres
-                // 23505 (unique_violation). Surface a clear conflict
-                // message instead of the opaque Supabase error and keep
-                // the name editor open so the user can pick something else.
+                // The UNIQUE constraint on the column is the single
+                // source of truth for name conflicts (a separate
+                // pre-check cost a round-trip and still raced), so a
+                // taken name arrives as Postgres 23505. Surface a clear
+                // conflict message instead of the opaque Supabase error
+                // and keep the editor open so the user can pick another.
                 if Self.isUniqueViolation(error) {
-                    nameConflictMessage = "\"\(name)\" was just taken — try another."
+                    nameConflictMessage = "\"\(name)\" is taken — try another."
                     // Re-load profile so the UI reflects the server's truth
                     // (in case our local profile drifted during the race).
                     await supabase.loadProfile()

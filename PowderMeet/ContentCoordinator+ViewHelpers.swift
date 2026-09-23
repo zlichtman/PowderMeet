@@ -297,9 +297,33 @@ extension ContentCoordinator {
     /// Local route preview. Canonical data requires live status; legacy data is
     /// limited to pre-release, labeled unverified, and never starts navigation.
     func previewLandmarkRoute(to requestedPoint: RendezvousPoint) async -> Bool {
+        // A same-dataset graph refresh mid-solve (background status merge on
+        // a freshly loaded map) re-solves once on the new graph rather than
+        // failing a tap that was made moments after the mountain appeared.
+        for attempt in 0..<2 {
+            switch await attemptLandmarkRoute(to: requestedPoint) {
+            case .finished(let succeeded):
+                return succeeded
+            case .graphChanged where attempt == 0:
+                continue
+            case .graphChanged:
+                break
+            }
+        }
+        setTransientMessage("Mountain conditions changed while routing. Please try again.")
+        return false
+    }
+
+    private enum LandmarkRouteAttempt {
+        case finished(Bool)
+        /// Same immutable dataset, but its displayed graph changed during the solve.
+        case graphChanged
+    }
+
+    private func attemptLandmarkRoute(to requestedPoint: RendezvousPoint) async -> LandmarkRouteAttempt {
         if let problem = destinationRoutingProblem {
             setTransientMessage(problem)
-            return false
+            return .finished(false)
         }
         guard let dataset = resortManagerRef?.currentDataset,
               let graph = resortManagerRef?.currentGraph,
@@ -308,7 +332,7 @@ extension ContentCoordinator {
               }),
               let destination = graph.nodes[point.nodeID] else {
             setTransientMessage("DESTINATION PREVIEW UNAVAILABLE")
-            return false
+            return .finished(false)
         }
         let previewOnly = isUnverifiedDestinationPreview
         let status = resortManagerRef?.currentStatus
@@ -331,21 +355,21 @@ extension ContentCoordinator {
                 graphNodeIDs: Set(graph.nodes.keys)
               ) else {
             setTransientMessage("SAFE DESTINATION ROUTING UNAVAILABLE")
-            return false
+            return .finished(false)
         }
         guard let profile = SupabaseManager.shared.currentUserProfile else {
             setTransientMessage("FINISH YOUR SKIER PROFILE TO ROUTE")
-            return false
+            return .finished(false)
         }
         guard let origin = meetup.resolveMyOrigin(graph: graph) else {
             setTransientMessage(previewOnly
                 ? "CHOOSE A PREVIEW START ON THE MOUNTAIN"
                 : "MOVE ONTO A MAPPED TRAIL OR SET YOUR TEST LOCATION")
-            return false
+            return .finished(false)
         }
         if origin.startNodeID == point.nodeID, origin.approachEdgeID == nil {
             setTransientMessage("YOU'RE ALREADY AT \((point.displayName ?? "THIS LANDMARK").uppercased())")
-            return false
+            return .finished(false)
         }
 
         let solver = meetup.configureSolver(
@@ -366,16 +390,18 @@ extension ContentCoordinator {
         guard !Task.isCancelled,
               resortManagerRef?.currentDataset?.version == dataset.version,
               resortManagerRef?.currentDataset?.resortID == dataset.resortID,
-              resortManagerRef?.currentGraph?.fingerprint == graph.fingerprint,
               destinationRoutingProblem == nil else {
             setTransientMessage("Mountain conditions changed while routing. Please try again.")
-            return false
+            return .finished(false)
+        }
+        guard resortManagerRef?.currentGraph?.fingerprint == graph.fingerprint else {
+            return .graphChanged
         }
         guard let route, !route.path.isEmpty else {
             setTransientMessage(previewOnly
                 ? "NO PREVIEW PATH TO THIS LANDMARK"
                 : "NO SAFE ROUTE TO THIS LANDMARK")
-            return false
+            return .finished(false)
         }
 
         var result = MeetingResult(
@@ -402,6 +428,6 @@ extension ContentCoordinator {
         setTransientMessage(previewOnly
             ? "UNVERIFIED ROUTE PREVIEW · NOT FOR NAVIGATION"
             : "SAFE ROUTE READY · PREVIEW")
-        return true
+        return .finished(true)
     }
 }

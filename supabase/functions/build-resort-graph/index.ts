@@ -46,7 +46,11 @@ import {
   type CanonicalRendezvousRow,
   overlayCuratedRendezvous,
 } from "../_shared/rendezvous_catalog.ts";
-import { parseGraphBuildRequest } from "../_shared/graph_build_request.ts";
+import {
+  bearerRole,
+  manifestCountFailure,
+  parseGraphBuildRequest,
+} from "../_shared/graph_build_request.ts";
 
 const GRAPH_VERSION = "v15";
 const SOURCE_BUCKET = "resort-snapshots";
@@ -78,6 +82,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return jsonError(400, parsedBody.error);
   }
   const body = parsedBody.value;
+
+  // Builds write staged blobs and metadata with the service role. The gateway
+  // verifies the JWT signature; only an operator's service-role token may
+  // start one (the app never calls this function).
+  if (bearerRole(req) !== "service_role") {
+    return jsonError(403, "build-resort-graph requires the service role");
+  }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -185,18 +196,31 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // 6. Build graph
   let graph = buildGraph(resortData, body.resort_id);
 
-  // 7. Apply canonical overlay
-  const trails = await loadCanonicalTrails(
+  // 7. Apply canonical overlay. Every lookup fails closed: an unreadable or
+  //    short manifest must never produce a graph with no canonical authority
+  //    (every source trail left open) that publish would then accept.
+  const trailLookup = await loadCanonicalTrails(
     supabase,
     body.resort_id,
     manifest.manifest_version,
   );
-  const lifts = await loadCanonicalLifts(
+  if (trailLookup.error) return jsonError(500, trailLookup.error);
+  const liftLookup = await loadCanonicalLifts(
     supabase,
     body.resort_id,
     manifest.manifest_version,
   );
-  const overrides = await loadGeometryOverrides(supabase, body.resort_id);
+  if (liftLookup.error) return jsonError(500, liftLookup.error);
+  const overrideLookup = await loadGeometryOverrides(
+    supabase,
+    body.resort_id,
+  );
+  if (overrideLookup.error) return jsonError(500, overrideLookup.error);
+  const trails = trailLookup.data;
+  const lifts = liftLookup.data;
+  const overrides = overrideLookup.data;
+  const countFailure = manifestCountFailure(manifest, trails.length, lifts.length);
+  if (countFailure) return jsonError(422, countFailure);
   const overlayResult = applyCuratedOverlay(graph, {
     trails: trails as any,
     lifts: lifts as any,
@@ -207,6 +231,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
       `canonical manifest reconciliation failed: ${
         JSON.stringify(overlayResult.failures)
       }`,
+    );
+  }
+  if (
+    overlayResult.appliedTrailIdentities !== trails.length ||
+    overlayResult.appliedLiftIdentities !== lifts.length
+  ) {
+    return jsonError(
+      422,
+      "canonical manifest reconciliation applied " +
+        `${overlayResult.appliedTrailIdentities}/${trails.length} trails and ` +
+        `${overlayResult.appliedLiftIdentities}/${lifts.length} lifts`,
     );
   }
   graph = overlayResult.graph;
@@ -406,24 +441,30 @@ async function loadCanonicalTrails(
   supabase: SupabaseClient,
   resortId: string,
   manifestVersion: number,
-): Promise<any[]> {
-  const { data } = await supabase.rpc("canonical_trails_with_geom", {
+): Promise<{ data: any[]; error: string | null }> {
+  const { data, error } = await supabase.rpc("canonical_trails_with_geom", {
     p_resort_id: resortId,
     p_manifest_version: manifestVersion,
   });
-  return data ?? [];
+  if (error) {
+    return { data: [], error: `canonical trail lookup failed: ${error.message}` };
+  }
+  return { data: data ?? [], error: null };
 }
 
 async function loadCanonicalLifts(
   supabase: SupabaseClient,
   resortId: string,
   manifestVersion: number,
-): Promise<any[]> {
-  const { data } = await supabase.rpc("canonical_lifts_with_geom", {
+): Promise<{ data: any[]; error: string | null }> {
+  const { data, error } = await supabase.rpc("canonical_lifts_with_geom", {
     p_resort_id: resortId,
     p_manifest_version: manifestVersion,
   });
-  return data ?? [];
+  if (error) {
+    return { data: [], error: `canonical lift lookup failed: ${error.message}` };
+  }
+  return { data: data ?? [], error: null };
 }
 
 async function loadCanonicalRendezvous(
@@ -448,11 +489,17 @@ async function loadCanonicalRendezvous(
 async function loadGeometryOverrides(
   supabase: SupabaseClient,
   resortId: string,
-): Promise<CanonicalGeometryOverride[]> {
-  const { data } = await supabase.rpc("latest_geometry_overrides", {
+): Promise<{ data: CanonicalGeometryOverride[]; error: string | null }> {
+  const { data, error } = await supabase.rpc("latest_geometry_overrides", {
     p_resort_id: resortId,
   });
-  return data ?? [];
+  if (error) {
+    return {
+      data: [],
+      error: `canonical geometry override lookup failed: ${error.message}`,
+    };
+  }
+  return { data: data ?? [], error: null };
 }
 
 async function sha256Hex(buf: Uint8Array): Promise<string> {

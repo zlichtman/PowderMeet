@@ -39,8 +39,11 @@ nonisolated struct ActiveMeetDatasetIdentity: Equatable, Sendable {
     let resortID: String
     let datasetVersion: String
 
+    /// A pre-release test meet on a frozen preview map (`PreviewMeetupPolicy`).
+    var isPreview: Bool { PreviewMeetupPolicy.isPreviewIdentity(datasetVersion) }
+
     func matches(dataset: MountainDataset, graph: MountainGraph) -> Bool {
-        dataset.source == .canonicalServer
+        dataset.source == (isPreview ? .legacySnapshot : .canonicalServer)
             && dataset.resortID == resortID
             && dataset.version.identifier == datasetVersion
             && graph.resortID == resortID

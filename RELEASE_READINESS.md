@@ -1,3 +1,51 @@
+# Functional pass — September 23, 2026
+
+GitHub `main` is `v1.0.0` plus one squashed commit of the Codex session work
+(build 202 on TestFlight); the standalone build-63 bump commit was removed.
+
+Production readback today: **0 canonical manifests, 0 graph blobs, 0
+publications**, 1 profile, 0 meet requests, 0 imported runs. Every mountain
+therefore loads its frozen preview map, and live Go To / meetups remain gated.
+Whistler is off season (Epic feed) until late November, so a published
+dataset would still report off-season rather than route.
+
+Fixed in the app:
+
+- **TestFlight test meetups** (`PreviewMeetupPolicy`): send, accept, and
+  activate a two-phone meetup on the preview map, labeled TEST on both phones,
+  stamped non-live, status-free, exact-identity only. App Store builds refuse.
+- **Preview solves are timeless**: meet previews, rehearsal, and test meetups
+  no longer fail in the evening because lift hours applied to preview maps.
+- **Meetup test location**: a fresh GPS fix off the mountain no longer blocks
+  a tester's chosen location (matches `resolveMyOrigin`).
+- **Go To**: a background status merge during an early tap re-solves once
+  instead of failing with "conditions changed".
+- **Live trail logging while locked**: fixes flow from the location delegate;
+  the recorder keeps running during a ski session, re-arms when the toggle is
+  switched back on, survives leaving and re-entering the ski area, retries
+  offline saves from a per-user queue, and updates Profile stats.
+- **Import feedback** is shown inline in Profile → Activity (Apple Health
+  errors and empty pulls included), not only as iOS notifications.
+- **Weather**: two forecast days (one day ended at resort-local midnight, so
+  evening scrubs had no data) and the LIVE readout falls back to the current
+  observation instead of "NO FORECAST AT THIS HOUR".
+- **Canonical meet replay**: a pinned-version fetch now carries current status,
+  so accepting a meet pinned to the live publication no longer fails first.
+
+Prepared, **not yet applied to production** (needs explicit approval):
+
+- `20260923170000_owner_scoped_activity_data.sql`: `imported_runs` was
+  readable by anyone with the anon key (`USING (true)`); now owner-only. The
+  recompute RPCs now refuse to rebuild another user's data. pgTAP extended.
+- `build-resort-graph`: requires a service-role token and fails closed when
+  manifest rows cannot be read or do not match expected counts (previously an
+  RPC error built an all-open, non-canonical graph that publish would accept).
+
+Still required for live routing: a reviewed canonical manifest per resort
+(every routable trail claimed; Whistler has 509 named candidates, 106 unnamed
+ways, 15 lift exits with no mapped downhill link and no connector tooling),
+then build, publish, and in-season status.
+
 # 1.0.0 (62) testing release — September 21, 2026
 
 The user explicitly authorized GitHub and TestFlight publication after the earlier

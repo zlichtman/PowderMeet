@@ -131,25 +131,48 @@ final class MountainLoadOwnershipTests: XCTestCase {
         XCTAssertFalse(identity.matches(dataset: replacement, graph: graph))
     }
 
-    func testActiveMeetIdentityRejectsLegacyDataset() {
+    /// A live (canonical) meet can never continue on a legacy preview map.
+    /// The only legacy identity that matches is a pre-release test meet on
+    /// its own exact preview map (`PreviewMeetupPolicy`).
+    func testActiveMeetIdentityRejectsLegacyDatasetExceptItsOwnTestMap() {
         let graph = testGraph(resortID: "vail")
-        let legacy = MountainDataset(
-            resortID: "vail",
-            version: MountainDatasetVersion(
-                manifestVersion: nil,
-                graphVersion: MountainRepository.expectedLegacyVersion,
-                contentSHA256: String(repeating: "e", count: 64)
-            ),
-            snapshotDate: nil,
-            source: .legacySnapshot,
-            graph: graph
+        func legacyDataset(_ version: MountainDatasetVersion) -> MountainDataset {
+            MountainDataset(
+                resortID: "vail",
+                version: version,
+                snapshotDate: nil,
+                source: .legacySnapshot,
+                graph: graph
+            )
+        }
+        let canonicalVersion = MountainDatasetVersion(
+            manifestVersion: 4,
+            graphVersion: "v15",
+            contentSHA256: String(repeating: "e", count: 64)
         )
-        let identity = ActiveMeetDatasetIdentity(
+        let liveIdentity = ActiveMeetDatasetIdentity(
             resortID: "vail",
-            datasetVersion: legacy.version.identifier
+            datasetVersion: canonicalVersion.identifier
         )
+        XCTAssertFalse(liveIdentity.matches(dataset: legacyDataset(canonicalVersion), graph: graph))
 
-        XCTAssertFalse(identity.matches(dataset: legacy, graph: graph))
+        let previewVersion = MountainDatasetVersion(
+            manifestVersion: nil,
+            graphVersion: MountainRepository.expectedLegacyVersion,
+            contentSHA256: String(repeating: "e", count: 64)
+        )
+        let testIdentity = ActiveMeetDatasetIdentity(
+            resortID: "vail",
+            datasetVersion: previewVersion.identifier
+        )
+        XCTAssertTrue(testIdentity.matches(dataset: legacyDataset(previewVersion), graph: graph))
+
+        let otherPreviewMap = MountainDatasetVersion(
+            manifestVersion: nil,
+            graphVersion: MountainRepository.expectedLegacyVersion,
+            contentSHA256: String(repeating: "f", count: 64)
+        )
+        XCTAssertFalse(testIdentity.matches(dataset: legacyDataset(otherPreviewMap), graph: graph))
     }
 
     private func request(

@@ -186,6 +186,7 @@ struct MeetView: View {
                             hasFriend: flow.selectedFriendId != nil,
                             hasResult: flow.fullMeetingResult != nil,
                             isNavigable: flow.fullMeetingResult?.solveAttempt.isNavigable ?? false,
+                            isTestSendable: isTestMeetupSendable,
                             hasSelection: flow.selectedOptionIndex != nil,
                             isSolving: flow.isSolving,
                             requestSent: flow.requestSent,
@@ -735,10 +736,20 @@ struct MeetView: View {
 
     // MARK: - Send Meet Request (POWDERMEET button action)
 
+    /// Pre-release only: the current result is a strict solve on a preview
+    /// map, sendable as a labeled test meetup (`PreviewMeetupPolicy`).
+    private var isTestMeetupSendable: Bool {
+        PreviewMeetupPolicy.canSend(
+            isPreRelease: BuildEnvironment.isPreRelease,
+            solveAttempt: flow.fullMeetingResult?.solveAttempt,
+            datasetSource: resortManager.currentDataset?.source
+        )
+    }
+
     private func sendMeetRequest() {
         guard let friend = selectedFriend,
               let result = flow.fullMeetingResult,
-              result.solveAttempt.isNavigable,
+              result.solveAttempt.isNavigable || isTestMeetupSendable,
               let idx = flow.selectedOptionIndex,
               let resortId = resortManager.currentEntry?.id,
               activeMeetSession == nil else { return }
@@ -751,7 +762,7 @@ struct MeetView: View {
         } else { return }
 
         guard let dataset = resortManager.currentDataset,
-              dataset.source == .canonicalServer,
+              dataset.source == .canonicalServer || isTestMeetupSendable,
               dataset.rendezvousCatalog.nodeIDs.contains(node.id) else {
             flow.sendError = "That stopping point is not in the verified mountain dataset. Recalculate routes."
             return
@@ -971,37 +982,41 @@ struct MeetView: View {
         }
 
         // ── My position: live GPS first, tester fallback — NO fake fallback ──
-        // Priority matches ContentCoordinator.resolveMyNodeId: GPS at the
-        // resort always wins over a stale tester pick.
-        let myOrigin: RoutingOrigin
-        if let myCoord = locationManager.currentLocation,
-           RoutingFixPolicy.isUsable(
+        // Priority matches MeetupSessionController.resolveMyOrigin: a fix
+        // that snaps onto this mountain's network wins; otherwise an explicit
+        // tester pick is used. A tester at home with GPS on used to be told
+        // they were off the network even with a test location set.
+        let hasUsableFix = locationManager.currentLocation != nil
+            && RoutingFixPolicy.isUsable(
                 horizontalAccuracyMeters: locationManager.currentAccuracy,
                 capturedAt: locationManager.currentFixTimestamp
-           ) {
-            guard let origin = graph.routingOrigin(
-                to: myCoord,
-                travelCourseDegrees: locationManager.usableTravelCourse,
-                altitudeMeters: locationManager.routingAltitudeMeters,
-                verticalAccuracyMeters: locationManager.currentVerticalAccuracy,
-                maximumSnapDistanceMeters: RoutingFixPolicy.networkSnapTolerance(
-                    horizontalAccuracyMeters: locationManager.currentAccuracy
-                ),
-                positionUncertaintyMeters: RoutingFixPolicy.positionUncertaintyMeters(
-                    horizontalAccuracyMeters: locationManager.currentAccuracy
+            )
+        let gpsOrigin: RoutingOrigin? = hasUsableFix
+            ? locationManager.currentLocation.flatMap { myCoord in
+                graph.routingOrigin(
+                    to: myCoord,
+                    travelCourseDegrees: locationManager.usableTravelCourse,
+                    altitudeMeters: locationManager.routingAltitudeMeters,
+                    verticalAccuracyMeters: locationManager.currentVerticalAccuracy,
+                    maximumSnapDistanceMeters: RoutingFixPolicy.networkSnapTolerance(
+                        horizontalAccuracyMeters: locationManager.currentAccuracy
+                    ),
+                    positionUncertaintyMeters: RoutingFixPolicy.positionUncertaintyMeters(
+                        horizontalAccuracyMeters: locationManager.currentAccuracy
+                    )
                 )
-            ) else {
-                if setUserVisibleErrors {
-                    flow.solveErrorMessage = "YOU'RE OFF THE MAPPED SKI NETWORK — MOVE CLOSER TO AN OPEN TRAIL OR LIFT"
-                }
-                return nil
             }
-            myOrigin = origin
+            : nil
+        let myOrigin: RoutingOrigin
+        if let gpsOrigin {
+            myOrigin = gpsOrigin
         } else if let testId = testMyNodeId, graph.nodes[testId] != nil {
             myOrigin = .node(testId)
         } else {
             if setUserVisibleErrors {
-                flow.solveErrorMessage = "Your location is unknown — pick a test location in your profile or enable GPS"
+                flow.solveErrorMessage = hasUsableFix
+                    ? "YOU'RE OFF THE MAPPED SKI NETWORK — MOVE CLOSER TO AN OPEN TRAIL OR LIFT"
+                    : "Your location is unknown — pick a test location in your profile or enable GPS"
             }
             return nil
         }

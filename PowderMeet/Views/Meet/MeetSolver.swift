@@ -105,7 +105,10 @@ enum MeetSolver {
                     rendezvousCatalog: inputs.rendezvousCatalog
                 )
                 s.datasetVersion = inputs.datasetVersion
-                s.solveTime = Date.now
+                // Preview maps carry no verified lift hours or status, so
+                // their (never-live) solve is timeless — an evening tester
+                // would otherwise find every lift closed by the clock.
+                s.solveTime = inputs.isAuthoritativeDataset ? Date.now : nil
                 if let hours = CuratedResortLoader.load(
                     resortId: g.resortID
                 )?.operatingHours {

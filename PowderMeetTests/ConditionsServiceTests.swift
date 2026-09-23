@@ -205,6 +205,29 @@ final class ConditionsServiceTests: XCTestCase {
         XCTAssertEqual(response.hourly.time, [expected])
     }
 
+    func testLiveDisplayFallsBackToCurrentReadingBeforeHourlyMerge() throws {
+        let now = Date(timeIntervalSince1970: 2_000_000_000)
+        let current = conditions(fetchedAt: now.addingTimeInterval(-120), temperatureC: -11)
+
+        let live = try XCTUnwrap(current.displaySample(at: now, now: now))
+        XCTAssertEqual(live.temperatureC, -11)
+        XCTAssertEqual(live.time, current.fetchedAt)
+
+        // Scrubbed away from now, a current reading is not a forecast.
+        XCTAssertNil(current.displaySample(at: now.addingTimeInterval(3 * 3_600), now: now))
+        XCTAssertNil(current.displaySample(at: now.addingTimeInterval(-3 * 3_600), now: now))
+    }
+
+    func testLiveDisplayPrefersCoveringHourlySampleAndRejectsStaleCurrent() throws {
+        let now = Date(timeIntervalSince1970: 2_000_000_000)
+        var withHourly = conditions(fetchedAt: now, temperatureC: -11)
+        withHourly.hourlyForecast = [hourly(at: now.addingTimeInterval(600), snowfallCm: 2)]
+        XCTAssertEqual(withHourly.displaySample(at: now, now: now)?.snowfallCm, 2)
+
+        let stale = conditions(fetchedAt: now.addingTimeInterval(-2 * 3_600), temperatureC: -4)
+        XCTAssertNil(stale.displaySample(at: now, now: now))
+    }
+
     private func hourly(at time: Date, snowfallCm: Double) -> HourlyCondition {
         HourlyCondition(
             time: time,

@@ -145,8 +145,9 @@ actor ConditionsService {
 
     /// Slow path: hourly samples for the timeline scrubber (±12h) plus the
     /// 24h / 72h snowfall totals. `past_days=3` is the minimum that satisfies
-    /// the 72h powder-quality calc; `forecast_days=1` covers the +12h scrubber
-    /// window. Merges into the cached `currentConditions` result.
+    /// the 72h powder-quality calc; `forecast_days=2` covers the +12h scrubber
+    /// window at any hour of the day. Merges into the cached
+    /// `currentConditions` result.
     @discardableResult
     func mergeHourly(for entry: ResortEntry) async -> ResortConditions? {
         guard let hourly = await fetchHourly(entry: entry) else {
@@ -265,9 +266,11 @@ actor ConditionsService {
                 "weather_code", "wind_speed_10m", "visibility"
             ].joined(separator: ",")),
             // 3 past days is the minimum that satisfies snowfallLast72hCm.
-            // 1 forecast day covers the timeline scrubber's +12h window.
+            // Forecast days end at resort-local midnight, so one day leaves
+            // an evening scrub (+12h) with no samples at all. Two days always
+            // covers the scrubber window and a meetup-extended range.
             URLQueryItem(name: "past_days",       value: "3"),
-            URLQueryItem(name: "forecast_days",   value: "1"),
+            URLQueryItem(name: "forecast_days",   value: "2"),
             URLQueryItem(name: "wind_speed_unit", value: "kmh"),
             URLQueryItem(name: "timezone",        value: "auto"),
             URLQueryItem(name: "timeformat",      value: "unixtime"),

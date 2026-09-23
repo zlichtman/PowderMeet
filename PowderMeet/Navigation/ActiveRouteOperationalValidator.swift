@@ -58,10 +58,26 @@ nonisolated enum ActiveRouteOperationalValidator {
         now: Date = .now
     ) -> ActiveRouteOperationalDecision {
         guard let dataset,
-              dataset.source == .canonicalServer,
-              identity.resortID == dataset.resortID,
-              identity.datasetVersion == dataset.version.identifier else {
+              identity.matches(dataset: dataset, graph: dataset.graph) else {
             return .datasetDrift
+        }
+
+        if identity.isPreview {
+            // A pre-release test meet on a frozen preview map carries no
+            // operational status to expire; it is only ever checked against
+            // that exact topology and stays labeled non-live.
+            guard routeIsValid(
+                edgeIDs: localRemainingEdgeIDs,
+                meetingNodeID: meetingNodeID,
+                graph: dataset.graph
+            ), routeIsValid(
+                edgeIDs: friendEdgeIDs,
+                meetingNodeID: meetingNodeID,
+                graph: dataset.graph
+            ) else {
+                return .routeRequiresReroute
+            }
+            return .valid
         }
 
         guard let status,

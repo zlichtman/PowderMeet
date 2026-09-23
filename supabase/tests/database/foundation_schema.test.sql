@@ -1,6 +1,6 @@
 begin;
 
-select plan(45);
+select plan(51);
 
 select has_table('public', 'profiles', 'profiles foundation table exists');
 select has_table('public', 'friendships', 'friendships foundation table exists');
@@ -526,6 +526,60 @@ select is(
   'fast-edge=groomed=14,slow-edge=moguls=4'::text,
   'each edge learns its own timed pace while legacy multi-edge fan-out is ignored'
 );
+
+-- Activity data is owner-scoped (20260923170000_owner_scoped_activity_data).
+select policies_are(
+  'public',
+  'imported_runs',
+  array[
+    'imported_runs_delete_own',
+    'imported_runs_insert_own',
+    'imported_runs_select_own',
+    'imported_runs_update_own'
+  ],
+  'imported_runs has no public read policy'
+);
+
+set local role anon;
+set local request.jwt.claims = '{"role":"anon"}';
+select is(
+  (select count(*) from public.imported_runs),
+  0::bigint,
+  'anon cannot read anyone''s imported runs'
+);
+select throws_ok(
+  $$ select public.recompute_profile_stats('00000000-0000-4000-8000-000000000001') $$,
+  '42501',
+  null,
+  'anon cannot trigger a stats recompute'
+);
+
+set local role authenticated;
+set local request.jwt.claims =
+  '{"sub":"00000000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(
+  (
+    select count(*)
+    from public.imported_runs
+    where profile_id = '00000000-0000-4000-8000-000000000001'
+  ),
+  0::bigint,
+  'a signed-in user cannot read another user''s imported runs'
+);
+select throws_ok(
+  $$ select public.recompute_profile_edge_speeds('00000000-0000-4000-8000-000000000001') $$,
+  '42501',
+  null,
+  'a signed-in user cannot recompute another user''s edge speeds'
+);
+
+set local request.jwt.claims =
+  '{"sub":"00000000-0000-4000-8000-000000000001","role":"authenticated"}';
+select lives_ok(
+  $$ select public.recompute_profile_stats('00000000-0000-4000-8000-000000000001') $$,
+  'the owner can still recompute their own stats'
+);
+reset role;
 
 select * from finish();
 

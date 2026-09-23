@@ -4,7 +4,7 @@
 //
 //  Conditions (current + historical) pipeline extracted from
 //  ContentCoordinator. Two cancellable tasks: `conditionsTask` for the
-//  live "now" + 96h hourly merge, `historicalTask` for archive backfill
+//  live "now" + 120h hourly merge, `historicalTask` for archive backfill
 //  on long scrubs. Both write into `resortConditions`, which the rest
 //  of the app reads as the source of truth for weather state.
 //
@@ -21,9 +21,9 @@ extension ContentCoordinator {
     /// immediately (it's the fast path — ~200ms, drives the live weather
     /// overlay). The hourly backfill is deferred 500ms — on rapid
     /// resort-hop, the new `loadConditions` call cancels the task, so the
-    /// previous hourly never hits the network. The hourly payload itself
-    /// is already the minimum Open-Meteo can serve (3 past + 1 forecast
-    /// days = 96 hours).
+    /// previous hourly never hits the network. The hourly payload is
+    /// 3 past + 2 forecast days (120 hours); forecast days end at
+    /// resort-local midnight, so one day could not cover an evening scrub.
     func loadConditions(for entry: ResortEntry) {
         conditionsTask?.cancel()
         conditionsTask = Task { [weak self] in

@@ -106,16 +106,20 @@ extension MeetupSessionController {
                 invalidateActiveSessionForDatasetDrift(session, coordinator: coord)
                 return
             }
-            guard let status = coord.resortManager.currentStatus,
-                  status.resortID == dataset.resortID,
-                  status.datasetVersion == dataset.version,
-                  status.isRoutable(at: attemptTime) else {
-                let message = coord.resortManager.currentStatus?.operatingMode == .offSeason
-                    ? "MOUNTAIN OFF SEASON — MEET ENDED"
-                    : "LIVE MOUNTAIN STATUS EXPIRED — START A NEW MEET"
-                invalidateActiveSession(session, coordinator: coord, message: message,
-                                        reason: "operational status unavailable during reroute retry")
-                return
+            // A pre-release test meet on a preview map has no status to
+            // require; `datasetIdentity.matches` already pinned the exact map.
+            if !session.datasetIdentity.isPreview {
+                guard let status = coord.resortManager.currentStatus,
+                      status.resortID == dataset.resortID,
+                      status.datasetVersion == dataset.version,
+                      status.isRoutable(at: attemptTime) else {
+                    let message = coord.resortManager.currentStatus?.operatingMode == .offSeason
+                        ? "MOUNTAIN OFF SEASON — MEET ENDED"
+                        : "LIVE MOUNTAIN STATUS EXPIRED — START A NEW MEET"
+                    invalidateActiveSession(session, coordinator: coord, message: message,
+                                            reason: "operational status unavailable during reroute retry")
+                    return
+                }
             }
             // Rebuild after every suspension: queues, closures, capability,
             // forecast and last-chair timing can all change during the wait.

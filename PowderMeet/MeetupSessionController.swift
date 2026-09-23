@@ -180,7 +180,13 @@ final class MeetupSessionController {
                 ?? .derived(from: graph)
         )
         solver.datasetVersion = coordinator?.resortManager.currentDataset?.version.identifier
-        solver.solveTime = solveTime
+        // A frozen preview map has no verified lift hours or status, so every
+        // pre-release exercise on it (Go To preview, route rehearsal, test
+        // meetup) is a timeless graph solve. Otherwise an evening tester was
+        // told every lift is closed. Canonical data keeps arrival-time hours.
+        solver.solveTime = coordinator?.resortManager.currentDataset?.source == .canonicalServer
+            ? solveTime
+            : nil
         if let hours = CuratedResortLoader.load(resortId: graph.resortID)?.operatingHours {
             solver.liftOpenHour = hours.openHour
             solver.liftCloseHour = hours.closeHour

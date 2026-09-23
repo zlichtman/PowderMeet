@@ -122,7 +122,10 @@ final class ActivityImportSession {
                 )
                 guard let self else { return }
                 if Task.isCancelled { self.phase = .cancelled; return }
-                self.phase = .completed(Self.summariseBanner(for: batch))
+                self.phase = .completed(Self.summariseBanner(
+                    for: batch,
+                    emptyMessage: "NO SKI WORKOUTS WITH GPS ROUTES IN APPLE HEALTH"
+                ))
                 Self.postNotifyForBatch(batch)
             } catch {
                 guard let self else { return }
@@ -160,7 +163,10 @@ final class ActivityImportSession {
     // of truth so onboarding + profile + the global banner all phrase
     // outcomes identically.
 
-    private static func summariseBanner(for batch: BatchImportResult) -> ActivityImportBanner {
+    private static func summariseBanner(
+        for batch: BatchImportResult,
+        emptyMessage: String = "NO SKI RUNS DETECTED IN FILE"
+    ) -> ActivityImportBanner {
         var totalRuns = 0
         var dupes = 0
         var fails: [String] = []
@@ -201,14 +207,14 @@ final class ActivityImportSession {
                 isError: true
             )
         }
-        return ActivityImportBanner(message: "NO SKI RUNS DETECTED IN FILE", isError: true)
+        return ActivityImportBanner(message: emptyMessage, isError: true)
     }
 
-    /// Counts → Notify event. Fires for every completed batch so the
-    /// iOS system notification is the single source of feedback (no
-    /// inline banner exists anymore). The body adapts to count==0 +
-    /// fails > 0 ("3 files failed to import") so error batches still
-    /// surface clearly.
+    /// Counts → Notify event. Fires for every completed batch so a
+    /// user who left the Profile tab still hears about the result; the
+    /// Activity tab also shows the same outcome inline. The body adapts
+    /// to count==0 + fails > 0 ("3 files failed to import") so error
+    /// batches still surface clearly.
     private static func postNotifyForBatch(_ batch: BatchImportResult) {
         var runs = 0, dupes = 0, fails = 0
         for outcome in batch.perFile {

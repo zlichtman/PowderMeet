@@ -78,6 +78,9 @@ struct ActivityTabContent: View {
             VStack(spacing: 8) {
                 ConnectAppleHealthRow()
                 ImportActivityFileRow(onTap: { showActivityImporter = true })
+                if let banner = importResultBanner {
+                    importResultRow(banner)
+                }
             }
 
             HUDSectionHeader(label: "DATA")
@@ -321,6 +324,45 @@ struct ActivityTabContent: View {
                 importError = "Couldn't update live recording: \(error.localizedDescription)"
             }
         }
+    }
+
+    /// Inline outcome of the last file or Apple Health import. The iOS
+    /// notification was the only feedback before: invisible when
+    /// notifications are denied, and never posted for Apple Health errors.
+    private func importResultRow(_ banner: ActivityImportBanner) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: banner.isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(banner.isError ? HUDTheme.accentAmber : HUDTheme.accentGreen)
+                .accessibilityHidden(true)
+            Text(banner.message)
+                .hudType(.caption)
+                .foregroundColor(HUDTheme.primaryText)
+                .tracking(0.5)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            Button {
+                importSession.acknowledgeCompletion()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(HUDTheme.secondaryText)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss import result")
+        }
+        .padding(.leading, 12)
+        .background(HUDTheme.cardBackground.opacity(0.6))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(
+                    banner.isError ? HUDTheme.accentAmber.opacity(0.45) : HUDTheme.cardBorder,
+                    lineWidth: 0.5
+                )
+        )
     }
 
     private var dataManagementSection: some View {

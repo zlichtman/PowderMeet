@@ -72,7 +72,7 @@ struct ResortConditions: Sendable {
     var utcOffsetSeconds: Int? = nil
     let fetchedAt: Date
 
-    /// Four-day hourly window starting from ~3 days back; used by the timeline
+    /// Five-day hourly window starting from ~3 days back; used by the timeline
     /// scrubber to show projected/past conditions at the selected instant.
     /// Empty if the fetch didn't include hourly data.
     var hourlyForecast: [HourlyCondition] = []
@@ -106,13 +106,33 @@ struct ResortConditions: Sendable {
     /// Display only an hourly reading that actually covers the selected time.
     /// `atTime` intentionally returns the nearest sample for model fallback,
     /// but showing a many-hours-old sample as current weather is misleading.
-    func displaySample(at date: Date) -> HourlyCondition? {
-        guard let sample = atTime(date),
-              abs(sample.time.timeIntervalSince(date)) <= 90 * 60 else {
+    /// At the live instant the fetched current block is itself a reading, so
+    /// it stands in until the hourly merge lands (or when that fetch fails).
+    func displaySample(at date: Date, now: Date = Date()) -> HourlyCondition? {
+        if let sample = atTime(date),
+           abs(sample.time.timeIntervalSince(date)) <= 90 * 60 {
+            return sample
+        }
+        guard abs(date.timeIntervalSince(now)) <= Self.liveDisplayWindow,
+              now.timeIntervalSince(fetchedAt) >= -Self.allowableFutureClockSkew,
+              now.timeIntervalSince(fetchedAt) <= Self.currentDisplayFreshness else {
             return nil
         }
-        return sample
+        return HourlyCondition(
+            time: fetchedAt,
+            temperatureC: temperatureC,
+            snowfallCm: 0,
+            cloudCoverPercent: cloudCoverPercent,
+            weatherCode: weatherCode,
+            windSpeedKph: windSpeedKph,
+            visibilityKm: visibilityKm
+        )
     }
+
+    /// Matches the timeline's LIVE label (±15 minutes of now).
+    nonisolated static let liveDisplayWindow: TimeInterval = 15 * 60
+    /// A current block older than this is not shown as live weather.
+    nonisolated static let currentDisplayFreshness: TimeInterval = 60 * 60
 
     /// Binary-search the sample nearest to `date` in a time-sorted array.
     private static func nearest(in samples: [HourlyCondition], to date: Date) -> HourlyCondition? {

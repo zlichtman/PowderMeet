@@ -326,6 +326,24 @@ extension SupabaseManager {
         return inserted.count
     }
 
+    /// Rebuilds the caller's lifetime `profile_stats` row from
+    /// `imported_runs` and reloads it. Used after live-recorded runs land,
+    /// which otherwise never reached the Profile totals.
+    @discardableResult
+    func recomputeProfileStats() async -> Bool {
+        guard let userId = currentSession?.user.id else { return false }
+        do {
+            try await client
+                .rpc("recompute_profile_stats", params: ["uid": AnyJSON.string(userId.uuidString)])
+                .execute()
+            await loadProfileStats()
+            return true
+        } catch {
+            AppLog.importer.error("recompute_profile_stats failed: \(error.localizedDescription)")
+            return false
+        }
+    }
+
     /// Deletes one or more `imported_runs` rows by id, then recomputes
     /// `profile_stats` so the lifetime card reflects the deletion.
     /// RLS limits the DELETE to the caller's own rows.

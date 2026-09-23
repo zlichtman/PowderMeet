@@ -18,9 +18,13 @@
 //  physical dedup waits for paired real-world fixtures.
 //
 //  After every successful persist, the recorder fires a debounced
-//  (≥30s) call to `SupabaseManager.recomputeProfileEdgeSpeeds()` so
-//  the per-edge skill memory loop picks up the new observation on
-//  the next solve.
+//  (≥30s) recompute of `profile_edge_speeds` and `profile_stats` so
+//  the per-edge skill memory picks up the new observation on the next
+//  solve and the Profile totals include the run. A save that fails
+//  offline is queued in `PendingLiveRunStore` and retried.
+//
+//  Fixes arrive through `LocationManager.onFix`, so recording continues
+//  with the screen locked while a ski session holds background location.
 //
 //  No graph loaded for the current resort? Persist the row anyway
 //  with `edge_id == nil`. Same contract as `ActivityImporter`: "X
@@ -130,6 +134,9 @@ final class LiveRunRecorder {
     /// minute would calibrate only the first one.
     @ObservationIgnored private var pendingRecomputeAfterFlight: Bool = false
 
+    /// Guards against two overlapping drains of the offline queue.
+    @ObservationIgnored private var isDrainingPendingRuns = false
+
     // MARK: - Tunables
 
     /// Min points to consider a flushed run. Same minimum
@@ -185,6 +192,7 @@ final class LiveRunRecorder {
         phase = .idle
         wasInVicinity = false
         lastIngestedFixGeneration = locationManager.fixGeneration
+        retryPendingRuns()
     }
 
     /// Stop observing fixes. If a run was in progress, flush it before
@@ -194,13 +202,20 @@ final class LiveRunRecorder {
     /// 10 seconds or 10 hours.)
     func stop() {
         guard isRecording else { return }
+        finishRunInProgress()
+        isRecording = false
+    }
+
+    /// Flush a run in progress and reset the classifier, without ending
+    /// the recording session (used when the skier leaves the ski area).
+    private func finishRunInProgress() {
         if let startIdx = runStartIndex, startIdx < buffer.count {
             let runPoints = Array(buffer[startIdx..<buffer.count])
             if runPoints.count >= minRunPoints {
                 Task { await self.flushRun(points: runPoints) }
             }
         }
-        isRecording = false
+        buffer.removeAll(keepingCapacity: true)
         runStartIndex = nil
         lastClassifiedAsLift = nil
         phase = .idle
@@ -249,15 +264,20 @@ final class LiveRunRecorder {
     /// `ContentCoordinator.handleLocationChange` path is the natural
     /// fit — every accepted fix bumps `fixGeneration`).
     func ingestCurrentFix() {
-        guard isRecording else { return }
         // Honour the user-level kill switch — checked on every fix,
         // not just at start, so a mid-session toggle takes effect
-        // immediately.
+        // immediately in either direction.
         guard supabase.currentUserProfile?.liveRecordingEnabled ?? true else {
             // User disabled recording mid-session — flush in-progress
             // run + halt. They can flip it back on later.
             stop()
             return
+        }
+        // Switching the toggle back on used to leave the recorder stopped
+        // until the app next came to the foreground.
+        if !isRecording {
+            guard supabase.currentSession != nil else { return }
+            start()
         }
 
         let gen = locationManager.fixGeneration
@@ -272,10 +292,10 @@ final class LiveRunRecorder {
 
         // Resort-vicinity gate. If the device isn't at a ski area, drop
         // the fix; if a run was somehow in progress (drove away mid-run)
-        // flush the partial and halt accumulation. No resort nearby =
-        // nothing to record.
+        // flush the partial. Recording stays armed so a return to the
+        // mountain is logged without reopening the app.
         if !isWithinResortVicinity(coord) {
-            if runStartIndex != nil { stop() }
+            if runStartIndex != nil { finishRunInProgress() }
             return
         }
 
@@ -560,17 +580,63 @@ final class LiveRunRecorder {
             conditions_fp: cf
         )
 
+        // Suppress unused warnings for trail-matcher-derived flags
+        // we don't currently roll up here. They flow downstream
+        // via the recompute aggregator from the persisted row.
+        _ = (hasMoguls, isGroomed, isGladed, widthMeters, fallLineExposure)
+        await persist(row, userID: userId)
+    }
+
+    // MARK: - Persist (with offline retry)
+
+    /// Upserts one run. A failed save (no signal on a chairlift is routine)
+    /// queues the exact row on disk for this user instead of dropping it;
+    /// the queue drains on the next successful save or recorder start.
+    /// Rows upsert on their dedup identity, so a retry never double-counts.
+    private func persist(_ row: ImportedRunWriteRow, userID: UUID) async {
+        let grace = BackgroundTaskAssertion(name: "PowderMeet.saveLiveRun")
+        defer { grace.end() }
         do {
             let inserted = try await supabase.upsertImportedRunRows([row])
-            guard !inserted.isEmpty else { return }
-            runsRecordedThisSession += 1
-            // Suppress unused warnings for trail-matcher-derived flags
-            // we don't currently roll up here. They flow downstream
-            // via the recompute aggregator from the persisted row.
-            _ = (hasMoguls, isGroomed, isGladed, widthMeters, fallLineExposure)
-            scheduleEdgeSpeedRecompute()
+            if !inserted.isEmpty {
+                runsRecordedThisSession += 1
+                scheduleRecompute()
+            }
+            await drainPendingRuns(userID: userID)
         } catch {
-            AppLog.importer.error("persist failed: \(error.localizedDescription)")
+            AppLog.importer.error("persist failed, queued for retry: \(error.localizedDescription)")
+            PendingLiveRunStore.append(row, for: userID)
+        }
+    }
+
+    private func retryPendingRuns() {
+        guard let userID = supabase.currentSession?.user.id,
+              PendingLiveRunStore.hasRows(for: userID) else { return }
+        Task { await self.drainPendingRuns(userID: userID) }
+    }
+
+    private func drainPendingRuns(userID: UUID) async {
+        guard !isDrainingPendingRuns,
+              supabase.currentSession?.user.id == userID else { return }
+        let pending = PendingLiveRunStore.load(for: userID)
+        guard !pending.isEmpty else { return }
+        isDrainingPendingRuns = true
+        defer { isDrainingPendingRuns = false }
+        let grace = BackgroundTaskAssertion(name: "PowderMeet.retryLiveRuns")
+        defer { grace.end() }
+        do {
+            let inserted = try await supabase.upsertImportedRunRows(pending)
+            // Every sent row is now stored or was already a duplicate.
+            PendingLiveRunStore.remove(
+                dedupHashes: Set(pending.map(\.dedup_hash)),
+                for: userID
+            )
+            if !inserted.isEmpty {
+                runsRecordedThisSession += inserted.count
+                scheduleRecompute()
+            }
+        } catch {
+            AppLog.importer.error("queued live runs still unsent: \(error.localizedDescription)")
         }
     }
 
@@ -597,13 +663,13 @@ final class LiveRunRecorder {
 
     // MARK: - Debounced recompute
 
-    /// Schedule a profile_edge_speeds recompute — rate-limited to at
-    /// most one call per `recomputeDebounceSeconds`. Calls that land
-    /// during the debounce window OR while a recompute is in flight
-    /// flag a follow-up recompute so a burst of runs all eventually
-    /// calibrate, even when only the first one wins the rate-limit
-    /// race.
-    private func scheduleEdgeSpeedRecompute() {
+    /// Schedule a profile_edge_speeds + profile_stats recompute —
+    /// rate-limited to at most one call per `recomputeDebounceSeconds`.
+    /// Calls that land during the debounce window OR while a recompute
+    /// is in flight flag a follow-up recompute so a burst of runs all
+    /// eventually calibrate and count, even when only the first one
+    /// wins the rate-limit race.
+    private func scheduleRecompute() {
         let now = Date()
         let withinDebounce = lastRecomputeAt.map { now.timeIntervalSince($0) < recomputeDebounceSeconds } ?? false
         if withinDebounce || recomputeTask != nil {
@@ -619,7 +685,11 @@ final class LiveRunRecorder {
             // solver picking the same edges as before their recent
             // runs. The amber `.calibrationStale` banner is quiet but
             // visible enough to catch.
+            // Live runs used to reach the pace model but never the
+            // Profile totals (runs / vertical / top speed).
+            async let statsRecomputed = supabase.recomputeProfileStats()
             let ok = await supabase.recomputeProfileEdgeSpeeds()
+            _ = await statsRecomputed
             await MainActor.run { [weak self] in
                 guard let self else { return }
                 self.recomputeTask = nil
@@ -634,7 +704,7 @@ final class LiveRunRecorder {
                     self.pendingRecomputeAfterFlight = false
                     Task { @MainActor [weak self] in
                         try? await Task.sleep(for: .seconds(self?.recomputeDebounceSeconds ?? 30))
-                        self?.scheduleEdgeSpeedRecompute()
+                        self?.scheduleRecompute()
                     }
                 }
             }

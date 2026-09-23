@@ -77,6 +77,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     var onFirstFix: (() -> Void)?
     private var firstFixDelivered = false
 
+    /// Fires on every accepted fix, straight from the delegate callback.
+    /// SwiftUI `onChange` does not run while the scene is backgrounded, so
+    /// fix consumers that must keep working with the screen locked (the live
+    /// run recorder, presence broadcasts, route progress) hang off this.
+    @ObservationIgnored var onFix: (() -> Void)?
+
     /// True while a "ski session" is active — the user is at a resort and
     /// sharing live presence. Background location is enabled only during a
     /// session so we don't drain battery when the app is closed at home.
@@ -265,6 +271,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             firstFixDelivered = true
             onFirstFix?()
         }
+        onFix?()
     }
 
     private func configureBackgroundUpdates() {

@@ -93,6 +93,34 @@ struct ContentView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
 
+            // A test meetup, rehearsal, or meet preview drawn from a preview
+            // map stays labeled for as long as it is on screen — the old
+            // 4-second banner was the only cue on the map.
+            if let nonLiveRouteLabel {
+                HStack(spacing: 8) {
+                    Image(systemName: "testtube.2")
+                        .font(.system(size: 10, weight: .bold))
+                    Text(nonLiveRouteLabel)
+                        .hudType(.label)
+                        .tracking(0.7)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Spacer(minLength: 0)
+                }
+                .foregroundColor(HUDTheme.accentAmber)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 7)
+                .background(HUDTheme.accentAmber.opacity(0.10))
+                .overlay(
+                    Rectangle()
+                        .fill(HUDTheme.accentAmber.opacity(0.30))
+                        .frame(height: 0.5),
+                    alignment: .bottom
+                )
+                .accessibilityLabel("\(nonLiveRouteLabel.lowercased()). Not for navigation.")
+            }
+
             if resortManager.currentDataset?.source == .canonicalServer,
                resortManager.currentStatus?.operatingMode == .offSeason {
                 HStack(spacing: 8) {
@@ -495,13 +523,6 @@ struct ContentView: View {
         .onChange(of: coordinator.testMyNodeId) { _, newId in
             coordinator.handleTestMyNodeIdChange(newId: newId)
         }
-        .onChange(of: coordinator.locationManager.fixGeneration) { _, _ in
-            // `fixGeneration` increments on every accepted fix — this
-            // replaces the old `currentLocation?.latitude` trigger, which
-            // missed pure-longitude moves and quantised duplicates that
-            // produced the same Double bit-pattern twice.
-            coordinator.handleLocationChange()
-        }
         .task {
             guard startsServices else { return }
             coordinator.bind(resortManager: resortManager)
@@ -516,9 +537,6 @@ struct ContentView: View {
 
     // MARK: - Map Screen (factored out to keep `body` type-checkable)
 
-    /// Hosting the 20+-parameter `ResortMapScreen` inline in `body` pushes
-    /// the SwiftUI type-checker past its expression-inference budget —
-    /// unrelated expressions in the same closure start failing with "unable
     /// Friends-on-resort distance items, sorted closest → farthest.
     /// Filters to friends in the same-resort presence set so we don't
     /// render distance for someone half a country away. Empty when
@@ -551,6 +569,24 @@ struct ContentView: View {
         return "\(session.id.uuidString):\(Int((location.latitude * 1_000_000).rounded())):\(Int((location.longitude * 1_000_000).rounded())):\(Int(location.capturedAt.timeIntervalSince1970 * 1_000))"
     }
 
+    /// Persistent banner copy while the map shows a route that is not live:
+    /// a pre-release test meetup, or a meet preview/rehearsal on a preview
+    /// map. Destination previews carry their own labeled summary bar.
+    private var nonLiveRouteLabel: String? {
+        if let session = coordinator.activeMeetSession {
+            return session.datasetIdentity.isPreview
+                ? "TEST MEETUP · PREVIEW MAP — NOT FOR NAVIGATION"
+                : nil
+        }
+        guard let result = coordinator.meetingResult,
+              result.presentationPurpose == .meetup,
+              !result.solveAttempt.isNavigable else { return nil }
+        return "PREVIEW ROUTE · MOUNTAIN DATA NOT VERIFIED"
+    }
+
+    /// Hosting the 20+-parameter `ResortMapScreen` inline in `body` pushes
+    /// the SwiftUI type-checker past its expression-inference budget —
+    /// unrelated expressions in the same closure start failing with "unable
     /// to type-check this expression in reasonable time". Extracting the
     /// view construction isolates the type-checker's work on this one spot.
     // When `currentEntry` is nil (cold launch, before the user picks a

@@ -63,7 +63,7 @@ struct TimelineView: View {
     /// Best-matching hourly sample at the scrubbed instant, or nil if
     /// `conditions` is unavailable / has no hourly coverage for that time.
     private var hourlyAtSelected: HourlyCondition? {
-        conditions?.displaySample(at: selectedDate)
+        conditions?.displaySample(at: selectedDate, now: referenceNow)
     }
 
     var body: some View {

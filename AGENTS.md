@@ -14,7 +14,9 @@ together, and the operator runbooks. Setup and day-to-day usage are in
 - **Map:** MapboxMaps SDK (`satellite-streets-v12` at runtime and in the offline
   cache, with terrain exaggeration and zoom-aware canonical graph overlays).
 - **Backend:** Supabase — auth, Postgres, Realtime (Broadcast + postgres_changes).
-- **On-device cache:** SwiftData (`FriendLocationStore`, `LocationHistoryStore`).
+- **On-device cache:** SwiftData (`FriendLocationStore`); in-memory
+  `LocationHistoryStore` breadcrumbs; a per-user `PendingLiveRunStore` file
+  holding live runs whose save failed offline.
 - **Build:** Open `PowderMeet.xcodeproj` in Xcode. Target family is iPhone
   only (`TARGETED_DEVICE_FAMILY = "1"`). PowderMeet is a one-handed-on-a-
   chairlift, in-a-pocket-with-gloves app — iPad layout isn't a use case
@@ -127,7 +129,10 @@ _local/                     gitignored: media originals, APNs keys, private GPS 
 - **Fresh status is part of “live”:** a canonical dataset may produce a navigable `.live` meet only while its dataset-matched `MountainStatus` is usable. Missing, future-dated, or expired status returns `.operationalStatusUnavailable`; it must not silently route on base-open topology.
 - **Fresh weather may optimize, never renegotiate, an active meet:** assign the fast current snapshot immediately for UI, but trigger active-route evaluation only after the hourly merge attempt completes so the current-only snapshot cannot consume the 30-second throttle just before forecast data arrives. Each phone may optimize its own remaining path to the already-agreed node through `RouteSwitchPolicy`; weather must never move that destination, weaken status or capability gates, or bypass identical-path, meaningful-gain, near-arrival, and anti-flap checks.
 - **Route rehearsal is local and visibly non-live:** the pre-release location picker may run a strict two-skier solve between a tester-selected local start and a second selected node using the signed-in profile plus the fixed advanced demo partner. Every successful rehearsal is stamped `.nonCanonicalDataset`, remains preview-only, and may only populate the map result.
-- **Solo landmark previews reuse strict routing:** `LandmarkRoutePolicy` allows Map → Go To only while no active meetup owns the map, the immutable dataset is canonical, current operational status is routable, and the exact target exists in both the dataset rendezvous catalog and graph. Resolve the same GPS-aware fractional `RoutingOrigin` and use configured `pathTo`; never route to an arbitrary tapped junction or introduce a relaxed fallback.
+- **Preview maps are timeless:** any solve on a non-canonical (frozen preview) dataset runs with `solveTime = nil` — `MeetupSessionController.configureSolver` and `MeetSolver` both enforce it — because a preview map has no verified lift hours or status. Canonical data keeps arrival-time lift hours.
+- **Solo landmark previews reuse strict routing:** `LandmarkRoutePolicy` allows Map → Go To only while no active meetup owns the map, the immutable dataset is canonical, current operational status is routable, and the exact target exists in both the dataset rendezvous catalog and graph. Resolve the same GPS-aware fractional `RoutingOrigin` and use configured `pathTo`; never route to an arbitrary tapped junction or introduce a relaxed fallback. Pre-release builds may additionally preview a route on a non-canonical map (`canUseUnverifiedPreview`), labeled UNVERIFIED, stamped `.nonCanonicalDataset`, never navigation.
+- **Pre-release test meetups:** `PreviewMeetupPolicy` lets a TestFlight/Debug build send, accept, and activate a two-phone meetup on a mountain's frozen preview map. The request carries the preview map's own identity (`mlegacy-…`), and the receiver must rebuild that exact identity. The session is stamped `.nonCanonicalDataset`, is labeled TEST MEETUP on both phones for its whole life, never reads or requires operational status, and is validated only against that exact preview topology. App Store builds reject it with an explicit message. A canonical identity never matches a legacy dataset and vice versa.
+- **Live recording keeps going while locked:** fixes reach `ContentCoordinator.handleLocationChange` through `LocationManager.onFix` straight from the delegate (SwiftUI `onChange` does not run in the background). The recorder is only stopped on background when no ski session holds background location. A failed save queues the exact row per user in `PendingLiveRunStore` for idempotent retry, and a successful save recomputes `profile_stats` as well as edge speeds.
 - **Accepted-meet recovery is bounded and exact:** cold launch may query recent accepted rows involving the signed-in user and restore only the newest row whose `created_at` is within four hours and whose full `dataset_version` is present. Select its known catalog resort before graph/social hydration, then run the normal strict sender/receiver activation path.
 - **Durable end intent wins recovery:** every active-session teardown initiated locally or by route invalidation must call `endRequestEventually`, which saves a user-scoped termination tombstone before clearing UI state. Retry queued expirations at bootstrap and on reachability restoration; remove a tombstone only after the server update succeeds.
 - **Live route progress follows geometry:** `RouteProgressTracker` projects GPS onto the remaining route polylines, maintains monotonic within-edge progress, and measures persistent deviation against that geometry. Node identity alone is never enough to claim the skier is on-route.
@@ -147,6 +152,7 @@ _local/                     gitignored: media originals, APNs keys, private GPS 
 - **Camera framing:** resort intro lands on `entry.preferredZoom ?? entry.defaultZoom`, `entry.preferredBearing ?? 0`, `entry.preferredPitch ?? 62`. `defaultZoom` is computed from the bounding-box span in `ResortCatalog.swift`; per-resort overrides exist on the catalog entry for resorts whose default isn't framed well.
 - **Stale-teardown guard:** `ContentCoordinator.teardown()` (called from `ContentView.onDisappear`) reads `SupabaseManager.shared.sessionGeneration` before tearing down realtime services — if a new session has already started, skip the teardown so we don't reset the new session's freshly-built channels.
 - **Sender-stamped timestamps:** `FriendLocation.capturedAt` is set by the sender. Receiver drops payloads with `capturedAt <= stored.capturedAt`.
+- **Activity data is owner-scoped:** `imported_runs` rows are readable only by their owner, and `recompute_profile_stats` / `recompute_profile_edge_speeds` (SECURITY DEFINER) refuse a caller recomputing another user's data (`assert_activity_owner`). Friends see aggregates through `profile_stats` and `profile_edge_speeds_friend_read`, never raw runs.
 - **No RLS clauses that read the caller's own row in the same table.:** Production-bitten: an audit pass added a resort-scoped clause to `live_presence_friend_read` (`AND live_presence.resort_id = (caller's own live_presence.resort_id)`). It silently rejected friend rows whenever the viewer's own row was missing, stale, or not-yet-matching — cold launch before first GPS fix, between resorts, friend-just- changed-resorts, subscribe-before-first-broadcast — and `postgres_changes` events flow through RLS, so realtime stopped arriving for any pair not perfectly synchronized.
 
 ## Realtime presence lifecycle
@@ -388,6 +394,10 @@ psql "$SUPABASE_DB_URL" -c "select id, lat_min, lon_min, lat_max, lon_max from r
 ```
 **2. Establish the canonical identity counts.** Review the resort's current
 official map or identity list and decide which unique, named, routable trail and
+lift identities the manifest will claim. Once a manifest has any trail row,
+every run edge it does not claim is built closed, so unnamed ways that routing
+needs must be claimed by a named row; lift exits with no mapped downhill link
+stay dead ends (the builder never infers connectors).
 **3. Run ingest:**
 ```sh
 CANONICAL_TRAILS=...  # unique identities in the reviewed map/list
@@ -453,6 +463,12 @@ curl -X POST $SUPABASE_URL/functions/v1/build-resort-graph \
   -d "{\"resort_id\":\"vail\",\"manifest_version\":${MANIFEST_VERSION},\"graph_version\":\"v15\"}"
 ```
 Record the returned `snapshot_date` and lowercase `sha256`. A successful build
+is staged only; clients see nothing until step 8. Check the `status` field, not
+the HTTP code (a missing snapshot returns 200 with `snapshot_pending`). Set
+rendezvous points and geometry overrides before the first build: an existing
+blob for the same tuple is returned as-is. The function requires a
+service-role token and fails closed if the manifest rows cannot be read or do
+not match the expected counts.
 **8. Publish the exact successful build:**
 ```sh
 export GRAPH_SNAPSHOT_DATE=<snapshot_date returned by build>
@@ -464,6 +480,8 @@ python -m canonical_ingest publish vail \
   --content-sha256 "$GRAPH_CONTENT_SHA256"
 ```
 The RPC revalidates canonical counts/names and the complete graph-blob identity,
+then atomically moves the resort's active publication pointer; publishing an
+older identity rolls back to it.
 **9. Smoke test the client path:**
 ```sh
 # Cache miss → fetch
@@ -481,6 +499,7 @@ curl -X POST $SUPABASE_URL/functions/v1/get-resort-graph \
 Expect `{"status":"cache_valid",...}` on the second call.
 **Re-applying after reality changes** (resort adds a new lift / fixes a name):
 re-run steps 3–9. A changed content hash stages v(N+1), but all clients remain
+on the active publication until step 8 publishes the new identity.
 
 ### Topsheet artwork import
 
@@ -535,9 +554,12 @@ supabase db push --include-all --dry-run
 ## Validation status
 
 Distribution remains held until the mountains work. Simulator validation now
-passes (621 tests, six opt-in skips), and the pending database migrations and
-graph services are deployed. See `RELEASE_READINESS.md` for unresolved production
-routing, provider coverage, and source-data gaps.
+passes (642 tests, nine opt-in skips). The September 23 owner-scoped activity
+migration and `build-resort-graph` hardening are committed but not yet applied
+or deployed. See `RELEASE_READINESS.md` for unresolved production routing,
+provider coverage, and source-data gaps. The opt-in `CapturedGoToPreviewTests`
+audit (`POWDERMEET_ROUTE_AUDIT_DIRECTORY`, optional `POWDERMEET_GO_TO_RESORTS`)
+measures how many landmarks Go To can reach on real captured graphs.
 
 - **Whistler Blackcomb** is the only resort with a curated overlay, a rebuilt
   real-data graph, a public-source audit, and golden routing fixtures. The
