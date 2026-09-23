@@ -32,32 +32,23 @@ extension MountainMapView.Coordinator {
         demSource.maxzoom = 14
         try? map.addSource(demSource)
 
-        // More aggressive exaggeration makes the mountain profile dramatic
+        // Keep ridges legible without making the near slope swallow the runs.
         var terrain = Terrain(sourceId: "mapbox-dem")
-        terrain.exaggeration = .constant(1.7)
+        terrain.exaggeration = .constant(1.15)
         try? map.setTerrain(terrain)
 
-        // Mapbox v11 3D lighting — the missing piece that makes the
-        // satellite-draped terrain read as a real lit mountain instead
-        // of a flat photo. Sun direction from the same solar math the
-        // sky uses, seeded from the (flattering daylight) baseline time.
+        // Light the terrain from the same solar position as the sky. The
+        // timeline refreshes this light as time and weather change.
         let solar = SunExposureCalculator.solarPosition(
             date: inputs.selectedTime,
             latitude: inputs.resortLatitude ?? 39.6,
             longitude: inputs.resortLongitude)
-        let polar = max(3.0, 90.0 - solar.altitude)   // 0 = straight up
-        var sun = DirectionalLight(id: "sun")
-        sun.direction = .constant([solar.azimuth, polar])
-        sun.color = .constant(StyleColor(UIColor(red: 1.0, green: 0.96,
-                                                 blue: 0.88, alpha: 1)))
-        sun.intensity = .constant(solar.altitude > 0 ? 0.85 : 0.35)
-        sun.castShadows = .constant(true)
-        sun.shadowIntensity = .constant(0.7)
-        var amb = AmbientLight(id: "ambient")
-        amb.color = .constant(StyleColor(UIColor(red: 0.62, green: 0.72,
-                                                 blue: 0.88, alpha: 1)))
-        amb.intensity = .constant(0.6)
-        try? map.setLights(ambient: amb, directional: sun)
+        applyTerrainLighting(
+            map,
+            solarAltitude: solar.altitude,
+            solarAzimuth: solar.azimuth,
+            cloudCover: inputs.cloudCoverPercent
+        )
 
         var hillshadeSource = RasterDemSource(id: "hillshade-dem")
         hillshadeSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
@@ -68,11 +59,11 @@ extension MountainMapView.Coordinator {
         // This gives the mountain depth and a snowy feel.
 
         var hillshade = HillshadeLayer(id: "hillshade-layer", source: "hillshade-dem")
-        hillshade.hillshadeExaggeration = .constant(0.55)
+        hillshade.hillshadeExaggeration = .constant(0.32)
         // Cool blue-tinted shadows evoke snow/ice in the shade
-        hillshade.hillshadeShadowColor = .constant(StyleColor(UIColor(red: 0.04, green: 0.06, blue: 0.14, alpha: 0.82)))
+        hillshade.hillshadeShadowColor = .constant(StyleColor(UIColor(red: 0.05, green: 0.08, blue: 0.16, alpha: 0.38)))
         // Brighter highlights on sun-facing slopes
-        hillshade.hillshadeHighlightColor = .constant(StyleColor(UIColor(red: 0.75, green: 0.80, blue: 0.90, alpha: 0.14)))
+        hillshade.hillshadeHighlightColor = .constant(StyleColor(UIColor(red: 0.88, green: 0.92, blue: 1.0, alpha: 0.20)))
         hillshade.hillshadeAccentColor = .constant(StyleColor(UIColor(hex: "0E1218")))
         // Illuminate from upper-left for natural sun feel
         hillshade.hillshadeIlluminationDirection = .constant(315)
@@ -80,12 +71,35 @@ extension MountainMapView.Coordinator {
 
         // Second hillshade: subtle warm fill on exposed ridges
         var ridgeLight = HillshadeLayer(id: "hillshade-ridge", source: "hillshade-dem")
-        ridgeLight.hillshadeExaggeration = .constant(0.30)
+        ridgeLight.hillshadeExaggeration = .constant(0.14)
         ridgeLight.hillshadeShadowColor = .constant(StyleColor(.clear))
-        ridgeLight.hillshadeHighlightColor = .constant(StyleColor(UIColor(red: 0.90, green: 0.88, blue: 0.82, alpha: 0.08)))
+        ridgeLight.hillshadeHighlightColor = .constant(StyleColor(UIColor(red: 1.0, green: 0.91, blue: 0.78, alpha: 0.10)))
         ridgeLight.hillshadeAccentColor = .constant(StyleColor(.clear))
         ridgeLight.hillshadeIlluminationDirection = .constant(280)
         try? map.addLayer(ridgeLight)
+    }
+
+    func applyTerrainLighting(
+        _ map: MapboxMap,
+        solarAltitude: Double,
+        solarAzimuth: Double,
+        cloudCover: Int
+    ) {
+        let daylight = max(0.0, min(1.0, (solarAltitude + 4.0) / 34.0))
+        let overcast = max(0.0, min(1.0, Double(cloudCover) / 100.0))
+        let polar = max(3.0, 90.0 - solarAltitude)
+        var sun = DirectionalLight(id: "sun")
+        sun.direction = .constant([solarAzimuth, polar])
+        sun.color = .constant(StyleColor(UIColor(red: 1.0, green: 0.96,
+                                                 blue: 0.88, alpha: 1)))
+        sun.intensity = .constant(0.28 + daylight * (0.90 - overcast * 0.28))
+        sun.castShadows = .constant(true)
+        sun.shadowIntensity = .constant(0.27 + daylight * (0.37 - overcast * 0.17))
+        var amb = AmbientLight(id: "ambient")
+        amb.color = .constant(StyleColor(UIColor(red: 0.76, green: 0.83,
+                                                 blue: 0.94, alpha: 1)))
+        amb.intensity = .constant(0.36 + daylight * 0.32 + overcast * daylight * 0.12)
+        try? map.setLights(ambient: amb, directional: sun)
     }
 
     // MARK: - Sky & Atmosphere
@@ -109,12 +123,13 @@ extension MountainMapView.Coordinator {
         var atmosphere = Atmosphere()
         atmosphere.color = .constant(StyleColor(UIColor(red: 0.06, green: 0.07, blue: 0.12, alpha: 1.0)))
         atmosphere.highColor = .constant(StyleColor(UIColor(red: 0.08, green: 0.10, blue: 0.18, alpha: 1.0)))
-        atmosphere.horizonBlend = .constant(0.08)
+        atmosphere.horizonBlend = .constant(0.04)
         atmosphere.starIntensity = .constant(0.12)
         atmosphere.spaceColor = .constant(StyleColor(UIColor(red: 0.03, green: 0.04, blue: 0.07, alpha: 1.0)))
         // Depth fog range — distant peaks fade, nearby terrain stays sharp.
-        // [start, end] in screen-relative units; tighter than default [2, 12].
-        atmosphere.range = .constant([0.8, 7.0])
+        // [start, end] in screen-relative units; clear days keep distant
+        // ridges visible while the weather update can still tighten haze.
+        atmosphere.range = .constant([2.5, 18.0])
         try? map.setAtmosphere(atmosphere)
     }
 
@@ -123,6 +138,11 @@ extension MountainMapView.Coordinator {
     func configureBaseMapStyle(_ mapView: MapboxMaps.MapView) {
         guard let map = mapView.mapboxMap else { return }
 
+        // Lift the real photo tiles gently so shaded evergreen terrain
+        // remains legible without replacing or painting over the imagery.
+        try? map.setLayerProperty(for: "satellite", property: "raster-brightness-min", value: 0.02)
+        try? map.setLayerProperty(for: "satellite", property: "raster-contrast", value: 0.12)
+        try? map.setLayerProperty(for: "satellite", property: "raster-saturation", value: 0.18)
         try? map.setLayerProperty(for: "background", property: "background-color", value: "#06080B")
         try? map.setLayerProperty(for: "water", property: "fill-color", value: "#080C14")
         try? map.setLayerProperty(for: "land", property: "background-color", value: "#06080B")
@@ -507,7 +527,7 @@ extension MountainMapView.Coordinator {
         liftGlow.lineOpacity = .constant(0.0)
         liftGlow.lineBlur = .constant(3.0)
         liftGlow.lineCap = .constant(LineCap.round)
-        liftGlow.lineElevationReference = .constant(.sea)
+        liftGlow.lineElevationReference = .constant(.ground)
         try? map.addLayer(liftGlow, layerPosition: .above(MountainMapView.LayerID.sunExposure))
 
         // ── Lift lines: warm gold, solid ──
@@ -523,13 +543,14 @@ extension MountainMapView.Coordinator {
                 16; 3.0
             }
         )
-        lifts.lineOpacity = .constant(0.72)
+        lifts.lineOpacity = .constant(0.68)
         lifts.lineCap = .constant(.round)
         lifts.lineEmissiveStrength = .constant(0.6)
-        // Hold true (sea-referenced) elevation so the cable flies
-        // straight over valleys — visibly crossing between peaks
-        // (Peak-to-Peak) instead of draping into the gully.
-        lifts.lineElevationReference = .constant(.sea)
+        // These GeoJSON lines contain only longitude/latitude, with no
+        // per-vertex altitude or line-z-offset. Sea-level reference clipped
+        // most of each lift behind 3D terrain, leaving the yellow fragments
+        // seen in the overview. Ground reference renders a continuous line.
+        lifts.lineElevationReference = .constant(.ground)
         try? map.addLayer(lifts, layerPosition: .above(MountainMapView.LayerID.liftGlow))
 
         var liftShimmer = LineLayer(id: MountainMapView.LayerID.liftShimmer, source: MountainMapView.SourceID.lifts)
@@ -544,7 +565,7 @@ extension MountainMapView.Coordinator {
         )
         liftShimmer.lineOpacity = .constant(0.0)
         liftShimmer.lineCap = .constant(.round)
-        liftShimmer.lineElevationReference = .constant(.sea)
+        liftShimmer.lineElevationReference = .constant(.ground)
         liftShimmer.minZoom = 14
         try? map.addLayer(liftShimmer, layerPosition: .above(MountainMapView.LayerID.lifts))
 

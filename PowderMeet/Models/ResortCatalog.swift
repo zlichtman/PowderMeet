@@ -31,6 +31,7 @@ nonisolated struct ResortEntry: Identifiable, Hashable {
     let preferredBearing: CLLocationDirection?
     let preferredPitch: Double?
     let preferredZoom: Double?
+    let preferredCameraCenter: CLLocationCoordinate2D?
 
     let treeLineMeters: Double?
 
@@ -67,6 +68,7 @@ nonisolated struct ResortEntry: Identifiable, Hashable {
         preferredBearing: CLLocationDirection? = nil,
         preferredPitch: Double? = nil,
         preferredZoom: Double? = nil,
+        preferredCameraCenter: CLLocationCoordinate2D? = nil,
         pinnedSnapshotDate: String? = nil,
         treeLineMeters: Double? = nil
     ) {
@@ -80,6 +82,7 @@ nonisolated struct ResortEntry: Identifiable, Hashable {
         self.preferredBearing = preferredBearing
         self.preferredPitch = preferredPitch
         self.preferredZoom = preferredZoom
+        self.preferredCameraCenter = preferredCameraCenter
         self.pinnedSnapshotDate = pinnedSnapshotDate
         self.treeLineMeters = treeLineMeters
     }
@@ -201,7 +204,7 @@ nonisolated extension ResortEntry {
         ResortEntry(id: "paoli-peaks", name: "Paoli Peaks", bounds: box(38.558391, -86.510196, latSpan: 0.0301, lonSpan: 0.0400), region: "IN", country: "USA", passProducts: [.epic], pinnedSnapshotDate: "2026-09-20"),
 
         // ── Canada ──
-        ResortEntry(id: "whistler", name: "Whistler Blackcomb", bounds: box(50.09, -122.95, latSpan: 0.12, lonSpan: 0.14), region: "BC", country: "Canada", passProducts: [.epic], preferredBearing: 0, preferredPitch: 66, preferredZoom: 11.6),
+        ResortEntry(id: "whistler", name: "Whistler Blackcomb", bounds: box(50.09, -122.95, latSpan: 0.12, lonSpan: 0.14), region: "BC", country: "Canada", passProducts: [.epic], preferredBearing: 180, preferredPitch: 74, preferredZoom: 12.0, preferredCameraCenter: CLLocationCoordinate2D(latitude: 50.07, longitude: -122.95)),
         ResortEntry(id: "fernie", name: "Fernie Alpine Resort", bounds: box(49.455796, -115.102893, latSpan: 0.0601, lonSpan: 0.0700), region: "BC", country: "Canada", passProducts: [.epic], pinnedSnapshotDate: "2026-09-20"),
         ResortEntry(id: "kicking-horse", name: "Kicking Horse", bounds: box(51.30, -117.05, latSpan: 0.07, lonSpan: 0.08), region: "BC", country: "Canada", passProducts: [.epic]),
         ResortEntry(id: "kimberley", name: "Kimberley Alpine Resort", bounds: box(49.68, -116.00, latSpan: 0.05, lonSpan: 0.06), region: "BC", country: "Canada", passProducts: [.epic]),

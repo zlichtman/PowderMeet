@@ -8,6 +8,18 @@ import UIKit
 
 @main
 struct PowderMeetApp: App {
+    #if DEBUG
+    private static let mapPreviewTime = ISO8601DateFormatter()
+        .date(from: "2026-09-23T17:30:00Z") ?? .now
+    private static let mapPreviewResort: ResortEntry? = {
+        let argument = ProcessInfo.processInfo.arguments.first(where: {
+            $0.hasPrefix("--preview-resort=")
+        })
+        let resortID = argument?.replacingOccurrences(of: "--preview-resort=", with: "")
+            ?? "whistler"
+        return ResortEntry.catalog.first(where: { $0.id == resortID })
+    }()
+    #endif
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @Environment(\.scenePhase) private var scenePhase
     @State private var supabase = SupabaseManager.shared
@@ -18,38 +30,64 @@ struct PowderMeetApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(supabase)
-                .environment(resortManager)
-                .environment(importSession)
-                .task {
-                    await supabase.initialize()
-                }
-                .task {
-                    await supabase.observeAuthChanges()
-                }
-                .onChange(of: scenePhase) { _, newPhase in
-                    // Re-verify the session every time the app comes
-                    // to the foreground. If the account was deleted
-                    // server-side (Supabase dashboard, RPC, etc.), the
-                    // refresh fails with a user-gone error and the
-                    // Manager signs out locally — RootView immediately
-                    // swaps to AuthView. Without this, a deleted user
-                    // could keep poking around for up to an hour while
-                    // their cached JWT was still nominally valid.
-                    if newPhase == .active {
-                        Task { await supabase.verifySessionStillValid() }
-                    }
-                }
-                .onOpenURL { url in
-                    // Password reset email tap → `powdermeet://reset#…`.
-                    // Hand the whole URL to SupabaseManager: it parses
-                    // the fragment tokens, sets up a transient recovery
-                    // session, and flips `pendingPasswordRecovery` so
-                    // RootView presents the new-password sheet.
-                    Task { await supabase.handleDeepLink(url) }
-                }
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--live-map-preview") {
+                MountainMapView(
+                    resortEntry: Self.mapPreviewResort,
+                    graph: nil,
+                    routeA: nil,
+                    routeB: nil,
+                    meetingNode: nil,
+                    userLocation: nil,
+                    friendLocations: [:],
+                    selectedTime: Self.mapPreviewTime,
+                    resortLatitude: Self.mapPreviewResort?.coordinate.latitude,
+                    resortLongitude: Self.mapPreviewResort?.coordinate.longitude,
+                    cloudCoverPercent: 10,
+                    visibilityKm: 20
+                )
+                .ignoresSafeArea()
+            } else {
+                appRoot
+            }
+            #else
+            appRoot
+            #endif
         }
+    }
+
+    private var appRoot: some View {
+        RootView()
+            .environment(supabase)
+            .environment(resortManager)
+            .environment(importSession)
+            .task {
+                await supabase.initialize()
+            }
+            .task {
+                await supabase.observeAuthChanges()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                // Re-verify the session every time the app comes
+                // to the foreground. If the account was deleted
+                // server-side (Supabase dashboard, RPC, etc.), the
+                // refresh fails with a user-gone error and the
+                // Manager signs out locally — RootView immediately
+                // swaps to AuthView. Without this, a deleted user
+                // could keep poking around for up to an hour while
+                // their cached JWT was still nominally valid.
+                if newPhase == .active {
+                    Task { await supabase.verifySessionStillValid() }
+                }
+            }
+            .onOpenURL { url in
+                // Password reset email tap → `powdermeet://reset#…`.
+                // Hand the whole URL to SupabaseManager: it parses
+                // the fragment tokens, sets up a transient recovery
+                // session, and flips `pendingPasswordRecovery` so
+                // RootView presents the new-password sheet.
+                Task { await supabase.handleDeepLink(url) }
+            }
     }
 }
 

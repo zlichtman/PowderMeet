@@ -30,10 +30,31 @@ nonisolated enum RouteRehearsalPolicy {
     }
 }
 
-/// Strict gate for local point-to-point previews. The destination must be an
-/// exact member of the immutable dataset catalog, not an arbitrary graph node,
-/// and the same canonical/status/session requirements as a live meet apply.
+/// Strict gate for local point-to-point routes. Unverified data is usable only
+/// for a clearly marked rehearsal in pre-release builds, never live navigation.
 nonisolated enum LandmarkRoutePolicy {
+    /// Preview start points must have a directed path to the chosen landmark.
+    /// Whistler's compatibility graph has disconnected pieces, so choosing
+    /// the first alphabetical lift base can fail before the strict solver
+    /// even has a viable route to evaluate.
+    static func nodesReaching(
+        destinationNodeID: String,
+        edges: [GraphEdge]
+    ) -> Set<String> {
+        var incoming: [String: [String]] = [:]
+        for edge in edges where edge.attributes.isOpen {
+            incoming[edge.targetID, default: []].append(edge.sourceID)
+        }
+        var reached: Set<String> = [destinationNodeID]
+        var frontier = [destinationNodeID]
+        while let nodeID = frontier.popLast() {
+            for sourceID in incoming[nodeID] ?? [] where reached.insert(sourceID).inserted {
+                frontier.append(sourceID)
+            }
+        }
+        return reached
+    }
+
     static func canPreview(
         hasActiveSession: Bool,
         datasetSource: MountainDataset.Source?,
@@ -45,6 +66,22 @@ nonisolated enum LandmarkRoutePolicy {
         !hasActiveSession
             && datasetSource == .canonicalServer
             && statusIsRoutable
+            && catalogNodeIDs.contains(destinationNodeID)
+            && graphNodeIDs.contains(destinationNodeID)
+    }
+
+    static func canUseUnverifiedPreview(
+        isPreRelease: Bool,
+        hasActiveSession: Bool,
+        datasetSource: MountainDataset.Source?,
+        destinationNodeID: String,
+        catalogNodeIDs: Set<String>,
+        graphNodeIDs: Set<String>
+    ) -> Bool {
+        isPreRelease
+            && !hasActiveSession
+            && datasetSource != nil
+            && datasetSource != .canonicalServer
             && catalogNodeIDs.contains(destinationNodeID)
             && graphNodeIDs.contains(destinationNodeID)
     }
@@ -228,7 +265,22 @@ extension ContentCoordinator {
         return true
     }
 
+    var isUnverifiedDestinationPreview: Bool {
+        guard let dataset = resortManagerRef?.currentDataset,
+              let graph = resortManagerRef?.currentGraph,
+              !dataset.rendezvousCatalog.points.isEmpty else { return false }
+        return LandmarkRoutePolicy.canUseUnverifiedPreview(
+            isPreRelease: BuildEnvironment.isPreRelease,
+            hasActiveSession: activeMeetSession != nil,
+            datasetSource: dataset.source,
+            destinationNodeID: dataset.rendezvousCatalog.points[0].nodeID,
+            catalogNodeIDs: dataset.rendezvousCatalog.nodeIDs,
+            graphNodeIDs: Set(graph.nodes.keys)
+        )
+    }
+
     var destinationRoutingProblem: String? {
+        if isUnverifiedDestinationPreview { return nil }
         let dataset = resortManagerRef?.currentDataset
         let status = resortManagerRef?.currentStatus
         let matchedStatus = status?.resortID == dataset?.resortID
@@ -242,29 +294,42 @@ extension ContentCoordinator {
         )
     }
 
-    /// Local route to a validated mountain landmark. This deliberately creates
-    /// no social request or active meetup session: it is a safe, reversible map
-    /// preview built by the production solver from the skier's real GPS origin.
+    /// Local route preview. Canonical data requires live status; legacy data is
+    /// limited to pre-release, labeled unverified, and never starts navigation.
     func previewLandmarkRoute(to requestedPoint: RendezvousPoint) async -> Bool {
         if let problem = destinationRoutingProblem {
             setTransientMessage(problem)
             return false
         }
         guard let dataset = resortManagerRef?.currentDataset,
-              let status = resortManagerRef?.currentStatus,
               let graph = resortManagerRef?.currentGraph,
               let point = dataset.rendezvousCatalog.points.first(where: {
                   $0.id == requestedPoint.id && $0.nodeID == requestedPoint.nodeID
               }),
-              LandmarkRoutePolicy.canPreview(
+              let destination = graph.nodes[point.nodeID] else {
+            setTransientMessage("DESTINATION PREVIEW UNAVAILABLE")
+            return false
+        }
+        let previewOnly = isUnverifiedDestinationPreview
+        let status = resortManagerRef?.currentStatus
+        let statusIsRoutable = status?.resortID == dataset.resortID
+            && status?.datasetVersion == dataset.version
+            && status?.isRoutable() == true
+        guard previewOnly ? LandmarkRoutePolicy.canUseUnverifiedPreview(
+                isPreRelease: BuildEnvironment.isPreRelease,
                 hasActiveSession: activeMeetSession != nil,
                 datasetSource: dataset.source,
-                statusIsRoutable: status.isRoutable(),
                 destinationNodeID: point.nodeID,
                 catalogNodeIDs: dataset.rendezvousCatalog.nodeIDs,
                 graphNodeIDs: Set(graph.nodes.keys)
-              ),
-              let destination = graph.nodes[point.nodeID] else {
+              ) : LandmarkRoutePolicy.canPreview(
+                hasActiveSession: activeMeetSession != nil,
+                datasetSource: dataset.source,
+                statusIsRoutable: statusIsRoutable,
+                destinationNodeID: point.nodeID,
+                catalogNodeIDs: dataset.rendezvousCatalog.nodeIDs,
+                graphNodeIDs: Set(graph.nodes.keys)
+              ) else {
             setTransientMessage("SAFE DESTINATION ROUTING UNAVAILABLE")
             return false
         }
@@ -273,7 +338,9 @@ extension ContentCoordinator {
             return false
         }
         guard let origin = meetup.resolveMyOrigin(graph: graph) else {
-            setTransientMessage("MOVE ONTO A MAPPED TRAIL OR SET YOUR TEST LOCATION")
+            setTransientMessage(previewOnly
+                ? "CHOOSE A PREVIEW START ON THE MOUNTAIN"
+                : "MOVE ONTO A MAPPED TRAIL OR SET YOUR TEST LOCATION")
             return false
         }
         if origin.startNodeID == point.nodeID, origin.approachEdgeID == nil {
@@ -285,6 +352,12 @@ extension ContentCoordinator {
             graph: graph,
             participantProfiles: [profile]
         )
+        if previewOnly {
+            // A tester may inspect the mountain outside operating hours.
+            // With no published status, these hours cannot be treated as
+            // live route truth; keep the exercise a timeless graph preview.
+            solver.solveTime = nil
+        }
         let route = await Task.detached(priority: .userInitiated) {
             solver.pathTo(target: point.nodeID, from: origin, skier: profile)
         }.value
@@ -299,7 +372,9 @@ extension ContentCoordinator {
             return false
         }
         guard let route, !route.path.isEmpty else {
-            setTransientMessage("NO SAFE ROUTE TO THIS LANDMARK")
+            setTransientMessage(previewOnly
+                ? "NO PREVIEW PATH TO THIS LANDMARK"
+                : "NO SAFE ROUTE TO THIS LANDMARK")
             return false
         }
 
@@ -319,12 +394,14 @@ extension ContentCoordinator {
                 context: solver.makeContext(for: profile.id.uuidString)
             ),
             etaStdSecondsA: route.etaStdSeconds,
-            solveAttempt: .live
+            solveAttempt: previewOnly ? .nonCanonicalDataset : .live
         )
-        result.presentationPurpose = .destination
+        result.presentationPurpose = previewOnly ? .previewDestination : .destination
         meetingResult = result
         routeAnimationTrigger &+= 1
-        setTransientMessage("SAFE ROUTE READY · PREVIEW")
+        setTransientMessage(previewOnly
+            ? "UNVERIFIED ROUTE PREVIEW · NOT FOR NAVIGATION"
+            : "SAFE ROUTE READY · PREVIEW")
         return true
     }
 }

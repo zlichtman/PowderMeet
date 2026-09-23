@@ -103,6 +103,17 @@ struct ResortConditions: Sendable {
         }
     }
 
+    /// Display only an hourly reading that actually covers the selected time.
+    /// `atTime` intentionally returns the nearest sample for model fallback,
+    /// but showing a many-hours-old sample as current weather is misleading.
+    func displaySample(at date: Date) -> HourlyCondition? {
+        guard let sample = atTime(date),
+              abs(sample.time.timeIntervalSince(date)) <= 90 * 60 else {
+            return nil
+        }
+        return sample
+    }
+
     /// Binary-search the sample nearest to `date` in a time-sorted array.
     private static func nearest(in samples: [HourlyCondition], to date: Date) -> HourlyCondition? {
         guard !samples.isEmpty else { return nil }

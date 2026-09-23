@@ -20,9 +20,11 @@ struct OnboardingProfileStep: View {
 
     @Binding var avatarData: Data?
     @Binding var skillLevel: String
+    @Binding var isProcessingAvatar: Bool
 
     @State private var avatarImage: Image?
     @State private var selectedItem: PhotosPickerItem?
+    @State private var avatarSelectionID = UUID()
     @State private var showSourceMenu = false
     @State private var showCamera = false
     @State private var showFileImporter = false
@@ -158,7 +160,9 @@ struct OnboardingProfileStep: View {
         }
         .onChange(of: selectedItem) { _, newItem in
             showPhotoPicker = false
-            Task { await loadFromPicker(newItem) }
+            guard newItem != nil else { return }
+            let selectionID = beginAvatarSelection()
+            Task { await loadFromPicker(newItem, selectionID: selectionID) }
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraPickerView { uiImage in
@@ -296,21 +300,33 @@ struct OnboardingProfileStep: View {
 
     // MARK: - Image Processing
 
-    private func loadFromPicker(_ item: PhotosPickerItem?) async {
-        guard let item else { return }
-        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
-        await setAvatar(fromData: data)
+    @MainActor private func beginAvatarSelection() -> UUID {
+        let id = UUID()
+        avatarSelectionID = id
+        isProcessingAvatar = true
+        return id
+    }
+
+    private func loadFromPicker(_ item: PhotosPickerItem?, selectionID: UUID) async {
+        guard let item,
+              let data = try? await item.loadTransferable(type: Data.self) else {
+            applyAvatar(nil, selectionID: selectionID)
+            return
+        }
+        await setAvatar(fromData: data, selectionID: selectionID)
     }
 
     private func loadFromFile(_ url: URL) {
         guard url.startAccessingSecurityScopedResource() else { return }
         defer { url.stopAccessingSecurityScopedResource() }
         guard let data = try? Data(contentsOf: url) else { return }
-        Task { await setAvatar(fromData: data) }
+        let selectionID = beginAvatarSelection()
+        Task { await setAvatar(fromData: data, selectionID: selectionID) }
     }
 
     private func processImage(_ uiImage: UIImage) {
-        Task { await setAvatar(fromImage: uiImage) }
+        let selectionID = beginAvatarSelection()
+        Task { await setAvatar(fromImage: uiImage, selectionID: selectionID) }
     }
 
     /// Decode + normalize + crop + encode entirely off the main thread.
@@ -318,28 +334,30 @@ struct OnboardingProfileStep: View {
     /// redraw and JPEG encode expensive enough to freeze onboarding if
     /// run inline — so the heavy work lives in a detached task and only
     /// the `@State` assignment hops back to the main actor.
-    private func setAvatar(fromData data: Data) async {
+    private func setAvatar(fromData data: Data, selectionID: UUID) async {
         let jpeg = await Task.detached(priority: .userInitiated) {
             UIImage(data: data).flatMap { Self.squareAvatarJPEG(from: $0) }
         }.value
-        applyAvatar(jpeg)
+        applyAvatar(jpeg, selectionID: selectionID)
     }
 
-    private func setAvatar(fromImage image: UIImage) async {
+    private func setAvatar(fromImage image: UIImage, selectionID: UUID) async {
         let jpeg = await Task.detached(priority: .userInitiated) {
             Self.squareAvatarJPEG(from: image)
         }.value
-        applyAvatar(jpeg)
+        applyAvatar(jpeg, selectionID: selectionID)
     }
 
-    @MainActor private func applyAvatar(_ jpeg: Data?) {
+    @MainActor private func applyAvatar(_ jpeg: Data?, selectionID: UUID) {
+        guard selectionID == avatarSelectionID else { return }
+        isProcessingAvatar = false
         guard let jpeg, let preview = UIImage(data: jpeg) else { return }
         avatarData = jpeg
         avatarImage = Image(uiImage: preview)
     }
 
     /// Pure pixel work — safe to run off the main thread.
-    nonisolated private static func squareAvatarJPEG(from uiImage: UIImage) -> Data? {
+    nonisolated static func squareAvatarJPEG(from uiImage: UIImage) -> Data? {
         // STEP 1 — Normalize orientation.
         // EXIF-tagged photos (anything from Camera / Photos) have the pixel
         // data in sensor orientation with `imageOrientation` carrying the

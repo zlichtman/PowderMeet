@@ -417,7 +417,7 @@ struct MountainMapView: UIViewRepresentable {
             coord.lastResortID = entry.id
 
             let camera = CameraOptions(
-                center: entry.coordinate,
+                center: entry.preferredCameraCenter ?? entry.coordinate,
                 zoom: entry.preferredZoom ?? entry.defaultZoom,
                 bearing: entry.preferredBearing ?? 0,
                 pitch: entry.preferredPitch ?? 62
@@ -481,7 +481,9 @@ struct MountainMapView: UIViewRepresentable {
         ?? .satelliteStreets
 
     private func initialCamera() -> CameraOptions {
-        let center = resortEntry?.coordinate ?? CLLocationCoordinate2D(latitude: 39.6, longitude: -106.35)
+        let center = resortEntry?.preferredCameraCenter
+            ?? resortEntry?.coordinate
+            ?? CLLocationCoordinate2D(latitude: 39.6, longitude: -106.35)
         return CameraOptions(
             center: center,
             zoom: resortEntry?.preferredZoom ?? resortEntry?.defaultZoom ?? 13,

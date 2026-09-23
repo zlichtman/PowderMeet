@@ -35,6 +35,7 @@ struct ProfileView: View {
     @State private var nameConflictMessage: String?
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var avatarImage: Image?
+    @State private var avatarOwnerID: UUID?
 
     // Inline tab + dev sheet
     @State private var selectedTab: ProfileTab = .friends
@@ -42,6 +43,7 @@ struct ProfileView: View {
 
     // Inflight
     @State private var isUploadingAvatar = false
+    @State private var isSavingName = false
     @State private var errorMessage: String?
 
     private var profile: UserProfile? { supabase.currentUserProfile }
@@ -85,14 +87,27 @@ struct ProfileView: View {
             }
         }
         .preferredColorScheme(.dark)
-        .task(id: profile?.avatarUrl) {
+        .task(id: profile.map { "\($0.id.uuidString)|\($0.avatarUrl ?? "")" }) {
+            if avatarOwnerID != profile?.id {
+                avatarImage = nil
+                avatarOwnerID = profile?.id
+            }
             guard let urlString = profile?.avatarUrl,
-                  let url = URL(string: urlString) else { return }
+                  let url = URL(string: urlString) else {
+                avatarImage = nil
+                return
+            }
+            if let cached = AvatarCache.shared.image(for: urlString) {
+                avatarImage = Image(uiImage: cached)
+                return
+            }
             for attempt in 0..<3 {
                 if Task.isCancelled { return }
                 if let (data, response) = try? await URLSession.shared.data(from: url),
                    let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode),
                    let uiImage = UIImage(data: data) {
+                    guard !Task.isCancelled, avatarOwnerID == profile?.id else { return }
+                    AvatarCache.shared.set(uiImage, for: urlString)
                     avatarImage = Image(uiImage: uiImage)
                     return
                 }
@@ -100,7 +115,11 @@ struct ProfileView: View {
             }
         }
         .onChange(of: selectedPhotoItem) { _, newItem in
-            Task { await uploadAvatar(from: newItem) }
+            guard let newItem, let ownerID = profile?.id else { return }
+            // Lock the picker before image decoding begins. Otherwise two
+            // quick choices can race and the older upload can win last.
+            isUploadingAvatar = true
+            Task { await uploadAvatar(from: newItem, for: ownerID) }
         }
         .onChange(of: editedName) { _, _ in
             if nameConflictMessage != nil { nameConflictMessage = nil }
@@ -165,8 +184,10 @@ struct ProfileView: View {
                             )
                             .offset(x: 28, y: 28)
                     }
+                    .contentShape(Circle())
                 }
                 .disabled(isUploadingAvatar)
+                .accessibilityLabel("Change profile photo")
 
                 if isEditingName {
                     editNameField
@@ -182,8 +203,12 @@ struct ProfileView: View {
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                             .minimumScaleFactor(0.7)
+                            .frame(width: 110)
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Edit display name")
                 }
             }
             .frame(width: 110)
@@ -204,6 +229,7 @@ struct ProfileView: View {
                 .textInputAutocapitalization(.words)
                 .submitLabel(.done)
                 .onSubmit { commitName() }
+                .disabled(isSavingName)
                 .padding(.horizontal, 6)
                 .frame(minHeight: 44)
                 .background(HUDTheme.inputBackground)
@@ -212,6 +238,33 @@ struct ProfileView: View {
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .stroke(HUDTheme.cardBorder, lineWidth: 1)
                 )
+
+            HStack(spacing: 6) {
+                Button {
+                    isEditingName = false
+                    nameConflictMessage = nil
+                } label: {
+                    Image(systemName: "xmark")
+                        .frame(width: 44, height: 44)
+                }
+                .disabled(isSavingName)
+                .accessibilityLabel("Cancel name edit")
+
+                Button(action: commitName) {
+                    Group {
+                        if isSavingName {
+                            ProgressView().tint(HUDTheme.spinnerInteractive)
+                        } else {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                    .frame(width: 44, height: 44)
+                }
+                .disabled(isSavingName)
+                .accessibilityLabel("Save display name")
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(HUDTheme.primaryText)
 
             if let conflict = nameConflictMessage {
                 Text(conflict)
@@ -223,17 +276,16 @@ struct ProfileView: View {
     }
 
     private func commitName() {
+        guard !isSavingName, let ownerID = profile?.id else { return }
         let name = editedName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else {
             nameConflictMessage = "Name can't be empty"
             return
         }
+        isSavingName = true
         Task {
-            let taken = await supabase.isDisplayNameTaken(name)
-            if taken {
-                nameConflictMessage = "\"\(name)\" is already taken"
-                return
-            }
+            defer { isSavingName = false }
+            guard profile?.id == ownerID, editedName.trimmingCharacters(in: .whitespacesAndNewlines) == name else { return }
             nameConflictMessage = nil
             do {
                 // setDisplayName mirrors to auth user-metadata too,
@@ -439,44 +491,47 @@ struct ProfileView: View {
 
     // MARK: - Avatar Upload
 
-    private func uploadAvatar(from item: PhotosPickerItem?) async {
-        guard let item else { return }
+    private func uploadAvatar(from item: PhotosPickerItem, for ownerID: UUID) async {
+        defer {
+            selectedPhotoItem = nil
+            isUploadingAvatar = false
+        }
+        guard profile?.id == ownerID else { return }
         guard let data = try? await item.loadTransferable(type: Data.self) else {
-            errorMessage = "Couldn't read the selected image."
+            if profile?.id == ownerID { errorMessage = "Couldn't read the selected image." }
             return
         }
+        guard profile?.id == ownerID else { return }
         guard data.count <= 50 * 1024 * 1024 else {
             errorMessage = "Image is too large (max 50MB)."
             return
         }
-        guard let uiImage = UIImage(data: data) else {
+        // Decode, normalize orientation, crop, and encode away from the UI
+        // actor. A full-resolution phone photo used to stall this entire tab.
+        let jpegData = await Task.detached(priority: .userInitiated) {
+            UIImage(data: data).flatMap { OnboardingProfileStep.squareAvatarJPEG(from: $0) }
+        }.value
+        guard let jpegData, let resized = UIImage(data: jpegData) else {
             errorMessage = "Unsupported image format."
             return
         }
 
-        let side = min(uiImage.size.width, uiImage.size.height)
-        let cropRect = CGRect(
-            x: (uiImage.size.width - side) / 2,
-            y: (uiImage.size.height - side) / 2,
-            width: side, height: side
-        )
-        guard let cgCropped = uiImage.cgImage?.cropping(to: cropRect) else { return }
-        let cropped = UIImage(cgImage: cgCropped, scale: uiImage.scale, orientation: uiImage.imageOrientation)
-
-        let targetSize = CGSize(width: 512, height: 512)
-        let resized = UIGraphicsImageRenderer(size: targetSize).image { _ in
-            cropped.draw(in: CGRect(origin: .zero, size: targetSize))
-        }
-        guard let jpegData = resized.jpegData(compressionQuality: 0.7) else { return }
-
+        let previousImage = avatarImage
         avatarImage = Image(uiImage: resized)
-        isUploadingAvatar = true
-        defer { isUploadingAvatar = false }
         do {
-            let url = try await supabase.uploadAvatar(imageData: jpegData)
+            guard profile?.id == ownerID else { return }
+            let url = try await supabase.uploadAvatar(
+                imageData: jpegData,
+                expectedUserID: ownerID
+            )
+            guard profile?.id == ownerID else { return }
+            AvatarCache.shared.set(resized, for: url)
             try await supabase.updateProfile(["avatar_url": .string(url)])
         } catch {
-            errorMessage = "Avatar upload failed: \(error.localizedDescription)"
+            if profile?.id == ownerID {
+                avatarImage = previousImage
+                errorMessage = "Avatar upload failed: \(error.localizedDescription)"
+            }
         }
     }
 }

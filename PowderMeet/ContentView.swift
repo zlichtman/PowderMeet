@@ -160,7 +160,8 @@ struct ContentView: View {
                         }
                         .transition(.move(edge: .top).combined(with: .opacity))
                     } else if let result = coordinator.meetingResult,
-                              result.presentationPurpose == .destination {
+                              result.presentationPurpose == .destination
+                                || result.presentationPurpose == .previewDestination {
                         DestinationRouteSummary(
                             result: result,
                             graph: resortManager.currentGraph
@@ -393,6 +394,8 @@ struct ContentView: View {
                     destinations: dataset.rendezvousCatalog.points,
                     graph: graph,
                     userLocation: coordinator.snappedUserLocation,
+                    previewOnly: coordinator.isUnverifiedDestinationPreview,
+                    previewStartNodeID: $coordinator.testMyNodeId,
                     availabilityMessage: coordinator.destinationRoutingProblem,
                     failureMessage: { coordinator.transientMessage }
                 ) { point in
@@ -587,6 +590,7 @@ struct ContentView: View {
 
     @ViewBuilder
     private var mapboxScreen: some View {
+        let selectedWeather = coordinator.resortConditions?.displaySample(at: coordinator.selectedTime)
         ResortMapScreen(
             selectedTrailEdgeId: $selectedTrailEdgeId,
             meetingResult: coordinator.meetingResult ?? coordinator.activeMeetSession?.meetingResult,
@@ -605,9 +609,12 @@ struct ContentView: View {
             isScrubbingTimeline: isScrubbingTimeline,
             resortLatitude: resortManager.currentEntry.map { ($0.bounds.minLat + $0.bounds.maxLat) / 2 },
             resortLongitude: resortManager.currentEntry.map { ($0.bounds.minLon + $0.bounds.maxLon) / 2 },
-            temperatureC: coordinator.resortConditions?.temperatureC ?? -2,
-            cloudCoverPercent: coordinator.resortConditions?.cloudCoverPercent ?? 0,
-            snowfallCmPerHour: coordinator.resortConditions?.atTime(coordinator.selectedTime)?.snowfallCm ?? 0,
+            temperatureC: selectedWeather?.temperatureC ?? coordinator.resortConditions?.temperatureC ?? -2,
+            cloudCoverPercent: selectedWeather?.cloudCoverPercent ?? coordinator.resortConditions?.cloudCoverPercent ?? 0,
+            snowfallCmPerHour: selectedWeather?.snowfallCm ?? 0,
+            windSpeedKph: selectedWeather?.windSpeedKph ?? coordinator.resortConditions?.windSpeedKph ?? 0,
+            windDirectionDeg: coordinator.resortConditions?.windDirectionDeg ?? 0,
+            visibilityKm: selectedWeather?.visibilityKm ?? coordinator.resortConditions?.visibilityKm ?? 10,
             mapBridge: coordinator.mapBridge,
             isMapVisible: selectedTab == 0 && coordinator.selectedEntry != nil,
             mapFriendLayerClock: coordinator.mapFriendLayerClock,

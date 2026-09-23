@@ -124,7 +124,9 @@ struct ResortMapScreen: View {
                let onOpenDestinationRouting {
                 VStack {
                     HStack {
-                        Button(action: onOpenDestinationRouting) {
+                        Button {
+                            onOpenDestinationRouting()
+                        } label: {
                             HStack(spacing: 7) {
                                 Image(systemName: "location.fill")
                                     .font(.system(size: 11, weight: .bold))

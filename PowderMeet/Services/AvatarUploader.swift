@@ -35,7 +35,8 @@ enum AvatarUploader {
         imageData: Data,
         client: SupabaseClient,
         projectURL: String,
-        anonKey: String
+        anonKey: String,
+        expectedUserID: UUID? = nil
     ) async throws -> String {
         // Force-fetch the SDK's current session — this refreshes if
         // expired and ensures we have a usable access token.
@@ -47,6 +48,10 @@ enum AvatarUploader {
                           userInfo: [NSLocalizedDescriptionKey: "Not authenticated. Try signing out and back in."])
         }
         let userId = session.user.id
+        if let expectedUserID, userId != expectedUserID {
+            throw NSError(domain: "AvatarUploader", code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "Account changed while preparing your photo. Please try again."])
+        }
         let userIdLower = userId.uuidString.lowercased()
         let path = "\(userIdLower)/avatar.jpg"
 
@@ -79,13 +84,11 @@ enum AvatarUploader {
                           userInfo: [NSLocalizedDescriptionKey: "Storage upload \(http.statusCode): \(body.prefix(200))"])
         }
 
-        // Public URL — bucket is public, so direct construction is
-        // fine. No `?t=<epoch>` cache-buster: the timestamp varied
-        // every upload, so any device that received the new URL via
-        // postgres_changes saw an `AvatarCache` miss and flashed a
-        // placeholder mid-fetch. With x-upsert the bucket object is
-        // overwritten atomically; consumers see the updated bytes
-        // on natural cache eviction or app foreground.
-        return "\(projectURL)/storage/v1/object/public/avatars/\(path)"
+        // The object path is stable for upsert, but the profile URL must
+        // change after every successful replacement. Otherwise URLCache and
+        // AvatarCache keep serving the previous photo across app launches
+        // and devices. CachedAvatarView retains the old image while the new
+        // URL loads, so this does not flash a placeholder.
+        return "\(projectURL)/storage/v1/object/public/avatars/\(path)?v=\(UUID().uuidString.lowercased())"
     }
 }

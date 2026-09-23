@@ -265,6 +265,7 @@ final class SupabaseManager {
     func observeAuthChanges() async {
         for await (event, session) in client.auth.authStateChanges {
             if event == .signedOut {
+                sessionGeneration &+= 1
                 self.currentSession = nil
                 self.currentUserProfile = nil
                 self.currentUserStats = nil
@@ -275,6 +276,11 @@ final class SupabaseManager {
                 // to nil while leaving `currentUserProfile` populated —
                 // that combination yields a view where `isAuthenticated`
                 // disagrees with the populated profile.
+                if currentSession?.user.id != session.user.id {
+                    sessionGeneration &+= 1
+                    currentUserProfile = nil
+                    currentUserStats = nil
+                }
                 self.currentSession = session
                 if currentUserProfile == nil {
                     await loadProfile()
@@ -481,6 +487,7 @@ final class SupabaseManager {
 
     func loadProfile() async {
         guard let userId = currentSession?.user.id else { return }
+        let generation = sessionGeneration
         profileLoadError = nil
         do {
             let profiles: [UserProfile] = try await client.from("profiles")
@@ -489,6 +496,8 @@ final class SupabaseManager {
                 .limit(1)
                 .execute()
                 .value
+            guard currentSession?.user.id == userId,
+                  sessionGeneration == generation else { return }
             if let profile = profiles.first {
                 self.currentUserProfile = profile
                 // Defer the two non-launch-critical fetches off the splash
@@ -525,6 +534,8 @@ final class SupabaseManager {
                 currentUserStats = nil
             }
         } catch {
+            guard currentSession?.user.id == userId,
+                  sessionGeneration == generation else { return }
             // Previously this signed the user out on ANY error — including
             // transient network blips, 5xx responses, and token-refresh
             // races. That was how users got kicked back to the auth screen
@@ -551,12 +562,15 @@ final class SupabaseManager {
     @discardableResult
     func ensureProfileExists() async -> Bool {
         guard let userId = currentSession?.user.id else { return false }
+        let generation = sessionGeneration
         let profiles: [UserProfile]? = try? await client.from("profiles")
             .select()
             .eq("id", value: userId.uuidString)
             .limit(1)
             .execute()
             .value
+        guard currentSession?.user.id == userId,
+              sessionGeneration == generation else { return false }
         if let existing = profiles?.first {
             self.currentUserProfile = existing
             return true
@@ -592,8 +606,10 @@ final class SupabaseManager {
                     updatedAt: nil
                 ))
                 .execute()
+            guard currentSession?.user.id == userId,
+                  sessionGeneration == generation else { return false }
             await loadProfile()
-            return true
+            return currentUserProfile?.id == userId
         } catch {
             AppLog.supabase.error("ensureProfileExists insert error: \(error)")
             return false
@@ -656,21 +672,33 @@ final class SupabaseManager {
     func setDisplayName(_ name: String) async throws {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+        guard let ownerID = currentSession?.user.id else {
+            throw ProfileSaveError.signInRequired
+        }
         try await updateProfile(["display_name": .string(trimmed)])
-        // Mirror to auth user-metadata. Best-effort.
-        do {
-            _ = try await client.auth.update(
-                user: UserAttributes(data: ["display_name": AnyJSON.string(trimmed)])
-            )
-            // Pick up the fresh session so currentSession reflects
-            // the new metadata immediately (any view that reads from
-            // user_metadata.display_name — e.g., debug panels — sees
-            // the change without waiting for the next refresh).
-            if let refreshed = try? await client.auth.session {
-                currentSession = refreshed
+        guard currentSession?.user.id == ownerID else {
+            throw ProfileSaveError.signInRequired
+        }
+        // The profile row is authoritative for the app. Mirror metadata in
+        // the background so the name editor can close after one network
+        // round-trip instead of waiting for the Auth service as well.
+        let generation = sessionGeneration
+        Task { [weak self] in
+            guard let self,
+                  self.currentSession?.user.id == ownerID,
+                  self.sessionGeneration == generation else { return }
+            do {
+                _ = try await self.client.auth.update(
+                    user: UserAttributes(data: ["display_name": AnyJSON.string(trimmed)])
+                )
+                guard self.currentSession?.user.id == ownerID,
+                      self.sessionGeneration == generation else { return }
+                if let refreshed = try? await self.client.auth.session {
+                    self.currentSession = refreshed
+                }
+            } catch {
+                AppLog.supabase.error("auth user-metadata display_name sync failed: \(error.localizedDescription)")
             }
-        } catch {
-            AppLog.supabase.error("auth user-metadata display_name sync failed: \(error.localizedDescription)")
         }
     }
 
@@ -678,6 +706,7 @@ final class SupabaseManager {
         guard let userId = currentSession?.user.id else {
             throw ProfileSaveError.signInRequired
         }
+        let generation = sessionGeneration
         // Use .select() to get the updated row back in one round-trip
         let response: [UserProfile] = try await client.from("profiles")
             .update(updates)
@@ -686,7 +715,8 @@ final class SupabaseManager {
             .execute()
             .value
         guard let updated = response.first else { throw ProfileSaveError.noProfileReturned }
-        guard currentSession?.user.id == userId else { throw ProfileSaveError.signInRequired }
+        guard currentSession?.user.id == userId,
+              sessionGeneration == generation else { throw ProfileSaveError.signInRequired }
         self.currentUserProfile = updated
     }
 
@@ -736,7 +766,11 @@ final class SupabaseManager {
     /// the profile UI can render zeros instead of a spinner.
     func loadProfileStats() async {
         guard let userId = currentSession?.user.id else { return }
-        currentUserStats = await fetchProfileStats(for: userId) ?? .empty(for: userId)
+        let generation = sessionGeneration
+        let stats = await fetchProfileStats(for: userId) ?? .empty(for: userId)
+        guard currentSession?.user.id == userId,
+              sessionGeneration == generation else { return }
+        currentUserStats = stats
     }
 
     // MARK: - Skis Catalog

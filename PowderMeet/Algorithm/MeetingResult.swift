@@ -18,11 +18,13 @@ import Foundation
 nonisolated enum RoutePresentationPurpose: Equatable, Sendable {
     case meetup
     case destination
+    case previewDestination
 
     var mapMarkerVerb: String {
         switch self {
         case .meetup: return "MEET"
         case .destination: return "GO"
+        case .previewDestination: return "PREVIEW"
         }
     }
 }

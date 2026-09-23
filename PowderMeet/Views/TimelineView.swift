@@ -50,13 +50,20 @@ struct TimelineView: View {
     }
 
     private var isScrubbingFuture: Bool {
-        selectedDate > referenceNow
+        selectedDate.timeIntervalSince(referenceNow) > 15 * 60
+    }
+
+    private var selectedTimeContext: String {
+        let offset = selectedDate.timeIntervalSince(referenceNow)
+        if offset > 15 * 60 { return "FORECAST" }
+        if offset < -15 * 60 { return "PAST" }
+        return "LIVE"
     }
 
     /// Best-matching hourly sample at the scrubbed instant, or nil if
     /// `conditions` is unavailable / has no hourly coverage for that time.
     private var hourlyAtSelected: HourlyCondition? {
-        conditions?.atTime(selectedDate)
+        conditions?.displaySample(at: selectedDate)
     }
 
     var body: some View {
@@ -149,12 +156,21 @@ struct TimelineView: View {
                         selectedDate = referenceNow
                     }
                 } label: {
-                    Text(fullTime(selectedDate))
-                        .hudType(.section)
-                        .foregroundColor(HUDTheme.accent)
-                        .tracking(1)
+                    VStack(spacing: 1) {
+                        Text(fullTime(selectedDate))
+                            .hudType(.section)
+                            .foregroundColor(HUDTheme.accent)
+                            .tracking(1)
+                        Text(selectedTimeContext)
+                            .font(.system(size: 9, weight: .bold, design: .monospaced))
+                            .foregroundColor(selectedTimeContext == "LIVE" ? HUDTheme.secondaryText : HUDTheme.accentAmber)
+                            .tracking(0.8)
+                    }
+                    .frame(minWidth: 96, minHeight: 44)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("\(selectedTimeContext.lowercased()) weather at \(fullTime(selectedDate)); tap to return to now")
 
                 Spacer()
 

@@ -15,6 +15,7 @@ struct OnboardingView: View {
 
     @State private var step = 0
     @State private var avatarData: Data?
+    @State private var isProcessingAvatar = false
     @State private var skillLevel = "intermediate"
     @State private var isSaving = false
     @State private var saveError: String?
@@ -58,7 +59,11 @@ struct OnboardingView: View {
             ZStack {
                 switch step {
                 case 0:
-                    OnboardingProfileStep(avatarData: $avatarData, skillLevel: $skillLevel)
+                    OnboardingProfileStep(
+                        avatarData: $avatarData,
+                        skillLevel: $skillLevel,
+                        isProcessingAvatar: $isProcessingAvatar
+                    )
                         .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                 case 1:
                     OnboardingContactsStep()
@@ -85,8 +90,8 @@ struct OnboardingView: View {
             // No SKIP affordance — every step records an explicit
             // decision before the user can advance.
             PrimaryButton(
-                title: step < totalSteps - 1 ? "CONTINUE" : "GET STARTED",
-                isLoading: isSaving,
+                title: isProcessingAvatar ? "PREPARING PHOTO" : (step < totalSteps - 1 ? "CONTINUE" : "GET STARTED"),
+                isLoading: isSaving || isProcessingAvatar,
                 isEnabled: continueEnabled
             ) {
                 if step < totalSteps - 1 {
@@ -109,6 +114,7 @@ struct OnboardingView: View {
     }
 
     private var continueEnabled: Bool {
+        if isSaving || isProcessingAvatar { return false }
         // Display name is collected at sign-up (or supplied by Apple Sign-In),
         // so step 0 (avatar) doesn't gate CONTINUE. The avatar is optional —
         // skipping the photo only avoids the upload step in completeOnboarding.
@@ -122,6 +128,11 @@ struct OnboardingView: View {
     }
 
     private func completeOnboarding() async {
+        guard !isSaving, !isProcessingAvatar else { return }
+        guard let ownerID = supabase.currentSession?.user.id else {
+            saveError = "Please sign in again to finish your profile."
+            return
+        }
         isSaving = true
 
         // Ensure the profile row exists — retry up to 3 times
@@ -158,7 +169,10 @@ struct OnboardingView: View {
             var lastError: Error?
             for attempt in 0..<2 {
                 do {
-                    avatarUrlString = try await supabase.uploadAvatar(imageData: avatarData)
+                    avatarUrlString = try await supabase.uploadAvatar(
+                        imageData: avatarData,
+                        expectedUserID: ownerID
+                    )
                     AppLog.supabase.debug("[Onboarding] Step 2 done: \(avatarUrlString ?? "nil")")
                     lastError = nil
                     break
@@ -202,10 +216,20 @@ struct OnboardingView: View {
 
         AppLog.supabase.debug("[Onboarding] Step 3: updating profile...")
         do {
+            guard supabase.currentSession?.user.id == ownerID else {
+                saveError = "Account changed while saving. Please sign in again."
+                isSaving = false
+                return
+            }
             try await supabase.updateProfile(updates)
             if supabase.currentUserProfile?.onboardingCompleted != true {
                 AppLog.supabase.error("[Onboarding] Profile not updated locally, reloading...")
                 await supabase.loadProfile()
+            }
+            guard supabase.currentUserProfile?.onboardingCompleted == true else {
+                saveError = "Your profile is still saving. Please try again."
+                isSaving = false
+                return
             }
             AppLog.supabase.debug("[Onboarding] Step 3 done — onboarding complete!")
         } catch {

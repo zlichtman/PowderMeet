@@ -294,6 +294,23 @@ final class MeetFlowTests: XCTestCase {
         ))
     }
 
+    func testPreviewStartOnlyUsesDirectedConnectedLiftBases() {
+        let edges = [
+            GraphEdge(id: "connected", sourceID: "usable-base", targetID: "lodge",
+                      kind: .lift, geometry: [], attributes: EdgeAttributes()),
+            GraphEdge(id: "wrong-direction", sourceID: "lodge", targetID: "one-way-base",
+                      kind: .run, geometry: [], attributes: EdgeAttributes()),
+            GraphEdge(id: "island", sourceID: "isolated-base", targetID: "isolated-top",
+                      kind: .lift, geometry: [], attributes: EdgeAttributes())
+        ]
+        let reachable = LandmarkRoutePolicy.nodesReaching(
+            destinationNodeID: "lodge", edges: edges
+        )
+        XCTAssertTrue(reachable.contains("usable-base"))
+        XCTAssertFalse(reachable.contains("one-way-base"))
+        XCTAssertFalse(reachable.contains("isolated-base"))
+    }
+
     func testGoToExplainsMissingDataWithoutWeakeningRouting() {
         let preview = LandmarkRoutePolicy.unavailabilityReason(
             hasActiveSession: false, datasetSource: .legacySnapshot,
@@ -309,6 +326,27 @@ final class MeetFlowTests: XCTestCase {
         XCTAssertNil(LandmarkRoutePolicy.unavailabilityReason(
             hasActiveSession: false, datasetSource: .canonicalServer,
             statusIsRoutable: true, hasDestinations: true))
+    }
+
+    func testUnverifiedGoToPreviewIsConfinedToTestBuildsAndCatalogNodes() {
+        let catalog: Set<String> = ["lift"]
+        let graph: Set<String> = ["lift", "junction"]
+        func allowed(_ preRelease: Bool, _ active: Bool, _ source: MountainDataset.Source?, _ node: String) -> Bool {
+            LandmarkRoutePolicy.canUseUnverifiedPreview(
+                isPreRelease: preRelease,
+                hasActiveSession: active,
+                datasetSource: source,
+                destinationNodeID: node,
+                catalogNodeIDs: catalog,
+                graphNodeIDs: graph
+            )
+        }
+        XCTAssertTrue(allowed(true, false, .legacySnapshot, "lift"))
+        XCTAssertFalse(allowed(false, false, .legacySnapshot, "lift"))
+        XCTAssertFalse(allowed(true, true, .legacySnapshot, "lift"))
+        XCTAssertFalse(allowed(true, false, .canonicalServer, "lift"))
+        XCTAssertFalse(allowed(true, false, .legacySnapshot, "junction"))
+        XCTAssertFalse(allowed(true, false, nil, "lift"))
     }
 
     func testLandmarkDestinationsUseStableUsefulOrdering() {

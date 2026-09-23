@@ -15,6 +15,8 @@ struct DestinationRouteSheet: View {
     let destinations: [RendezvousPoint]
     let graph: MountainGraph
     var userLocation: CLLocationCoordinate2D?
+    var previewOnly: Bool = false
+    @Binding var previewStartNodeID: String?
     var availabilityMessage: String? = nil
     var failureMessage: () -> String? = { nil }
     let onRoute: (RendezvousPoint) async -> Bool
@@ -30,6 +32,12 @@ struct DestinationRouteSheet: View {
         return ordered.filter { point in
             destinationName(point).localizedCaseInsensitiveContains(needle)
                 || point.kind.userFacingLabel.localizedCaseInsensitiveContains(needle)
+        }
+    }
+
+    private var previewStarts: [RendezvousPoint] {
+        LandmarkRoutePolicy.orderedDestinations(destinations).filter {
+            $0.kind == .liftBase || $0.kind == .midStation
         }
     }
 
@@ -51,6 +59,7 @@ struct DestinationRouteSheet: View {
             ScrollView {
                 LazyVStack(spacing: 10) {
                     trustHeader
+                    if previewOnly { previewStartSelector }
                     if filteredDestinations.isEmpty {
                         emptyState
                     } else {
@@ -76,17 +85,19 @@ struct DestinationRouteSheet: View {
 
     private var trustHeader: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: availabilityMessage == nil ? "checkmark.shield.fill" : "info.circle")
+            Image(systemName: previewOnly ? "exclamationmark.triangle.fill" : (availabilityMessage == nil ? "checkmark.shield.fill" : "info.circle"))
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(availabilityMessage == nil ? HUDTheme.accentGreen : HUDTheme.accentAmber)
+                .foregroundColor(previewOnly || availabilityMessage != nil ? HUDTheme.accentAmber : HUDTheme.accentGreen)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(availabilityMessage == nil ? "VALIDATED MOUNTAIN LANDMARKS" : "ROUTING NOT AVAILABLE")
+                Text(previewOnly ? "UNVERIFIED ROUTE PREVIEW" : (availabilityMessage == nil ? "VALIDATED MOUNTAIN LANDMARKS" : "ROUTING NOT AVAILABLE"))
                     .hudType(.label)
                     .foregroundColor(HUDTheme.primaryText)
                     .tracking(0.8)
-                Text(availabilityMessage ?? "Routes honor your terrain limits, selected skis, live closures, lift hours, weather, and GPS confidence.")
+                Text(previewOnly
+                    ? "For testing only. The mountain graph, closures, and lift hours are not verified. Do not use this route for navigation."
+                    : (availabilityMessage ?? "Routes honor your terrain limits, selected skis, live closures, lift hours, weather, and GPS confidence."))
                     .font(.system(size: 12))
                     .foregroundColor(HUDTheme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
@@ -102,12 +113,63 @@ struct DestinationRouteSheet: View {
         )
     }
 
+    private var previewStartSelector: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("PREVIEW START · NOT YOUR LOCATION")
+                .hudType(.label)
+                .foregroundColor(HUDTheme.accentAmber)
+                .tracking(0.8)
+            Menu {
+                if previewStartNodeID != nil {
+                    Button("Clear selected start") { previewStartNodeID = nil }
+                }
+                ForEach(previewStarts) { point in
+                    Button(destinationName(point)) { previewStartNodeID = point.nodeID }
+                }
+            } label: {
+                HStack {
+                    Text(previewStartNodeID.flatMap { id in
+                        previewStarts.first(where: { $0.nodeID == id }).map(destinationName)
+                    } ?? (userLocation == nil ? "AUTO-SELECT A START LIFT" : "USE MY LOCATION"))
+                        .lineLimit(1)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                }
+                .hudType(.bodyEmph)
+                .foregroundColor(HUDTheme.primaryText)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Choose preview starting lift")
+        }
+        .padding(12)
+        .background(HUDTheme.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
     private func destinationRow(_ point: RendezvousPoint) -> some View {
         Button {
             guard routingPointID == nil else { return }
             if let availabilityMessage {
                 routeError = availabilityMessage
                 return
+            }
+            if previewOnly && userLocation == nil && previewStartNodeID == nil {
+                // Make the first tap useful for a remote tester with no GPS
+                // fix at this resort. Choose only from lift bases with a
+                // directed graph connection to this destination; the solver
+                // still enforces the skier's terrain limits.
+                let reachable = LandmarkRoutePolicy.nodesReaching(
+                    destinationNodeID: point.nodeID,
+                    edges: graph.edges
+                )
+                guard let start = previewStarts.first(where: {
+                    $0.nodeID != point.nodeID && reachable.contains($0.nodeID)
+                }) else {
+                    routeError = "No connected preview starting lift is available for this destination."
+                    return
+                }
+                previewStartNodeID = start.nodeID
             }
             routingPointID = point.id
             Task {
@@ -175,14 +237,14 @@ struct DestinationRouteSheet: View {
         }
         .buttonStyle(.plain)
         .disabled(routingPointID != nil)
-        .accessibilityLabel("Route to \(destinationName(point)), \(point.kind.userFacingLabel)")
+        .accessibilityLabel("\(previewOnly ? "Preview route" : "Route") to \(destinationName(point)), \(point.kind.userFacingLabel)")
     }
 
     private var emptyState: some View {
         VStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 24, weight: .medium))
-            Text(destinations.isEmpty ? "NO VERIFIED DESTINATIONS YET" : "NO LANDMARKS MATCH")
+            Text(destinations.isEmpty ? (previewOnly ? "NO PREVIEW DESTINATIONS" : "NO VERIFIED DESTINATIONS YET") : "NO LANDMARKS MATCH")
                 .hudType(.section)
                 .tracking(1)
         }
@@ -239,6 +301,8 @@ struct DestinationRouteSummary: View {
         RouteStepConsolidator.consolidate(result.pathA, graph: graph).first
     }
 
+    private var isUnverifiedPreview: Bool { result.solveAttempt == .nonCanonicalDataset }
+
     var body: some View {
         HStack(spacing: 11) {
             Image(systemName: result.rendezvousPoint?.kind.systemImageName ?? "location.fill")
@@ -250,9 +314,9 @@ struct DestinationRouteSummary: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Text("GO TO")
+                    Text(isUnverifiedPreview ? "PREVIEW" : "GO TO")
                         .hudType(.caption)
-                        .foregroundColor(HUDTheme.routeMeeting)
+                        .foregroundColor(isUnverifiedPreview ? HUDTheme.accentAmber : HUDTheme.routeMeeting)
                         .tracking(1)
                     Text(destinationName.uppercased())
                         .hudType(.section)
@@ -260,7 +324,13 @@ struct DestinationRouteSummary: View {
                         .tracking(0.4)
                         .lineLimit(1)
                 }
-                if let firstStep {
+                if isUnverifiedPreview {
+                    Text("UNVERIFIED MAP · NOT FOR NAVIGATION")
+                        .hudType(.caption)
+                        .foregroundColor(HUDTheme.accentAmber)
+                        .tracking(0.5)
+                        .lineLimit(1)
+                } else if let firstStep {
                     Text("\(firstStep.isLiftStep ? "RIDE" : "START ON") \(firstStep.name.uppercased())")
                         .hudType(.caption)
                         .foregroundColor(HUDTheme.secondaryText)
@@ -276,7 +346,7 @@ struct DestinationRouteSummary: View {
 
             Spacer(minLength: 6)
 
-            Text(etaText)
+            Text(isUnverifiedPreview ? "~\(etaText)" : etaText)
                 .hudType(.label)
                 .foregroundColor(HUDTheme.routeSkierA)
                 .tracking(0.5)

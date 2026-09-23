@@ -37,11 +37,10 @@ extension MountainMapView.Coordinator {
     /// Bucketed to 5-minute windows at rest / 15-minute while scrubbing
     /// so we're not repainting the atmosphere on every pixel of drag.
     func updateSkyLayerSunPosition(_ map: MapboxMap) {
-        let calendar = Calendar.current
-        let minute = calendar.component(.hour, from: inputs.selectedTime) * 60
-                   + calendar.component(.minute, from: inputs.selectedTime)
         let bucketMinutes = inputs.isScrubbingTimeline ? 15 : 5
-        let bucket = minute / bucketMinutes
+        let bucket = Int(inputs.selectedTime.timeIntervalSinceReferenceDate / Double(bucketMinutes * 60))
+        let skyKey = bucket &* 131 &+ inputs.cloudCoverPercent
+        let atmosphereKey = skyKey &* 10_000 &+ Int((inputs.visibilityKm * 10).rounded())
 
         let lat = inputs.resortLatitude ?? 39.6
         let lon = inputs.resortLongitude
@@ -57,8 +56,15 @@ extension MountainMapView.Coordinator {
             value: [solar.azimuth, max(0, solar.altitude)]
         )
 
-        if bucket != lastSkyBucket {
-            lastSkyBucket = bucket
+        if skyKey != lastSkyBucket {
+            lastSkyBucket = skyKey
+
+            applyTerrainLighting(
+                map,
+                solarAltitude: solar.altitude,
+                solarAzimuth: solar.azimuth,
+                cloudCover: inputs.cloudCoverPercent
+            )
 
             // Sun intensity dims heavily with cloud cover: 0% → clear
             // bluebird (full intensity), 100% → overcast (low punch).
@@ -91,8 +97,8 @@ extension MountainMapView.Coordinator {
         // Fog / atmosphere (terrain depth haze) — separate bucket so
         // visibility-driven range updates even when the sky palette
         // hasn't changed.
-        if bucket != lastAtmosphereBucket {
-            lastAtmosphereBucket = bucket
+        if atmosphereKey != lastAtmosphereBucket {
+            lastAtmosphereBucket = atmosphereKey
             applyAtmosphereTint(
                 map,
                 solarAltitude: solar.altitude,
@@ -111,7 +117,7 @@ extension MountainMapView.Coordinator {
     ) -> (atmosphere: String, halo: String) {
         // Map solar altitude (-20° → sub-horizon, 60° → near zenith) to
         // a warm-cool mix; cloud cover washes the warmth toward gray.
-        let altT = max(0.0, min(1.0, (solarAltitude + 10.0) / 70.0))  // 0 = night/dusk, 1 = noon
+        let altT = max(0.0, min(1.0, (solarAltitude + 4.0) / 34.0))  // 0 = night, 1 = full daylight
         let cloudT = max(0.0, min(1.0, Double(cloudCover) / 100.0))
 
         // Clear-sky ramp: deep navy at night → warm amber at dawn/dusk →
@@ -120,7 +126,7 @@ extension MountainMapView.Coordinator {
 
         // Night → noon target atmosphere RGB (0..1)
         let nightR = 0.08, nightG = 0.10, nightB = 0.18
-        let noonR  = 0.40, noonG  = 0.60, noonB  = 0.92
+        let noonR  = 0.36, noonG  = 0.63, noonB  = 0.90
         var r = mix(nightR, noonR, altT)
         var g = mix(nightG, noonG, altT)
         var b = mix(nightB, noonB, altT)
@@ -168,41 +174,42 @@ extension MountainMapView.Coordinator {
         cloudCover: Int,
         visibilityKm: Double
     ) {
-        let altT = max(0.0, min(1.0, (solarAltitude + 10.0) / 70.0))
+        let altT = max(0.0, min(1.0, (solarAltitude + 4.0) / 34.0))
         let cloudT = max(0.0, min(1.0, Double(cloudCover) / 100.0))
 
         // Base low-atmosphere color (near ground) — darkens in stormy
         // conditions, warms at dawn/dusk, cools at noon.
         func mix(_ a: Double, _ b: Double, _ t: Double) -> Double { a + (b - a) * t }
-        let baseR = mix(0.06, 0.45, altT)
-        let baseG = mix(0.07, 0.55, altT)
-        let baseB = mix(0.12, 0.75, altT)
-        let stormyR = mix(baseR, 0.32, cloudT * 0.85)
-        let stormyG = mix(baseG, 0.36, cloudT * 0.85)
-        let stormyB = mix(baseB, 0.42, cloudT * 0.85)
+        let baseR = mix(0.06, 0.30, altT)
+        let baseG = mix(0.07, 0.43, altT)
+        let baseB = mix(0.12, 0.62, altT)
+        let stormyR = mix(baseR, 0.55, cloudT * 0.85)
+        let stormyG = mix(baseG, 0.60, cloudT * 0.85)
+        let stormyB = mix(baseB, 0.67, cloudT * 0.85)
 
         let highR = mix(0.08, 0.55, altT)
         let highG = mix(0.10, 0.70, altT)
         let highB = mix(0.18, 0.92, altT)
-        let highStormyR = mix(highR, 0.45, cloudT * 0.75)
-        let highStormyG = mix(highG, 0.48, cloudT * 0.75)
-        let highStormyB = mix(highB, 0.55, cloudT * 0.75)
+        let highStormyR = mix(highR, 0.65, cloudT * 0.75)
+        let highStormyG = mix(highG, 0.70, cloudT * 0.75)
+        let highStormyB = mix(highB, 0.76, cloudT * 0.75)
 
-        // Visibility → fog range. 10+ km = clear (default 0.8, 7.0);
-        // 5 km = moderate haze; 1 km = whiteout (range clamps in tight).
+        // Preserve map readability even when the weather feed reports poor
+        // visibility. The HUD carries the actual distance; visual haze adds
+        // atmosphere without hiding the trail network from the user.
         let vis = max(0.2, min(20.0, visibilityKm))
-        let rangeStart = 0.4 + (vis / 20.0) * 0.6      // 0.4 → 1.0
-        let rangeEnd   = 3.0 + (vis / 20.0) * 6.0      // 3.0 → 9.0
+        let rangeStart = 1.5 + (vis / 20.0) * 1.0
+        let rangeEnd   = 7.0 + (vis / 20.0) * 11.0
 
         let stars = max(0.0, 0.2 * (1.0 - altT) * (1.0 - cloudT * 0.6))
-        let horizon = min(0.3, 0.08 + (1.0 - vis / 10.0) * 0.15)
+        let horizon = min(0.22, 0.04 + (1.0 - vis / 10.0) * 0.12)
 
         var atmosphere = Atmosphere()
         atmosphere.color = .constant(StyleColor(uiColor(r: stormyR, g: stormyG, b: stormyB, a: 1.0)))
         atmosphere.highColor = .constant(StyleColor(uiColor(r: highStormyR, g: highStormyG, b: highStormyB, a: 1.0)))
         atmosphere.range = .constant([rangeStart, rangeEnd])
         atmosphere.starIntensity = .constant(stars)
-        atmosphere.horizonBlend = .constant(max(0.08, horizon))
+        atmosphere.horizonBlend = .constant(max(0.04, horizon))
         try? map.setAtmosphere(atmosphere)
     }
 

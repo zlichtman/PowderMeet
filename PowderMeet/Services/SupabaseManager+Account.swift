@@ -64,12 +64,13 @@ extension SupabaseManager {
     /// Thin delegate to `AvatarUploader` (the storage-REST plumbing lives
     /// there now); the public API is unchanged so onboarding + profile call
     /// sites don't move.
-    func uploadAvatar(imageData: Data) async throws -> String {
+    func uploadAvatar(imageData: Data, expectedUserID: UUID? = nil) async throws -> String {
         try await AvatarUploader.upload(
             imageData: imageData,
             client: client,
             projectURL: Self.projectURL,
-            anonKey: Self.anonKey
+            anonKey: Self.anonKey,
+            expectedUserID: expectedUserID
         )
     }
 }
