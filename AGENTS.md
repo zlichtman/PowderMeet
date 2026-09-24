@@ -555,8 +555,8 @@ supabase db push --include-all --dry-run
 
 Distribution remains held until the mountains work. Simulator validation now
 passes (642 tests, nine opt-in skips). The September 23 owner-scoped activity
-migration and `build-resort-graph` hardening are committed but not yet applied
-or deployed. See `RELEASE_READINESS.md` for unresolved production routing,
+migration is applied and `build-resort-graph` v8 (service-role only, fail
+closed) is deployed. See `RELEASE_READINESS.md` for unresolved production routing,
 provider coverage, and source-data gaps. The opt-in `CapturedGoToPreviewTests`
 audit (`POWDERMEET_ROUTE_AUDIT_DIRECTORY`, optional `POWDERMEET_GO_TO_RESORTS`)
 measures how many landmarks Go To can reach on real captured graphs.

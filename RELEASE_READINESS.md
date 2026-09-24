@@ -2,6 +2,9 @@
 
 GitHub `main` is `v1.0.0` plus one squashed commit of the Codex session work
 (build 202 on TestFlight); the standalone build-63 bump commit was removed.
+The fix pass below shipped as **1.0.0 (203)**: archived Release, uploaded to
+App Store Connect with automatic signing (upload succeeded; Apple processing).
+Only the known MapboxCommon/MapboxCoreMaps missing-dSYM warnings appeared.
 
 Production readback today: **0 canonical manifests, 0 graph blobs, 0
 publications**, 1 profile, 0 meet requests, 0 imported runs. Every mountain
@@ -32,14 +35,25 @@ Fixed in the app:
 - **Canonical meet replay**: a pinned-version fetch now carries current status,
   so accepting a meet pinned to the live publication no longer fails first.
 
-Prepared, **not yet applied to production** (needs explicit approval):
+Applied to production with explicit approval:
 
-- `20260923170000_owner_scoped_activity_data.sql`: `imported_runs` was
-  readable by anyone with the anon key (`USING (true)`); now owner-only. The
-  recompute RPCs now refuse to rebuild another user's data. pgTAP extended.
-- `build-resort-graph`: requires a service-role token and fails closed when
+- `20260923170000_owner_scoped_activity_data.sql` (via `supabase db push
+  --include-all` after a dry run): `imported_runs` was readable by anyone with
+  the anon key (`USING (true)`); now owner-only. The recompute RPCs now refuse
+  to rebuild another user's data. pgTAP extended. Readback confirmed the
+  policies and grants; a rolled-back probe confirmed a cross-user recompute
+  fails with 42501 and the owner's own recompute succeeds.
+  Exposure: the 365 runs imported between 18:18 and 21:42 UTC today were
+  readable with the anon key until the fix. The API gateway logs show only the
+  owner's own app (authenticated, PowderMeet/202) touched `imported_runs`
+  in that window; no anonymous or GraphQL reads.
+- The local file `20260922012500_restore_powdermeet_house_ski.sql` was renamed
+  to `20260922012247_…`, the version production recorded for the identical
+  statement (it had been applied outside `db push`), so history is in sync.
+- `build-resort-graph` v8: requires a service-role token and fails closed when
   manifest rows cannot be read or do not match expected counts (previously an
   RPC error built an all-open, non-canonical graph that publish would accept).
+  JWT verification remains enabled; an anon-key call now returns 403.
 
 Still required for live routing: a reviewed canonical manifest per resort
 (every routable trail claimed; Whistler has 509 named candidates, 106 unnamed
