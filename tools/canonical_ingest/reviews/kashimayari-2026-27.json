@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "resort_id": "kashimayari",
+  "season": "2026-2027",
+  "observed_at": "2026-09-21",
+  "decision": "review_required",
+  "production_apply_allowed": false,
+  "source_capture": {
+    "osm_sha256": "281414a06b39fdd92220b1ac80e8dfef0e0c6abb1f7e44766bcda5d6793b8226",
+    "elevation_sha256": "fa4c98687c451bcde89bedb1ee2061bc404987defbd37550a25b4c6132410238",
+    "source_timestamp": "2026-09-21T18:41:36Z",
+    "query_included_explicit_connections": true,
+    "explicit_connection_way_count": 0,
+    "named_trail_candidates": 1,
+    "unnamed_downhill_ways": 14,
+    "named_lift_candidates": 5,
+    "method": "Completed staged September 21 server snapshot; current app pins remain unchanged."
+  },
+  "topology_audit": {
+    "source_trails": 15,
+    "source_lifts": 5,
+    "nodes": 119,
+    "edges": 130,
+    "fingerprint": "119:130:d3e0e3d63c2072ea",
+    "integrity_failures": [],
+    "disconnected_components": 1,
+    "lift_exits_without_explicit_downhill_link": [],
+    "canonical_review_required": true,
+    "graph_version": "v15"
+  },
+  "official_sources": [
+    "https://www.kashimayari.net/snow/fields/",
+    "https://www.hakubavalley.com/cms/wp-content/uploads/2026/03/KashimayariSnowResortFamilyPark_2026.pdf"
+  ],
+  "apply_blockers": [
+    "Map all 14 unnamed source downhill ways to verified course identities and geometry; do not invent names.",
+    "A connected source graph does not prove complete coverage or safe rendezvous locations.",
+    "No canonical live-status provider is configured for this resort. The official page status update is dated March 23, so it is not a current observation."
+  ],
+  "official_crosscheck": {
+    "lift_labels_match_source_after_nfkc": [
+      "\u7b2c1\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8",
+      "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8",
+      "\u7b2c5\u30da\u30a2\u30ea\u30d5\u30c8",
+      "\u7b2c6\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8",
+      "\u7b2c7\u30da\u30a2\u30ea\u30d5\u30c8"
+    ],
+    "terrain_status_last_updated": "2026-03-23 08:00",
+    "meaning": "Lift spelling corroboration only. The published course list has multiple named routes while 14 source downhill ways are unnamed; identity and geometry ownership remain unreviewed."
+  },
+  "previous_topology_audit_v14": {
+    "source_trails": 15,
+    "source_lifts": 5,
+    "nodes": 119,
+    "edges": 130,
+    "fingerprint": "119:130:d3e0e3d63c2072ea",
+    "integrity_failures": [],
+    "disconnected_components": 1,
+    "lift_exits_without_explicit_downhill_link": [],
+    "canonical_review_required": true
+  }
+}

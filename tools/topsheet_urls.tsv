@@ -1,0 +1,77 @@
+# topsheet_urls.tsv — operator-curated source URLs.
+# Format: <slug><TAB><url>
+# Lines starting with # are ignored. Blank URL → slug is silently skipped.
+#
+# Workflow:
+#   1. For each slug, search the brand site / retailer.
+#   2. Right-click the topsheet image → "Copy Image Address".
+#   3. Paste the URL after the TAB on that slug's row. Save.
+#   4. Run: ~/topsheet-source/.venv/bin/python tools/scrape_topsheets.py --from-urls
+# Re-runnable: rows whose processed PNG already exists are skipped.
+# Empty URLs are silently skipped, so you can drip-fill over time.
+
+atomic-bent-110
+atomic-bent-100
+atomic-bent-90
+atomic-maverick-95-ti
+atomic-redster-g9-rvsk-s
+black-crows-atris
+black-crows-camox
+black-crows-daemon
+black-crows-anima
+faction-prodigy-3
+faction-mana-4
+faction-dancer-3
+rossignol-soul-7-hd
+rossignol-sender-104-ti
+rossignol-experience-86-ti
+rossignol-black-ops-sender
+k2-mindbender-99ti
+k2-mindbender-108ti
+k2-disruption-82ti
+salomon-qst-106
+salomon-qst-98
+salomon-stance-96
+salomon-s-force-bold
+volkl-m6-mantra
+volkl-blaze-106
+volkl-kendo-88
+volkl-revolt-95
+nordica-enforcer-100
+nordica-enforcer-110
+nordica-santa-ana-98
+head-kore-99
+head-kore-105
+head-supershape-e-magnum
+blizzard-bonafide-97
+blizzard-rustler-10
+blizzard-hustle-10
+blizzard-black-pearl-88
+dps-pagoda-100-rp
+dps-pagoda-tour-112
+dps-wailer-a112
+armada-arv-100
+armada-arv-116-jj
+armada-declivity-102-ti
+line-sakana
+line-blade-optic-96
+line-pandora-99
+stockli-stormrider-102
+stockli-stormrider-88
+stockli-laser-ax
+on3p-wrenegade-108
+on3p-woodsman-108
+dynastar-m-pro-99
+dynastar-m-free-108
+fischer-ranger-102
+fischer-rc4
+elan-ripstick-96
+elan-ripstick-106
+moment-wildcat
+moment-deathwish
+j-skis-masterblaster
+j-skis-friend
+icelantic-nomad-105
+icelantic-pioneer-109
+voile-hypervector-bc
+black-diamond-helio-carbon-95

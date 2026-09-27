@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "resort_id": "vail",
+  "observed_at": "2026-08-09",
+  "meaning": "Explicit review decisions only. They merge source labels into one pending canonical candidate; they never accept a row, resolve attributes, establish final counts, or authorize publication.",
+  "artifacts": [
+    {
+      "path": "fixtures/overpass/vail.json",
+      "sha256": "0d7f7b29fa7f02e46994ea21dfc33bd3346a8e6558a47338270f0c33f1d9c4fa"
+    },
+    {
+      "path": "official_maps/vail.json",
+      "sha256": "11776f3b854bf4512b4adba93e2ccfbab8a6cb65838d61575480ab003cdfcb7b"
+    }
+  ],
+  "merges": [
+    {
+      "id": "trail:avanti",
+      "kind": "trail",
+      "canonical_name": "Avanti",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Avanti" },
+        { "source": "overpass", "name": "Avanti - Lower" },
+        { "source": "overpass", "name": "Avanti - Middle" },
+        { "source": "overpass", "name": "Avanti - Upper" }
+      ],
+      "evidence_fingerprint": "9e7b3394f056fe2f9f1cf37a26614356b85ac020ec78732d4b85e66315f21e28"
+    },
+    {
+      "id": "trail:berries",
+      "kind": "trail",
+      "canonical_name": "Berries",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Berries" },
+        { "source": "overpass", "name": "Berries - Lower" },
+        { "source": "overpass", "name": "Berries - Upper" }
+      ],
+      "evidence_fingerprint": "aaab75b869b9db03b29d5d0842382657d29be92ad75e9fc8fe3335c1f3abc481"
+    },
+    {
+      "id": "trail:big-rock-park",
+      "kind": "trail",
+      "canonical_name": "Big Rock Park",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Big Rock Park" },
+        { "source": "overpass", "name": "Big Rock Park - East" },
+        { "source": "overpass", "name": "Big Rock Park - West" }
+      ],
+      "evidence_fingerprint": "19aced2df50b47ce76e0600ba261fd44dcac5a2e9e957b133ec6775670dfdc6b"
+    },
+    {
+      "id": "trail:cloud-9",
+      "kind": "trail",
+      "canonical_name": "Cloud 9",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Cloud 9" },
+        { "source": "overpass", "name": "Cloud 9 - Lower" },
+        { "source": "overpass", "name": "Cloud 9 - Middle" }
+      ],
+      "evidence_fingerprint": "268370766853de0e45bc051157dd7576603a5f4f68f2ce05b2d16e2155ce8e59"
+    },
+    {
+      "id": "trail:grand-review",
+      "kind": "trail",
+      "canonical_name": "Grand Review",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Grand Review" },
+        { "source": "overpass", "name": "Grand Review" },
+        { "source": "overpass", "name": "Grand Review - Lower" }
+      ],
+      "evidence_fingerprint": "de4867b442696702841d0563ccf60d8d2a5575569ef36ccf37bb4ed1b32b2d7c"
+    },
+    {
+      "id": "trail:lionsway",
+      "kind": "trail",
+      "canonical_name": "Lionsway",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Lionsway" },
+        { "source": "overpass", "name": "Lionsway - Lower" },
+        { "source": "overpass", "name": "Lionsway - Upper" }
+      ],
+      "evidence_fingerprint": "7afa37885ce1c0758dbe34cf6dab6266ed5428e9a265e6c296a9917dea24ba64"
+    },
+    {
+      "id": "trail:pickeroon",
+      "kind": "trail",
+      "canonical_name": "Pickeroon",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Pickeroon" },
+        { "source": "overpass", "name": "Pickeroon - Lower" },
+        { "source": "overpass", "name": "Pickeroon - Upper" }
+      ],
+      "evidence_fingerprint": "512668d598d5d6f836d71b8a9ebea43b7061425e74971567dde7e80248edd930"
+    },
+    {
+      "id": "trail:pony-express",
+      "kind": "trail",
+      "canonical_name": "Pony Express",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Pony Express" },
+        { "source": "overpass", "name": "Pony Express - Lower" },
+        { "source": "overpass", "name": "Pony Express - Upper" }
+      ],
+      "evidence_fingerprint": "a9a35ff8c6245b650f4bbfcbb154c447d9d3e949169fb14d1c1a10d9931eae91"
+    },
+    {
+      "id": "trail:prima",
+      "kind": "trail",
+      "canonical_name": "Prima",
+      "rationale": "Official map base label plus one connected positional source chain; Prima Cornice and Brown's Face remain separate.",
+      "members": [
+        { "source": "official_map", "name": "Prima" },
+        { "source": "overpass", "name": "Prima - Lower" },
+        { "source": "overpass", "name": "Prima - Middle" }
+      ],
+      "evidence_fingerprint": "d22d7cb05c2a56b8c0a44b804a745ad2e2dabd4febc8f252f00fbd2a101a41f1"
+    },
+    {
+      "id": "trail:safari",
+      "kind": "trail",
+      "canonical_name": "Safari",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "Safari" },
+        { "source": "overpass", "name": "Safari" },
+        { "source": "overpass", "name": "Safari - East" },
+        { "source": "overpass", "name": "Safari - Lower" }
+      ],
+      "evidence_fingerprint": "2aeb31005840757e27208082e732368c4ad5037cafa1fcf2ee54b2bb8a06bc2a"
+    },
+    {
+      "id": "trail:the-preserve",
+      "kind": "trail",
+      "canonical_name": "The Preserve",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "The Preserve" },
+        { "source": "overpass", "name": "The Preserve" },
+        { "source": "overpass", "name": "The Preserve - Lower" }
+      ],
+      "evidence_fingerprint": "d0c7d701ba8030bcd6ac88db28c799da2e5682b57fd6cf720edbbbb5c65f07ad"
+    },
+    {
+      "id": "trail:the-star",
+      "kind": "trail",
+      "canonical_name": "The Star",
+      "rationale": "Official map base label plus one connected positional source chain.",
+      "members": [
+        { "source": "official_map", "name": "The Star" },
+        { "source": "overpass", "name": "The Star" },
+        { "source": "overpass", "name": "The Star - Lower" }
+      ],
+      "evidence_fingerprint": "44713ef8064418b358394afb66ea049e70aeb405c19c2b106c946ddcb6e74bc1"
+    },
+    {
+      "id": "trail:cjs-glade",
+      "kind": "trail",
+      "canonical_name": "CJ's Glade",
+      "rationale": "Official map spelling resolves the singular/plural source alias.",
+      "members": [
+        { "source": "official_map", "name": "CJ's Glade" },
+        { "source": "overpass", "name": "CJ's Glades" }
+      ],
+      "evidence_fingerprint": "7e4f9f209615cc178213bfa28fbf91345dfb4e4999c980c9a67448029f0972ad"
+    },
+    {
+      "id": "trail:genghis-khan",
+      "kind": "trail",
+      "canonical_name": "Genghis Khan",
+      "rationale": "Official map spelling resolves the transposed source spelling.",
+      "members": [
+        { "source": "official_map", "name": "Genghis Khan" },
+        { "source": "overpass", "name": "Genghis Kahn" }
+      ],
+      "evidence_fingerprint": "559868692c7261a75af2953d6a5b7dd1ba439f211d1fabc729ffb27038559ae7"
+    },
+    {
+      "id": "lift:mountain-top-express",
+      "kind": "lift",
+      "canonical_name": "Mountain Top Express Lift",
+      "rationale": "Official lift number is retained separately; parenthetical source number is an alias.",
+      "members": [
+        { "source": "official_map", "name": "Mountain Top Express Lift" },
+        { "source": "overpass", "name": "Mountain Top Express Lift (4)" }
+      ],
+      "evidence_fingerprint": "0ff17d3d4422e5e5641416f0bc8190d873de2aa81925791f7581ecdf7b3a52aa"
+    },
+    {
+      "id": "lift:sun-down-express",
+      "kind": "lift",
+      "canonical_name": "Sun Down Express Lift",
+      "rationale": "Official map supplies the complete lift label for the same numbered source lift.",
+      "members": [
+        { "source": "official_map", "name": "Sun Down Express Lift" },
+        { "source": "overpass", "name": "Sun Down Express" }
+      ],
+      "evidence_fingerprint": "f6ef409c7bd1d6c0a66f6e90b730e85dc617f48e86ccbd7dcb5ac7f172209d53"
+    }
+  ],
+  "deferred": [
+    {
+      "kind": "trail",
+      "names": ["Wild Card", "Wildcard"],
+      "reason": "One same-name candidate branches; explicit identity/topology evidence is still required."
+    },
+    {
+      "kind": "trail",
+      "names": ["Poppyfields East", "Poppyfields West"],
+      "reason": "Both names are independently printed on the official map and remain distinct."
+    },
+    {
+      "kind": "trail",
+      "names": ["Ledges", "Minnie's", "Riva Ridge", "Silk Road", "Vail Village Catwalk"],
+      "reason": "The positional source families are disconnected and cannot be merged without connector or identity evidence."
+    }
+  ]
+}

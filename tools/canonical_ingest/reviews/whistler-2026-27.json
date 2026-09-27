@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "resort_id": "whistler",
+  "season": "2026-2027",
+  "observed_at": "2026-09-21",
+  "decision": "review_required",
+  "production_apply_allowed": false,
+  "source_capture": {
+    "osm_sha256": "d40dfb73a64254980b19485e1f24c582a1aec3a4cfbffe1a713fdce8ad6f75ea",
+    "elevation_sha256": "21baefae7ddab55a68b176c5db43ccbbb4ed67d25c99fceaf768308dd59c7337",
+    "source_timestamp": "2026-06-01T08:52:28Z",
+    "query_included_explicit_connections": true,
+    "explicit_connection_way_count": 0,
+    "named_trail_candidates": 509,
+    "unnamed_downhill_ways": 106,
+    "named_lift_candidates": 33,
+    "method": "Operator-side Overpass extraction after edge-runtime upstream timeouts. Terrain elevations reused at exact coordinate keys; no active snapshot pin changed."
+  },
+  "topology_audit": {
+    "source_trails": 700,
+    "source_lifts": 32,
+    "nodes": 2178,
+    "edges": 2858,
+    "fingerprint": "2178:2858:6099cc1c1156d3b9",
+    "integrity_failures": [],
+    "disconnected_components": 17,
+    "lift_exits_without_explicit_downhill_link": [
+      {
+        "id": "l1174906008",
+        "name": "Top Carpet",
+        "source_way_id": "1174906008",
+        "terminal_node_id": "src:10917226254",
+        "coordinate": {
+          "lat": 50.0984179,
+          "lon": -122.9490292
+        }
+      },
+      {
+        "id": "l1174906013",
+        "name": "Scampland Carpet",
+        "source_way_id": "1174906013",
+        "terminal_node_id": "src:10917226305",
+        "coordinate": {
+          "lat": 50.0972101,
+          "lon": -122.9506942
+        }
+      },
+      {
+        "id": "l258644618",
+        "name": "Blackcomb Kids Carpet",
+        "source_way_id": "258644618",
+        "terminal_node_id": "src:2639771125",
+        "coordinate": {
+          "lat": 50.1144261,
+          "lon": -122.9473712
+        }
+      },
+      {
+        "id": "l258645935",
+        "name": "It Happens Carpet",
+        "source_way_id": "258645935",
+        "terminal_node_id": "src:2639783825",
+        "coordinate": {
+          "lat": 50.0982853,
+          "lon": -122.9509912
+        }
+      },
+      {
+        "id": "l258646026",
+        "name": "Adult Supercarpet",
+        "source_way_id": "258646026",
+        "terminal_node_id": "src:2639785180",
+        "coordinate": {
+          "lat": 50.0972554,
+          "lon": -122.9489256
+        }
+      },
+      {
+        "id": "l258646027",
+        "name": "Never Ever Flats Carpet",
+        "source_way_id": "258646027",
+        "terminal_node_id": "src:2639785182",
+        "coordinate": {
+          "lat": 50.0989068,
+          "lon": -122.9499463
+        }
+      },
+      {
+        "id": "l258646783",
+        "name": "Creekside Carpet",
+        "source_way_id": "258646783",
+        "terminal_node_id": "src:2639792861",
+        "coordinate": {
+          "lat": 50.0931981,
+          "lon": -122.9881061
+        }
+      },
+      {
+        "id": "l29166968",
+        "name": "Emerald 6 Express",
+        "source_way_id": "29166968",
+        "terminal_node_id": "src:320777536",
+        "coordinate": {
+          "lat": 50.0684081,
+          "lon": -122.9454023
+        }
+      },
+      {
+        "id": "l29362437_vx2",
+        "name": "Blackcomb Gondola",
+        "source_way_id": "29362437",
+        "terminal_node_id": "src:6041106563",
+        "coordinate": {
+          "lat": 50.0960575,
+          "lon": -122.9016523
+        }
+      },
+      {
+        "id": "l29473068",
+        "name": "Excelerator Express",
+        "source_way_id": "29473068",
+        "terminal_node_id": "src:324831618",
+        "coordinate": {
+          "lat": 50.1034316,
+          "lon": -122.9050822
+        }
+      },
+      {
+        "id": "l32775430",
+        "name": "Peak Express",
+        "source_way_id": "32775430",
+        "terminal_node_id": "src:2639798564",
+        "coordinate": {
+          "lat": 50.0592396,
+          "lon": -122.9574478
+        }
+      },
+      {
+        "id": "l32828960",
+        "name": "Olympic Chair",
+        "source_way_id": "32828960",
+        "terminal_node_id": "src:369887842",
+        "coordinate": {
+          "lat": 50.0931029,
+          "lon": -122.946435
+        }
+      },
+      {
+        "id": "l47941921",
+        "name": "Garbanzo Express",
+        "source_way_id": "47941921",
+        "terminal_node_id": "src:2639787943",
+        "coordinate": {
+          "lat": 50.0789909,
+          "lon": -122.9510754
+        }
+      },
+      {
+        "id": "l47941929",
+        "name": "Fitzsimmons Express",
+        "source_way_id": "47941929",
+        "terminal_node_id": "src:2639782492",
+        "coordinate": {
+          "lat": 50.0973172,
+          "lon": -122.953261
+        }
+      },
+      {
+        "id": "l48083140",
+        "name": "Franz's Chair",
+        "source_way_id": "48083140",
+        "terminal_node_id": "src:611220502",
+        "coordinate": {
+          "lat": 50.0666912,
+          "lon": -122.9474313
+        }
+      }
+    ],
+    "canonical_review_required": true,
+    "graph_version": "v15"
+  },
+  "official_sources": [
+    "https://www.whistlerblackcomb.com/-/aemasset/sitecore/whistler-blackcomb/maps/winter-2025-2026/20251023_WB_winter-trail_map_001.pdf"
+  ],
+  "apply_blockers": [
+    "The provider source timestamp is June 1, not the September 21 extraction date. It does not establish 2026-27 coverage.",
+    "The graph has 17 disconnected components and 15 lift exits without an immediate mapped downhill connection. These are review flags, not permission to infer links.",
+    "Complete reviewed trail/lift identities and rendezvous landmarks are absent.",
+    "Winter inventory and operational status must be validated before live routing."
+  ],
+  "previous_topology_audit_v14": {
+    "source_trails": 769,
+    "source_lifts": 33,
+    "nodes": 2586,
+    "edges": 3257,
+    "fingerprint": "2586:3257:fc803b2196684ca3",
+    "integrity_failures": [],
+    "disconnected_components": 85,
+    "lift_exits_without_explicit_downhill_link": [
+      {
+        "id": "l1174906008",
+        "name": "Top Carpet"
+      },
+      {
+        "id": "l1174906013",
+        "name": "Scampland Carpet"
+      },
+      {
+        "id": "l258644618",
+        "name": "Blackcomb Kids Carpet"
+      },
+      {
+        "id": "l258645935",
+        "name": "It Happens Carpet"
+      },
+      {
+        "id": "l258646026",
+        "name": "Adult Supercarpet"
+      },
+      {
+        "id": "l258646027",
+        "name": "Never Ever Flats Carpet"
+      },
+      {
+        "id": "l258646783",
+        "name": "Creekside Carpet"
+      },
+      {
+        "id": "l29166968",
+        "name": "Emerald 6 Express"
+      },
+      {
+        "id": "l29362437_vx2",
+        "name": "Blackcomb Gondola"
+      },
+      {
+        "id": "l29473068",
+        "name": "Excelerator Express"
+      },
+      {
+        "id": "l32775430",
+        "name": "Peak Express"
+      },
+      {
+        "id": "l32828960",
+        "name": "Olympic Chair"
+      },
+      {
+        "id": "l47941921",
+        "name": "Garbanzo Express"
+      },
+      {
+        "id": "l47941929",
+        "name": "Fitzsimmons Express"
+      },
+      {
+        "id": "l48083140",
+        "name": "Franz's Chair"
+      },
+      {
+        "id": "l682523542",
+        "name": "Kadenwood Gondola"
+      }
+    ],
+    "canonical_review_required": true
+  },
+  "parser_corrections": [
+    "69 area=yes downhill footprints excluded from route centerlines.",
+    "Private Kadenwood Gondola excluded.",
+    "Explicit oneway=no passenger lifts retain both travel directions; no inferred links."
+  ]
+}

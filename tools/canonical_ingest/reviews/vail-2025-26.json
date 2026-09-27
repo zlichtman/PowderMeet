@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "resort_id": "vail",
+  "season": "2025-2026",
+  "observed_at": "2026-08-09",
+  "decision": "review_required",
+  "production_apply_allowed": false,
+  "official_sources": {
+    "mountain_statistics": "https://www.vail.com/the-mountain/about-the-mountain/mountain-info.aspx",
+    "trail_map_page": "https://www.vail.com/the-mountain/about-the-mountain/trail-map.aspx",
+    "terrain_status_page": "https://www.vail.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "winter_maps": [
+      "https://scene7.vailresorts.com/is/image/vailresorts/20251001_VL_winter-front-side-logos-trail_map_001",
+      "https://scene7.vailresorts.com/is/image/vailresorts/20251001_VL_winter-back-bowls-logos-trail_map_001",
+      "https://scene7.vailresorts.com/is/image/vailresorts/20251001_VL_winter-blue-sky-logos-trail_map_001"
+    ],
+    "reviewed_label_evidence": "tools/canonical_ingest/official_maps/vail.json"
+  },
+  "headline_statistics": {
+    "trails_or_runs": 278,
+    "lifts": 32,
+    "semantics": "Resort-published inventory statistics; not canonical identity counts."
+  },
+  "overpass_candidate_inventory": {
+    "fixture": "tools/canonical_ingest/fixtures/overpass/vail.json",
+    "downhill_way_count": 255,
+    "named_downhill_way_count": 249,
+    "unique_normalized_trail_name_count": 215,
+    "multi_way_trail_identity_candidate_count": 24,
+    "trail_identity_candidates_with_attribute_conflicts": 5,
+    "explicit_connection_way_count": 0,
+    "aerialway_way_count": 43,
+    "aerialway_station_way_count": 12,
+    "routable_lift_way_count": 30,
+    "unique_routable_lift_name_count": 29,
+    "multi_way_lift_identity_candidate_count": 1,
+    "legacy_draft_lift_count_including_station_names": 32
+  },
+  "official_map_label_evidence": {
+    "purpose": "Reviewed label-presence evidence only; it never establishes inventory completeness, geometry ownership, identity granularity, acceptance, or topology.",
+    "reviewed_trail_label_count": 105,
+    "reviewed_lift_label_count": 25,
+    "overpass_trail_candidates_exactly_corroborated": 90,
+    "overpass_lift_candidates_exactly_corroborated": 21,
+    "map_only_trail_label_count": 15,
+    "map_only_lift_label_count": 4,
+    "map_only_trail_labels": [
+      "Avanti",
+      "Berries",
+      "Big Rock Park",
+      "CJ's Glade",
+      "Cloud 9",
+      "Genghis Khan",
+      "Ledges",
+      "Lionsway",
+      "Minnie's",
+      "Pickeroon",
+      "Pony Express",
+      "Prima",
+      "Riva Ridge",
+      "Silk Road",
+      "Vail Village Catwalk"
+    ],
+    "map_only_lift_labels": [
+      "Cascade Village Lift",
+      "Earl's Express Lift",
+      "Mountain Top Express Lift",
+      "Sun Down Express Lift"
+    ],
+    "retention": "Official map images and raw OCR output are not committed. The compact label evidence retains source URLs, exact downloaded content hashes, dimensions, map membership, and official lift numbers.",
+    "limitations": [
+      "The label list is intentionally incomplete and therefore cannot satisfy a canonical identity count.",
+      "Map labels may name a whole route once while OSM splits it into upper, middle, and lower ways.",
+      "OCR was only a locator; every retained label was visually reviewed, and purely numeric or legend labels were excluded.",
+      "A match corroborates spelling only; it does not prove routable topology or identity granularity."
+    ]
+  },
+  "official_map_manual_crosscheck": {
+    "observed_at": "2026-08-09",
+    "confirmed_routable_lifts_present_on_official_map_but_absent_from_overpass": [
+      {
+        "name": "Cascade Village Lift",
+        "official_map": "The Front Side",
+        "official_number": 20
+      },
+      {
+        "name": "Earl's Express Lift",
+        "official_map": "Blue Sky Basin",
+        "official_number": 38
+      }
+    ],
+    "meaning": "This proves the Overpass lift inventory is incomplete. It does not imply that adding two rows, or forcing the result to the 32-lift headline, yields the canonical routable identity count."
+  },
+  "official_summer_feed_crosscheck": {
+    "observed_at": "2026-08-09",
+    "winter_inventory_usable": false,
+    "active_summer_lifts": [
+      "Eagle Bahn Gondola #19",
+      "Gondola One"
+    ],
+    "meaning": "The official terrain feed is correctly identified as off-season and cannot validate the complete winter lift or trail inventory."
+  },
+  "overpass_topology_crosscheck": {
+    "multi_way_candidate_count": 25,
+    "connected_chain_count": 18,
+    "connected_branch_count": 1,
+    "connected_branch_candidates": [
+      "Wild Card"
+    ],
+    "disconnected_candidate_count": 6,
+    "disconnected_candidates": [
+      "Surface Lift",
+      "Bwana",
+      "Chaos Canyon",
+      "Sleepytime Road",
+      "The Pump House",
+      "Wow"
+    ],
+    "meaning": "Connectivity is review evidence only. Shared nodes support one segmented route candidate; disconnected or branching geometry requires an explicit identity/topology decision and is never auto-accepted."
+  },
+  "positional_segment_family_crosscheck": {
+    "purpose": "Review-only candidates produced by exact positional suffixes such as Upper, Middle, Lower, East, and West. Approximate names are never auto-merged.",
+    "family_count": 17,
+    "candidate_row_reduction_if_every_family_were_approved": 35,
+    "connected_chain_family_count": 12,
+    "connected_chain_candidate_row_reduction": 22,
+    "connected_chain_families": [
+      "Avanti",
+      "Berries",
+      "Big Rock Park",
+      "Cloud 9",
+      "Grand Review",
+      "Lionsway",
+      "Pickeroon",
+      "Pony Express",
+      "Prima",
+      "Safari",
+      "The Preserve",
+      "The Star"
+    ],
+    "disconnected_family_count": 5,
+    "disconnected_families": [
+      { "name": "Ledges", "minimum_component_gap_m": 610.7 },
+      { "name": "Minnie's", "minimum_component_gap_m": 266.4 },
+      { "name": "Riva Ridge", "minimum_component_gap_m": 270.9 },
+      { "name": "Silk Road", "minimum_component_gap_m": 494.6 },
+      { "name": "Vail Village Catwalk", "minimum_component_gap_m": 100.9 }
+    ],
+    "applied_connected_chain_decision_count": 12,
+    "remaining_disconnected_family_count": 5,
+    "meaning": "The twelve connected families are now explicit, evidence-pinned identity decisions that collapse source rows into pending canonical candidates. They are not accepted, and any source-artifact or row-evidence change invalidates ingest. Five families remain disconnected and require connector or identity evidence."
+  },
+  "near_name_crosscheck": {
+    "purpose": "Deterministic review suggestions only. Dependency presence cannot change draft identities.",
+    "raw_pair_count": 6,
+    "raw_pairs": [
+      ["Mountain Top Express Lift", "Mountain Top Express Lift (4)"],
+      ["Sun Down Express", "Sun Down Express Lift"],
+      ["CJ's Glade", "CJ's Glades"],
+      ["Genghis Kahn", "Genghis Khan"],
+      ["Poppyfields East", "Poppyfields West"],
+      ["Wild Card", "Wildcard"]
+    ],
+    "applied_alias_decision_count": 4,
+    "remaining_pair_count": 2,
+    "remaining_pairs": [
+      ["Poppyfields East", "Poppyfields West"],
+      ["Wild Card", "Wildcard"]
+    ]
+  },
+  "identity_decision_application": {
+    "file": "tools/canonical_ingest/decisions/vail.json",
+    "evidence_artifacts": [
+      {
+        "path": "tools/canonical_ingest/fixtures/overpass/vail.json",
+        "sha256": "0d7f7b29fa7f02e46994ea21dfc33bd3346a8e6558a47338270f0c33f1d9c4fa"
+      },
+      {
+        "path": "tools/canonical_ingest/official_maps/vail.json",
+        "sha256": "11776f3b854bf4512b4adba93e2ccfbab8a6cb65838d61575480ab003cdfcb7b"
+      }
+    ],
+    "applied_decision_count": 16,
+    "connected_family_merge_count": 12,
+    "trail_alias_merge_count": 2,
+    "lift_alias_merge_count": 2,
+    "raw_to_current_trail_row_reduction": 24,
+    "raw_to_current_lift_row_reduction": 2,
+    "semantics": "Decisions only normalize source membership into pending canonical candidates. They do not accept rows, resolve attributes, review final counts, or authorize apply."
+  },
+  "decision_applied_topology_crosscheck": {
+    "multi_way_candidate_count": 36,
+    "connected_chain_count": 29,
+    "connected_branch_count": 1,
+    "disconnected_count": 6,
+    "remaining_positional_family_count": 5,
+    "remaining_near_name_pair_count": 2
+  },
+  "decision_applied_attribute_conflicts": {
+    "attribute": "difficulty",
+    "trails": {
+      "Avanti": ["black", "blue"],
+      "Berries": ["black", "blue"],
+      "Born Free": ["blue", "green"],
+      "Bwana": ["black", "blue"],
+      "Lost Boy": ["blue", "green"],
+      "Northface Catwalk": ["blue", "green"],
+      "Pickeroon": ["black", "blue"],
+      "Prima": ["black", "blue"],
+      "Safari": ["black", "blue"],
+      "Simba": ["black", "blue"],
+      "The Preserve": ["black", "blue"]
+    },
+    "review_policy": "Resolve each identity explicitly. When the source ways are legitimate segments with different ratings, leave canonical difficulty null and clear the reviewed conflict so graph publication preserves each source edge's rating."
+  },
+  "review_state": {
+    "accepted_trail_identity_count": 0,
+    "accepted_lift_identity_count": 0,
+    "raw_review_union_trail_count": 230,
+    "raw_review_union_lift_count": 33,
+    "current_offline_candidate_trail_count": 206,
+    "current_offline_candidate_lift_count": 31,
+    "applied_identity_decision_count": 16,
+    "unresolved_attribute_conflict_count": 11,
+    "canonical_counts_reviewed": false
+  },
+  "apply_blockers": [
+    "The official 278-trail headline is not a unique routable identity list.",
+    "The raw review union contains 230 trail rows. Sixteen evidence-pinned identity decisions reduce the current pending draft to 206 trails and 31 lifts, but no row is accepted and final identity counts remain unreviewed.",
+    "Eleven trail candidates contain unresolved difficulty observations. For a legitimate multi-segment identity, canonical difficulty may be set to null after review so the graph preserves each source segment's difficulty; a single value must not be forced merely to clear the gate.",
+    "Six same-name candidates have disconnected OSM way components and one has branching geometry; each requires an explicit identity/topology decision.",
+    "The current draft contains 31 lift candidates after two explicit name-alias decisions. Cascade Village Lift and Earl's Express Lift remain true map-observed omissions. The relationship to the 32-lift headline cannot be inferred because headline and routable-identity semantics differ.",
+    "Five official-map positional families remain disconnected in OSM and require explicit connector or identity evidence. Wild Card versus Wildcard remains unresolved because one candidate branches.",
+    "The fixture contains no explicit piste:type=connection ways, so connector topology needs separate authoritative evidence.",
+    "No trail or lift row has been individually accepted by an operator."
+  ]
+}
