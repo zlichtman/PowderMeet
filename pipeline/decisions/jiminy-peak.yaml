@@ -1,0 +1,5 @@
+resort_id: jiminy-peak
+# Cricket Triple is the beginner chair at the base; the base-area run is mapped
+# 247 m from its loading station.
+links:
+  - {from: n2149843508, to: n2149834583}

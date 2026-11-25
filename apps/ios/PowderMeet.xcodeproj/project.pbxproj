@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		106F0AFFB9854E6A1C3912F0 /* PowderMeetAPI in Frameworks */ = {isa = PBXBuildFile; productRef = FA9BB225D7CAD5E55730A197 /* PowderMeetAPI */; };
+		143C6470B13F4A59FCC9486E /* SupabaseBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 46572E27C0F68738A41BC954 /* SupabaseBackend */; };
+		1896151F89167BC47BB750B5 /* MountainCore in Frameworks */ = {isa = PBXBuildFile; productRef = 31DF35CB8FC72ADD58A78324 /* MountainCore */; };
+		414F22D7A5033AB14D1874FE /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1AC9C1063E843838CBD9FA95 /* AppCore */; };
+		79AE054D5ADC9E7AF740FA3C /* PMLogging in Frameworks */ = {isa = PBXBuildFile; productRef = AA3A5C494DD569B4EA482DFD /* PMLogging */; };
+		B2AE94878CBD8328CD8F6808 /* MapboxAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = A3C1FBC9491EE9D47ACB6C46 /* MapboxAdapter */; };
+		C59149E52CD5941FE71B90FC /* MapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 5E9B7C77054A02D921FC316A /* MapScene */; };
+		E5642F6D9E4CA0ECAF62C329 /* MeetSolver in Frameworks */ = {isa = PBXBuildFile; productRef = 4976DBEFADF23DE7CF9DA511 /* MeetSolver */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0DDE0F244167562C201D26C5 /* MountainCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MountainCore; path = ../../packages/MountainCore; sourceTree = SOURCE_ROOT; };
+		10FC47ED5D549B3C01CFAFDB /* AppCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppCore; path = ../../packages/AppCore; sourceTree = SOURCE_ROOT; };
+		2BEFCBE8B2D588CE64210D0A /* SupabaseBackend */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SupabaseBackend; path = ../../packages/SupabaseBackend; sourceTree = SOURCE_ROOT; };
+		62DAC630988F53827F44EA81 /* MeetSolver */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MeetSolver; path = ../../packages/MeetSolver; sourceTree = SOURCE_ROOT; };
+		694641142A4AAF673B777411 /* MapboxAdapter */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MapboxAdapter; path = ../../packages/MapboxAdapter; sourceTree = SOURCE_ROOT; };
+		79E0B88DFE50D8324CF3D68A /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		7A61DF22CEFC83A9BB1F8CB7 /* MapScene */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MapScene; path = ../../packages/MapScene; sourceTree = SOURCE_ROOT; };
+		B322BAAB98B7E94CF58ECC7C /* PowderMeetAPI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PowderMeetAPI; path = ../../packages/PowderMeetAPI; sourceTree = SOURCE_ROOT; };
+		C94D7E3580E1E52173638ED3 /* PowderMeet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PowderMeet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D4FB8F360B73728E9656FA /* Support */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Support; path = ../../packages/Support; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		389F78BEDF97AF708CF1DA0A /* PowderMeet */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = PowderMeet;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06D4403BEEC2FB5227CA4DC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				414F22D7A5033AB14D1874FE /* AppCore in Frameworks */,
+				106F0AFFB9854E6A1C3912F0 /* PowderMeetAPI in Frameworks */,
+				143C6470B13F4A59FCC9486E /* SupabaseBackend in Frameworks */,
+				1896151F89167BC47BB750B5 /* MountainCore in Frameworks */,
+				E5642F6D9E4CA0ECAF62C329 /* MeetSolver in Frameworks */,
+				79AE054D5ADC9E7AF740FA3C /* PMLogging in Frameworks */,
+				C59149E52CD5941FE71B90FC /* MapScene in Frameworks */,
+				B2AE94878CBD8328CD8F6808 /* MapboxAdapter in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7C31259247FCB168B1744E84 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				10FC47ED5D549B3C01CFAFDB /* AppCore */,
+				694641142A4AAF673B777411 /* MapboxAdapter */,
+				7A61DF22CEFC83A9BB1F8CB7 /* MapScene */,
+				62DAC630988F53827F44EA81 /* MeetSolver */,
+				0DDE0F244167562C201D26C5 /* MountainCore */,
+				B322BAAB98B7E94CF58ECC7C /* PowderMeetAPI */,
+				2BEFCBE8B2D588CE64210D0A /* SupabaseBackend */,
+				F1D4FB8F360B73728E9656FA /* Support */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		9628A1A8628AD3CD6ACFD450 = {
+			isa = PBXGroup;
+			children = (
+				A10E1C52BB6A12F2312FAF0C /* ios */,
+				7C31259247FCB168B1744E84 /* Packages */,
+				389F78BEDF97AF708CF1DA0A /* PowderMeet */,
+				9D503CFCEAF0B80D1089D2E4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9D503CFCEAF0B80D1089D2E4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C94D7E3580E1E52173638ED3 /* PowderMeet.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A10E1C52BB6A12F2312FAF0C /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				79E0B88DFE50D8324CF3D68A /* Secrets.xcconfig */,
+			);
+			name = ios;
+			path = .;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA52134CF115B691210DF07E /* PowderMeet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6226BAC2E70A2C1A2619105B /* Build configuration list for PBXNativeTarget "PowderMeet" */;
+			buildPhases = (
+				2219676FFBFC17BFD53FED66 /* Sources */,
+				BE8048931BC717FD889D8C98 /* Resources */,
+				06D4403BEEC2FB5227CA4DC6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				389F78BEDF97AF708CF1DA0A /* PowderMeet */,
+			);
+			name = PowderMeet;
+			packageProductDependencies = (
+				1AC9C1063E843838CBD9FA95 /* AppCore */,
+				FA9BB225D7CAD5E55730A197 /* PowderMeetAPI */,
+				46572E27C0F68738A41BC954 /* SupabaseBackend */,
+				31DF35CB8FC72ADD58A78324 /* MountainCore */,
+				4976DBEFADF23DE7CF9DA511 /* MeetSolver */,
+				AA3A5C494DD569B4EA482DFD /* PMLogging */,
+				5E9B7C77054A02D921FC316A /* MapScene */,
+				A3C1FBC9491EE9D47ACB6C46 /* MapboxAdapter */,
+			);
+			productName = PowderMeet;
+			productReference = C94D7E3580E1E52173638ED3 /* PowderMeet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5517E66F3BF0E2B63A435A4B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					FA52134CF115B691210DF07E = {
+						DevelopmentTeam = 28LJG7MXT3;
+					};
+				};
+			};
+			buildConfigurationList = 620D3D9B3E91C8E33B9ADBC8 /* Build configuration list for PBXProject "PowderMeet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9628A1A8628AD3CD6ACFD450;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C1783AC2528723E6F193F57D /* XCLocalSwiftPackageReference "../../packages/AppCore" */,
+				52256A963C1EDCC0C9EBC675 /* XCLocalSwiftPackageReference "../../packages/MapScene" */,
+				73306AEA9D0E617F479F4D69 /* XCLocalSwiftPackageReference "../../packages/MapboxAdapter" */,
+				A39C62C70CCD85F5EAD2D4E2 /* XCLocalSwiftPackageReference "../../packages/MeetSolver" */,
+				73AE45108972144C057925CC /* XCLocalSwiftPackageReference "../../packages/MountainCore" */,
+				78C317864BDCD10848B75D8A /* XCLocalSwiftPackageReference "../../packages/PowderMeetAPI" */,
+				BB2E7125F9949D528E5AA178 /* XCLocalSwiftPackageReference "../../packages/SupabaseBackend" */,
+				31B6751D45D8BB3E5D972EC8 /* XCLocalSwiftPackageReference "../../packages/Support" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9D503CFCEAF0B80D1089D2E4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA52134CF115B691210DF07E /* PowderMeet */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BE8048931BC717FD889D8C98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2219676FFBFC17BFD53FED66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4B08747049A70959AE9167BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79E0B88DFE50D8324CF3D68A /* Secrets.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B972D0F28698BFB9A1EF4D2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79E0B88DFE50D8324CF3D68A /* Secrets.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D266D57663A490C22678F7B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Powder AppIcon-Carbon AppIcon-Whiteout AppIcon-Retro AppIcon-RetroIce AppIcon-Alpenglow AppIcon-Aurora AppIcon-AuroraDawn AppIcon-AuroraEmber AppIcon-AuroraIce AppIcon-AuroraRose";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = PowderMeet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2026112401;
+				DEVELOPMENT_TEAM = 28LJG7MXT3;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.powdermeet.PowderMeet;
+				SDKROOT = iphoneos;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F323E5343BABA048117D9683 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIcon-Powder AppIcon-Carbon AppIcon-Whiteout AppIcon-Retro AppIcon-RetroIce AppIcon-Alpenglow AppIcon-Aurora AppIcon-AuroraDawn AppIcon-AuroraEmber AppIcon-AuroraIce AppIcon-AuroraRose";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = PowderMeet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2026112401;
+				DEVELOPMENT_TEAM = 28LJG7MXT3;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 3.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.powdermeet.PowderMeet;
+				SDKROOT = iphoneos;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		620D3D9B3E91C8E33B9ADBC8 /* Build configuration list for PBXProject "PowderMeet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B972D0F28698BFB9A1EF4D2C /* Debug */,
+				4B08747049A70959AE9167BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6226BAC2E70A2C1A2619105B /* Build configuration list for PBXNativeTarget "PowderMeet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D266D57663A490C22678F7B5 /* Debug */,
+				F323E5343BABA048117D9683 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		31B6751D45D8BB3E5D972EC8 /* XCLocalSwiftPackageReference "../../packages/Support" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/Support;
+		};
+		52256A963C1EDCC0C9EBC675 /* XCLocalSwiftPackageReference "../../packages/MapScene" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/MapScene;
+		};
+		73306AEA9D0E617F479F4D69 /* XCLocalSwiftPackageReference "../../packages/MapboxAdapter" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/MapboxAdapter;
+		};
+		73AE45108972144C057925CC /* XCLocalSwiftPackageReference "../../packages/MountainCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/MountainCore;
+		};
+		78C317864BDCD10848B75D8A /* XCLocalSwiftPackageReference "../../packages/PowderMeetAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/PowderMeetAPI;
+		};
+		A39C62C70CCD85F5EAD2D4E2 /* XCLocalSwiftPackageReference "../../packages/MeetSolver" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/MeetSolver;
+		};
+		BB2E7125F9949D528E5AA178 /* XCLocalSwiftPackageReference "../../packages/SupabaseBackend" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/SupabaseBackend;
+		};
+		C1783AC2528723E6F193F57D /* XCLocalSwiftPackageReference "../../packages/AppCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/AppCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1AC9C1063E843838CBD9FA95 /* AppCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppCore;
+		};
+		31DF35CB8FC72ADD58A78324 /* MountainCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MountainCore;
+		};
+		46572E27C0F68738A41BC954 /* SupabaseBackend */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SupabaseBackend;
+		};
+		4976DBEFADF23DE7CF9DA511 /* MeetSolver */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MeetSolver;
+		};
+		5E9B7C77054A02D921FC316A /* MapScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapScene;
+		};
+		A3C1FBC9491EE9D47ACB6C46 /* MapboxAdapter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxAdapter;
+		};
+		AA3A5C494DD569B4EA482DFD /* PMLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PMLogging;
+		};
+		FA9BB225D7CAD5E55730A197 /* PowderMeetAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PowderMeetAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5517E66F3BF0E2B63A435A4B /* Project object */;
+}

@@ -1,0 +1,19 @@
+resort_id: boston-mills-brandywine
+# Read from the resort's own 2025-26 winter trail maps
+# (https://bmbw.com/the-mountain/about-the-mountain/trail-map.aspx):
+# Boston Mills: https://www.bmbw.com/-/aemasset/sitecore/boston-mills-brandywine/maps/20251113_BMBW_boston-mills-winter-trail_map_001.pdf
+# Brandywine: https://www.bmbw.com/-/aemasset/sitecore/boston-mills-brandywine/maps/20251113_BMBW_brandywine-winter-trail_map_001.pdf
+# Both maps name a Lift 1, Lift 2, Lift 4 and Carpet Lift, which OSM maps under
+# the same names; each takes its area's name so the two mountains' lifts stay
+# apart. OpenSkiMap places each way in its area.
+way_names:
+  # Boston Mills (the southern hill)
+  256778791: Boston Mills Lift 1
+  180853645: Boston Mills Lift 2
+  256778951: Boston Mills Lift 4
+  256778792: Boston Mills Carpet Lift
+  # Brandywine (the northern hill)
+  256778782: Brandywine Lift 1
+  256778783: Brandywine Lift 2
+  256778786: Brandywine Lift 4
+  256778790: Brandywine Carpet Lift

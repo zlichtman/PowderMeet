@@ -1,0 +1,93 @@
+resort_id: palisades-tahoe
+# Read from Palisades Tahoe's own winter trail maps, linked from
+# https://www.palisadestahoe.com/mountain-information/trail-maps:
+# Palisades: https://www.palisadestahoe.com/-/media/palisades-tahoe/pdfs/trail-maps/palisadesmaintrailmap.pdf
+# Alpine front: https://www.palisadestahoe.com/-/media/palisades-tahoe/pdfs/trail-maps/alpine-front-side-trail.pdf
+# Alpine back: https://www.palisadestahoe.com/-/media/palisades-tahoe/pdfs/trail-maps/alpine-back-side-trail.pdf
+# Most remaining names on the status list are bowls, faces, cliffs, pockets and
+# gates the maps label without a line, beginner areas and parks; they are left as
+# they are.
+
+merges:
+  # Alpine front map: Treeline Cirque is one chair with a mid unload station,
+  # mapped as two pieces; the status list names it once.
+  - id: lift:treeline-cirque
+    kind: lift
+    canonical_name: "Treeline Cirque"
+    members:
+      - {source: official, name: "Treeline Cirque"}
+      - {source: osm, name: "Treeline Cirque Lower"}
+      - {source: osm, name: "Treeline Cirque Upper"}
+      - {source: openskimap, name: "Treeline Cirque Lower"}
+      - {source: openskimap, name: "Treeline Cirque Upper"}
+  # Palisades map: "The Funitel" from the base to Gold Coast.
+  - id: lift:gold-coast-funitel
+    kind: lift
+    canonical_name: "Gold Coast Funitel"
+    members:
+      - {source: official, name: "Funitel"}
+      - {source: osm, name: "Gold Coast Funitel"}
+      - {source: openskimap, name: "Gold Coast Funitel"}
+  # Palisades and Alpine maps: one Base to Base Gondola; the status list names it by direction.
+  - id: lift:base-to-base-gondola
+    kind: lift
+    canonical_name: "Base to Base Gondola"
+    members:
+      - {source: official, name: "Base to Base Gondola to Alpine"}
+      - {source: official, name: "Base to Base Gondola to Palisades"}
+      - {source: osm, name: "Base to Base Gondola"}
+      - {source: openskimap, name: "Base to Base Gondola"}
+  # Palisades map: the KT-22 chute, written Chute 75 in the list.
+  - id: trail:75-chute
+    kind: trail
+    canonical_name: "75 Chute"
+    members:
+      - {source: official, name: "Chute 75"}
+      - {source: osm, name: "75 Chute"}
+      - {source: openskimap, name: "75 Chute"}
+  # Palisades map: the chutes off the Palisades, labelled National, Extra and Main.
+  - id: trail:main-chute
+    kind: trail
+    canonical_name: "Main Chute"
+    members:
+      - {source: official, name: "Main"}
+      - {source: osm, name: "Main Chute"}
+      - {source: openskimap, name: "Main Chute"}
+  - id: trail:extra-chute
+    kind: trail
+    canonical_name: "Extra Chute"
+    members:
+      - {source: official, name: "Extra"}
+      - {source: osm, name: "Extra Chute"}
+      - {source: openskimap, name: "Extra Chute"}
+  - id: trail:national-chute
+    kind: trail
+    canonical_name: "National Chute"
+    members:
+      - {source: official, name: "National"}
+      - {source: osm, name: "National Chute"}
+      - {source: openskimap, name: "National Chute"}
+  # Palisades map: Light Towers off Siberia, mapped in the singular.
+  - id: trail:light-tower
+    kind: trail
+    canonical_name: "Light Tower"
+    members:
+      - {source: official, name: "Light Towers"}
+      - {source: osm, name: "Light Tower"}
+      - {source: openskimap, name: "Light Tower"}
+  # Palisades map: Montezuma's below Snow King.
+  - id: trail:montezumas-revenge
+    kind: trail
+    canonical_name: "Montezuma's Revenge"
+    members:
+      - {source: official, name: "Montezuma's"}
+      - {source: osm, name: "Montezuma's Revenge"}
+      - {source: openskimap, name: "Montezuma's Revenge"}
+  # Palisades map: Moseley's on KT-22's west face.
+  - id: trail:moseleys-aka-west-face
+    kind: trail
+    canonical_name: "Moseley's (aka West Face)"
+    members:
+      - {source: official, name: "Moseley's"}
+      - {source: osm, name: "Moseley's (aka West Face)"}
+      - {source: openskimap, name: "Moseley's (aka West Face)"}

@@ -1,0 +1,122 @@
+resort_id: crystal-mountain
+# Read from Crystal's own 2026-27 winter trail map, linked from
+# https://www.crystalmountainresort.com/the-mountain/trail-maps:
+# https://www.crystalmountainresort.com/-/media/crystal/images/2526-images/trail-maps/crystal_winter_2627_trail_map_heinz_and_updated_kiehls.jpg
+
+merges:
+  # The map and the resort's list drop "Run" from the three Ferk's.
+  - id: trail:upper-ferks
+    kind: trail
+    canonical_name: "Upper Ferk's"
+    members:
+      - {source: official, name: "Upper Ferk's"}
+      - {source: osm, name: "Upper Ferk's Run"}
+      - {source: openskimap, name: "Upper Ferk's Run"}
+  - id: trail:middle-ferks
+    kind: trail
+    canonical_name: "Middle Ferk's"
+    members:
+      - {source: official, name: "Middle Ferk's"}
+      - {source: osm, name: "Middle Ferk's Run"}
+      - {source: openskimap, name: "Middle Ferk's Run"}
+  - id: trail:lower-ferks
+    kind: trail
+    canonical_name: "Lower Ferk's"
+    members:
+      - {source: official, name: "Lower Ferk's"}
+      - {source: osm, name: "Lower Ferk's Run"}
+      - {source: openskimap, name: "Lower Ferk's Run"}
+  # The map spells it Kelly's Gap Road, as the resort's list does.
+  - id: trail:kellys-gap-road
+    kind: trail
+    canonical_name: "Kelly's Gap Road"
+    members:
+      - {source: official, name: "Kelly's Gap Road"}
+      - {source: osm, name: "Kelley's Gap Road"}
+      - {source: openskimap, name: "Kelley's Gap Road"}
+  # One run on the map, Sluiceway, mapped in two pieces.
+  - id: trail:sluiceway
+    kind: trail
+    canonical_name: Sluiceway
+    members:
+      - {source: official, name: Sluiceway}
+      - {source: osm, name: Upper Sluiceway}
+      - {source: osm, name: Middle Sluiceway}
+      - {source: openskimap, name: Upper Sluiceway}
+      - {source: openskimap, name: Middle Sluiceway}
+  - id: trail:discovery-meadow
+    kind: trail
+    canonical_name: Discovery Meadow
+    members:
+      - {source: official, name: Discover Meadow}
+      - {source: osm, name: Discovery Meadow}
+      - {source: openskimap, name: Discovery Meadow}
+  - id: trail:lower-brand-x-cliffs
+    kind: trail
+    canonical_name: Lower Brand X Cliffs
+    members:
+      - {source: official, name: Lower Brand-X Cliff}
+      - {source: osm, name: Lower Brand X Cliffs}
+      - {source: openskimap, name: Lower Brand X Cliffs}
+  - id: trail:left-angle-trees
+    kind: trail
+    canonical_name: Left Angle Trees
+    members:
+      - {source: official, name: Left Angle Trees}
+      - {source: osm, name: Left Angle Trees (Lower LA)}
+      - {source: openskimap, name: Left Angle Trees (Lower LA)}
+  - id: trail:right-angle-trees
+    kind: trail
+    canonical_name: Right Angle Trees
+    members:
+      - {source: official, name: Right Angle Trees}
+      - {source: osm, name: Right Angle Trees (Lower RA)}
+      - {source: openskimap, name: Right Angle Trees (Lower RA)}
+  - id: trail:sheppard
+    kind: trail
+    canonical_name: Sheppard
+    members:
+      - {source: official, name: Sheppard}
+      - {source: osm, name: Sheppard}
+      - {source: openskimap, name: Sheooard}
+
+links:
+  # Chair 6 tops out at Silver Queen; the map's runs under it start from the
+  # unloading ramp, mapped 60 to 240 m away.
+  - {from: n1407859956, to: n10879446502}   # Summit Chute
+  - {from: n1407859956, to: n10879446504}   # Upper Field
+  - {from: n1407859956, to: n10879243099}   # Chairline Left
+  - {from: n1407859956, to: n10879260406}   # Screaming Babies
+  - {from: n1407859956, to: n10879243103}   # Chairline Right
+  - {from: n1407859956, to: n10879243093}   # Rabbit Ears
+  - {from: n1407859956, to: n10879463006}   # Divider Chute
+  - {from: n1407859956, to: n10879463008}   # Lower Field
+  - {from: n1407859956, to: n10877089652}   # Double Ought's Left
+  # The top of Blazing Elk lies on the ridge at Elk Pass, where Jeremy's Road
+  # leaves for Upper Otto Bahn and the Northway chair; mapped 110 m apart.
+  - {from: n10879463092, to: n3010961251}   # Blazing Elk -> Elk Pass
+
+add_runs:
+  # Campbell Basin is the bowl between Chair 6 and The Throne; it runs out to
+  # Chair 6's bottom by the Campbell Basin Lodge.
+  - name: Campbell Basin
+    difficulty: double_black
+    from: n1407859956          # top of Chair 6
+    to: n1407859942            # bottom of Chair 6
+    source: "https://www.crystalmountainresort.com/-/media/crystal/images/2526-images/trail-maps/crystal_winter_2627_trail_map_heinz_and_updated_kiehls.jpg"
+  # Snorting Elk Bowl lies below the ridge between Elk Pass and Blazing Elk
+  # and runs out onto Snorting Elk.
+  - name: Snorting Elk Bowl
+    difficulty: double_black
+    from: n3010961251          # Elk Pass, start of Jeremy's Road
+    to: n10879463094           # start of Snorting Elk
+    source: "https://www.crystalmountainresort.com/-/media/crystal/images/2526-images/trail-maps/crystal_winter_2627_trail_map_heinz_and_updated_kiehls.jpg"
+  # Blazing Elk starts at the top of Green Valley, through the G1 gate on
+  # Grubstake Point, and follows the ridge to Elk Pass; OSM maps only its lower
+  # part, from 350 m north. This is the way to Elk Pass, Jeremy's Road and the
+  # Northway chair, otherwise cut off from the rest of the mountain.
+  - name: Blazing Elk
+    difficulty: black
+    from: n1407884453          # top of Green Valley, start of Grubstake
+    to: n10879463092           # start of the mapped Blazing Elk
+    source: "https://www.crystalmountainresort.com/-/media/crystal/images/2526-images/trail-maps/crystal_winter_2627_trail_map_heinz_and_updated_kiehls.jpg"

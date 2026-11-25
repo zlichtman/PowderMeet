@@ -1,0 +1,6 @@
+resort_id: whitetail
+# The beginner carpet by the base lodge is mapped 235 m from the nearest run;
+# skiers walk over from the base area.
+links:
+  - {from: n1097189897, to: n11337125867}
+  - {from: n11337125867, to: n1097189897}

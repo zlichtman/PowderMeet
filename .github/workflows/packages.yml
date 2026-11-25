@@ -1,0 +1,27 @@
+name: packages
+on:
+  push:
+    branches: [main]
+    paths: ["packages/**", ".github/workflows/packages.yml"]
+  workflow_dispatch:
+concurrency:
+  group: packages-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: swift:6.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: System libraries
+        run: apt-get update && apt-get install -y zlib1g-dev libsqlite3-dev pkg-config
+      - name: Build and test every package
+        run: |
+          set -e
+          for pkg in Support MountainCore MeetSolver DescentKit MapScene PowderMeetAPI AppCore; do
+            echo "::group::$pkg"
+            swift test --package-path "packages/$pkg"
+            echo "::endgroup::"
+          done

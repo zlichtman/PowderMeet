@@ -1,0 +1,29 @@
+resort_id: june-mountain
+# Read from June Mountain's own 2026-27 trail map, linked from
+# https://junemountain.com/mountain-information/trail-map:
+# https://junemountain.com/-/media/june/pdfs/trail-map/26-27_jmsa_trailmap_17x12_web.pdf
+
+merges:
+  # The map's Bodie from Rainbow Summit, mapped under the misspelling Bodle.
+  - id: trail:bodie
+    kind: trail
+    canonical_name: "Bodie"
+    members:
+      - {source: official, name: "Bodie"}
+      - {source: osm, name: "Bodle"}
+      - {source: openskimap, name: "Bodle"}
+
+# Runs on the list and the map with no mapped line, drawn between lift ends.
+add_runs:
+  # IQ: black, from June Meadows Chalet down beside J1 to the base.
+  - name: "IQ"
+    difficulty: black
+    from: n2634534914    # top of J1
+    to: n2634534913      # bottom of J1
+    source: "https://junemountain.com/-/media/june/pdfs/trail-map/26-27_jmsa_trailmap_17x12_web.pdf"
+  # Surprise: blue, from the top of J2 beside the chair back to the Chalet.
+  - name: "Surprise"
+    difficulty: blue
+    from: n2634534920    # top of J2
+    to: n2634534919      # bottom of J2
+    source: "https://junemountain.com/-/media/june/pdfs/trail-map/26-27_jmsa_trailmap_17x12_web.pdf"

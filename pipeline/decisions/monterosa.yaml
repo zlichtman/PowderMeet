@@ -1,0 +1,8 @@
+resort_id: monterosa
+# The Passo dei Salati - Punta Indren cable car. The resort's page calls Punta
+# Indren "the starting point of the Freeride itineraries" and the highest point
+# the lifts reach (https://monterosaski.eu/en/experiences/freeriding-18786).
+# The only ways OSM maps at its top station are tagged piste:type=skitour
+# (Salza, Balma, Canal Grande), so no run leaves it on the map.
+reject:
+  - lift:funivia-passo-dei-salati-punta-indren

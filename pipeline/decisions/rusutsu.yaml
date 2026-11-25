@@ -1,0 +1,8 @@
+resort_id: rusutsu
+# Isola No.5 Pair starts beside Steamboat-B on Mt. Isola (official winter trail
+# map, rusutsu.com/wp-content/uploads/trail-map-winter_en-1.jpg); skiers leave
+# Steamboat-B 180 m above the loading station, 40 m higher.
+links:
+  - {from: n2717868466, to: n2867880210}
+# Tower Pair stays cut off: the same map shows it leaving from the hotel side,
+# 520 m from the nearest run, so it is reached on foot, not on skis.

@@ -1,0 +1,5 @@
+resort_id: snowshoe
+# Silver Creek is its own ski area 2 km south of Snowshoe Basin, with its own
+# lodge and base, reached by road. Snowshoe is upside down (the village is on
+# top), so Silver Creek's base sits above the lowest 15 % of the lift range.
+areas: [n2623867896]   # bottom of Cascade

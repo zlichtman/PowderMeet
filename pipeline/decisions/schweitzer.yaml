@@ -1,0 +1,192 @@
+resort_id: schweitzer
+# Read from Schweitzer's own 2025-26 winter trail maps, linked from
+# https://schweitzer.com/discover/trail-maps:
+# Schweitzer Bowl: https://schweitzer.com/-/media/schweitzer/pdfs-and-maps/schweitzer-wintertrailmap-2025-26-1schweitzerbowl-lettersize.jpg
+# Outback Bowl: https://schweitzer.com/-/media/schweitzer/pdfs-and-maps/maps/schweitzer-wintertrailmap-2025-26-2outbackbowl-web1920.jpg
+# The status list splits runs into (upper) and (lower); each name joins the run the
+# maps draw. Runouts, chutes and glades the maps label without a line are left.
+
+merges:
+  # Outback map: the Stella chair.
+  - id: lift:stella
+    kind: lift
+    canonical_name: "Stella"
+    members:
+      - {source: official, name: "Stella Express"}
+      - {source: osm, name: "Stella"}
+      - {source: openskimap, name: "Stella"}
+  # Both maps: the Sunnyside chair from the village.
+  - id: lift:sunny-side
+    kind: lift
+    canonical_name: "Sunny Side"
+    members:
+      - {source: official, name: "Sunnyside Double"}
+      - {source: osm, name: "Sunny Side"}
+      - {source: openskimap, name: "Sunny Side"}
+  # Schweitzer Bowl map: Jimmie's Run (J.R.), one run beside the Great Escape Quad.
+  - id: trail:jimmies-run-j-r
+    kind: trail
+    canonical_name: "Jimmie's Run (J.R.)"
+    members:
+      - {source: official, name: "Jimmy's Run (upper)"}
+      - {source: official, name: "Jimmy's Run (lower)"}
+      - {source: osm, name: "Jimmie's Run (J.R.)"}
+      - {source: openskimap, name: "Jimmie's Run (J.R.)"}
+  # Runs the maps draw as one line, listed in sections.
+  - id: trail:have-fun
+    kind: trail
+    canonical_name: "Have Fun"
+    members:
+      - {source: official, name: "Have Fun (upper)"}
+      - {source: official, name: "Have Fun (lower)"}
+      - {source: osm, name: "Have Fun"}
+      - {source: openskimap, name: "Have Fun"}
+  - id: trail:pend-oreille
+    kind: trail
+    canonical_name: "Pend Oreille"
+    members:
+      - {source: official, name: "Pend Oreille (upper)"}
+      - {source: official, name: "Pend Oreille (middle)"}
+      - {source: official, name: "Pend Oreille (lower)"}
+      - {source: osm, name: "Pend Oreille"}
+      - {source: openskimap, name: "Pend Oreille"}
+  - id: trail:ridge-run
+    kind: trail
+    canonical_name: "Ridge Run"
+    members:
+      - {source: official, name: "Ridge Run (upper)"}
+      - {source: official, name: "Ridge Run (lower)"}
+      - {source: osm, name: "Ridge Run"}
+      - {source: openskimap, name: "Ridge Run"}
+  - id: trail:snow-ghost
+    kind: trail
+    canonical_name: "Snow Ghost"
+    members:
+      - {source: official, name: "Snow Ghost (upper)"}
+      - {source: official, name: "Snow Ghost (lower)"}
+      - {source: osm, name: "Snow Ghost"}
+      - {source: openskimap, name: "Snow Ghost"}
+  # Mapped as Upper G-3 and G-3.
+  - id: trail:upper-g-3
+    kind: trail
+    canonical_name: "Upper G-3"
+    members:
+      - {source: official, name: "G-3 (upper)"}
+      - {source: osm, name: "Upper G-3"}
+      - {source: openskimap, name: "Upper G-3"}
+  - id: trail:g-3
+    kind: trail
+    canonical_name: "G-3"
+    members:
+      - {source: official, name: "G-3 (lower)"}
+      - {source: osm, name: "G-3"}
+      - {source: openskimap, name: "G-3"}
+  # Mapped as Upper Kaniksu and Kaniksu.
+  - id: trail:upper-kaniksu
+    kind: trail
+    canonical_name: "Upper Kaniksu"
+    members:
+      - {source: official, name: "Kaniksu (upper)"}
+      - {source: osm, name: "Upper Kaniksu"}
+      - {source: openskimap, name: "Upper Kaniksu"}
+  - id: trail:kaniksu
+    kind: trail
+    canonical_name: "Kaniksu"
+    members:
+      - {source: official, name: "Kaniksu (lower)"}
+      - {source: osm, name: "Kaniksu"}
+      - {source: openskimap, name: "Kaniksu"}
+  # Mapped as Stiles and Lower Stiles.
+  - id: trail:stiles
+    kind: trail
+    canonical_name: "Stiles"
+    members:
+      - {source: official, name: "Stiles (upper)"}
+      - {source: osm, name: "Stiles"}
+      - {source: openskimap, name: "Stiles"}
+  - id: trail:lower-stiles
+    kind: trail
+    canonical_name: "Lower Stiles"
+    members:
+      - {source: official, name: "Stiles (lower)"}
+      - {source: osm, name: "Lower Stiles"}
+      - {source: openskimap, name: "Lower Stiles"}
+  # Mapped as Sam's Alley and Lower Sam's Alley.
+  - id: trail:sams-alley
+    kind: trail
+    canonical_name: "Sam's Alley"
+    members:
+      - {source: official, name: "Sam's Alley (upper)"}
+      - {source: osm, name: "Sam's Alley"}
+      - {source: openskimap, name: "Sam's Alley"}
+  - id: trail:lower-sams-alley
+    kind: trail
+    canonical_name: "Lower Sam's Alley"
+    members:
+      - {source: official, name: "Sam's Alley (lower)"}
+      - {source: osm, name: "Lower Sam's Alley"}
+      - {source: openskimap, name: "Lower Sams Alley"}
+  - id: trail:lower-loophole
+    kind: trail
+    canonical_name: "Lower Loophole"
+    members:
+      - {source: official, name: "Loophole (lower)"}
+      - {source: osm, name: "Lower Loophole"}
+      - {source: openskimap, name: "Lower Loophole"}
+  # The list adds the chute's letter.
+  - id: trail:buds-chute
+    kind: trail
+    canonical_name: "Bud's Chute"
+    members:
+      - {source: official, name: "Bud's Chute (B)"}
+      - {source: osm, name: "Bud's Chute"}
+      - {source: openskimap, name: "Bud's Chute"}
+  - id: trail:k-macs
+    kind: trail
+    canonical_name: "K-Mac's"
+    members:
+      - {source: official, name: "K-MAC's (D)"}
+      - {source: osm, name: "K-Mac's"}
+      - {source: openskimap, name: "K-Mac's"}
+  # Spelled Glade-iator on the map and the list.
+  - id: trail:glade-iator
+    kind: trail
+    canonical_name: "Glade-iator"
+    members:
+      - {source: official, name: "Glade-iator"}
+      - {source: osm, name: "Glade-iater"}
+      - {source: openskimap, name: "Glade-iater"}
+  # Spelled SARS Spur on the map and the list.
+  - id: trail:sars-spur
+    kind: trail
+    canonical_name: "SARS Spur"
+    members:
+      - {source: official, name: "SARS Spur"}
+      - {source: osm, name: "Scars Spur"}
+      - {source: openskimap, name: "Sars Spur"}
+  # OpenSkiMap's misspelling of Enchanted Forest by the Creekside Express.
+  - id: trail:enchanted-forest
+    kind: trail
+    canonical_name: "Enchanted Forest"
+    members:
+      - {source: osm, name: "Enchanted Forest"}
+      - {source: openskimap, name: "Enchanced Forest"}
+
+# Outback map: Little Blue Ridge Run, the way down from the Idyle Our T-Bar, runs
+# on to the Outback base by Cedar Park; its mapped end stops 218 m short.
+links:
+  - {from: n3338895553, to: n1696969681}
+add_runs:
+  # Misfortune: black, from the top of Colburn Triple down beside it.
+  - name: "Misfortune"
+    difficulty: black
+    from: n3338890286    # top of Colburn Triple
+    to: n7201609642      # bottom of Colburn Triple
+    source: "https://schweitzer.com/-/media/schweitzer/pdfs-and-maps/maps/schweitzer-wintertrailmap-2025-26-2outbackbowl-web1920.jpg"
+  # North Ridge: blue, along the ridge from Sky House to the Idyle Our T-Bar,
+  # the way the Outback map shows to reach the T-bar.
+  - name: "North Ridge"
+    difficulty: blue
+    from: n1692726605    # top of Great Escape Quad at Sky House
+    to: n1429659560      # bottom of Idyle Our T-Bar
+    source: "https://schweitzer.com/-/media/schweitzer/pdfs-and-maps/maps/schweitzer-wintertrailmap-2025-26-2outbackbowl-web1920.jpg"

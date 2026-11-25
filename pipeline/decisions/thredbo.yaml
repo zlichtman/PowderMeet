@@ -1,0 +1,10 @@
+resort_id: thredbo
+# The resort's trail map draws the Boost Mobile Terrain Park between Merritts
+# Mountain House, by the bottom of the Cruiser chairlift, and the Easy Rider
+# T-Bar (https://cdn.thredbo.com.au/wp-content/uploads/2026/05/29115602/260325-1-Winter-2026-Tear-off-Trail_lowres.pdf),
+# and the park's page says "quick lap times thanks to the Easy Rider T-Bar"
+# (https://www.thredbo.com.au/activities/terrain-parks/cruiser-terrain-park/).
+# OSM maps no run across that gap: 250 m from the Cruiser's bottom (1666 m) down
+# to the T-Bar's bottom (1638 m), by the elevations in the build.
+links:
+  - {from: n4262477015, to: n2641331467}

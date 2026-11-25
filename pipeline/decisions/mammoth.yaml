@@ -1,0 +1,356 @@
+resort_id: mammoth
+# Read from Mammoth's own 2026-27 winter trail map, linked from
+# https://www.mammothmountain.com/mountain/trail-map:
+# https://sc.mammothmountain.com/-/media/project/mammoth/library/pdfs/maps/26-27_mmsa_trailmap_brochure_web.pdf
+# The status list adds chair numbers to lift names and splits runs into Upper and
+# Lower; each name joins the mapped lift or run the map shows. Parks, pipes,
+# playgrounds, bowls and bluffs the map labels without a line are left as they are.
+
+merges:
+  # Lifts: the list adds the map's chair number.
+  - id: lift:broadway-express
+    kind: lift
+    canonical_name: "Broadway Express"
+    members:
+      - {source: official, name: "Broadway Express 1"}
+      - {source: osm, name: "Broadway Express"}
+      - {source: openskimap, name: "Broadway Express"}
+  - id: lift:stump-alley-express
+    kind: lift
+    canonical_name: "Stump Alley Express"
+    members:
+      - {source: official, name: "Stump Alley Express 2"}
+      - {source: osm, name: "Stump Alley Express"}
+      - {source: openskimap, name: "Stump Alley Express"}
+  - id: lift:face-lift-express
+    kind: lift
+    canonical_name: "Face Lift Express"
+    members:
+      - {source: official, name: "Face Lift Express 3"}
+      - {source: osm, name: "Face Lift Express"}
+      - {source: openskimap, name: "Face Lift Express"}
+  - id: lift:roller-coaster-express
+    kind: lift
+    canonical_name: "Roller Coaster Express"
+    members:
+      - {source: official, name: "Roller Coaster Express 4"}
+      - {source: osm, name: "Roller Coaster Express"}
+      - {source: openskimap, name: "Roller Coaster Express"}
+  - id: lift:high-five-express
+    kind: lift
+    canonical_name: "High Five Express"
+    members:
+      - {source: official, name: "High 5 Express"}
+      - {source: osm, name: "High Five Express"}
+      - {source: openskimap, name: "High Five Express"}
+  - id: lift:unbound-express
+    kind: lift
+    canonical_name: "Unbound Express"
+    members:
+      - {source: official, name: "Unbound Express 6"}
+      - {source: osm, name: "Unbound Express"}
+      - {source: openskimap, name: "Unbound Express"}
+  - id: lift:cloud-nine-express
+    kind: lift
+    canonical_name: "Cloud Nine Express"
+    members:
+      - {source: official, name: "Cloud Nine Express 9"}
+      - {source: osm, name: "Cloud Nine Express"}
+      - {source: openskimap, name: "Cloud Nine Express"}
+  - id: lift:gold-rush-express
+    kind: lift
+    canonical_name: "Gold Rush Express"
+    members:
+      - {source: official, name: "Gold Rush Express 10"}
+      - {source: osm, name: "Gold Rush Express"}
+      - {source: openskimap, name: "Gold Rush Express"}
+  - id: lift:discovery-express
+    kind: lift
+    canonical_name: "Discovery Express"
+    members:
+      - {source: official, name: "Discovery Express 11"}
+      - {source: osm, name: "Discovery Express"}
+      - {source: openskimap, name: "Discovery Express"}
+  - id: lift:eagle-express
+    kind: lift
+    canonical_name: "Eagle Express"
+    members:
+      - {source: official, name: "Eagle Express 15"}
+      - {source: osm, name: "Eagle Express"}
+      - {source: openskimap, name: "Eagle Express"}
+  - id: lift:canyon-express
+    kind: lift
+    canonical_name: "Canyon Express"
+    members:
+      - {source: official, name: "Canyon Express 16"}
+      - {source: osm, name: "Canyon Express"}
+      - {source: openskimap, name: "Canyon Express"}
+  - id: lift:schoolyard-express
+    kind: lift
+    canonical_name: "Schoolyard Express"
+    members:
+      - {source: official, name: "Schoolyard Express 17"}
+      - {source: osm, name: "Schoolyard Express"}
+      - {source: openskimap, name: "Schoolyard Express"}
+  # The Panorama Gondola's two stages.
+  - id: lift:panorama-gondola-lower
+    kind: lift
+    canonical_name: "Panorama Gondola Lower"
+    members:
+      - {source: official, name: "Panorama Lower"}
+      - {source: osm, name: "Panorama Gondola Lower"}
+      - {source: openskimap, name: "Panorama Gondola Lower"}
+  - id: lift:panorama-gondola-upper
+    kind: lift
+    canonical_name: "Panorama Gondola Upper"
+    members:
+      - {source: official, name: "Panorama Upper"}
+      - {source: osm, name: "Panorama Gondola Upper"}
+      - {source: openskimap, name: "Panorama Gondola Upper"}
+  # Runs the map draws as one line, listed in Upper and Lower sections.
+  - id: trail:arriba
+    kind: trail
+    canonical_name: "Arriba"
+    members:
+      - {source: official, name: "Arriba (Upper)"}
+      - {source: official, name: "Arriba (Lower)"}
+      - {source: osm, name: "Arriba"}
+      - {source: openskimap, name: "Arriba"}
+  - id: trail:back-for-more
+    kind: trail
+    canonical_name: "Back For More"
+    members:
+      - {source: official, name: "Back for More (Upper)"}
+      - {source: official, name: "Back for More (Lower)"}
+      - {source: osm, name: "Back For More"}
+      - {source: openskimap, name: "Back For More"}
+  - id: trail:downhill
+    kind: trail
+    canonical_name: "Downhill"
+    members:
+      - {source: official, name: "Downhill (Upper)"}
+      - {source: official, name: "Downhill (Lower)"}
+      - {source: osm, name: "Downhill"}
+      - {source: openskimap, name: "Downhill"}
+  - id: trail:face-of-five
+    kind: trail
+    canonical_name: "Face of Five"
+    members:
+      - {source: official, name: "Face of Five (Upper)"}
+      - {source: official, name: "Face of Five (Lower)"}
+      - {source: osm, name: "Face of Five"}
+      - {source: openskimap, name: "Face of Five"}
+  - id: trail:goldhill
+    kind: trail
+    canonical_name: "Goldhill"
+    members:
+      - {source: official, name: "Goldhill (Upper)"}
+      - {source: official, name: "Goldhill (Lower)"}
+      - {source: osm, name: "Goldhill"}
+      - {source: openskimap, name: "Goldhill"}
+  - id: trail:mambo
+    kind: trail
+    canonical_name: "Mambo"
+    members:
+      - {source: official, name: "Mambo (Upper)"}
+      - {source: official, name: "Mambo (Lower)"}
+      - {source: osm, name: "Mambo"}
+      - {source: openskimap, name: "Mambo"}
+  - id: trail:ricochet
+    kind: trail
+    canonical_name: "Ricochet"
+    members:
+      - {source: official, name: "Ricochet (Upper)"}
+      - {source: official, name: "Ricochet (Lower)"}
+      - {source: osm, name: "Ricochet"}
+      - {source: openskimap, name: "Ricochet"}
+  - id: trail:roller-coaster
+    kind: trail
+    canonical_name: "Roller Coaster"
+    members:
+      - {source: official, name: "Roller Coaster (Upper)"}
+      - {source: official, name: "Roller Coaster (Lower)"}
+      - {source: osm, name: "Roller Coaster"}
+      - {source: openskimap, name: "Roller Coaster"}
+  - id: trail:solitude
+    kind: trail
+    canonical_name: "Solitude"
+    members:
+      - {source: official, name: "Solitude (Upper)"}
+      - {source: official, name: "Solitude (Lower)"}
+      - {source: osm, name: "Solitude"}
+      - {source: openskimap, name: "Solitude"}
+  - id: trail:st-anton
+    kind: trail
+    canonical_name: "St. Anton"
+    members:
+      - {source: official, name: "St. Anton (Upper)"}
+      - {source: official, name: "St. Anton (Lower)"}
+      - {source: osm, name: "St. Anton"}
+      - {source: openskimap, name: "St. Anton"}
+  # Road Runner is mapped in two parts: the long upper part from McCoy Station and the lower part to Main Lodge.
+  - id: trail:upper-road-runner
+    kind: trail
+    canonical_name: "Upper Road Runner"
+    members:
+      - {source: official, name: "Road Runner (Upper)"}
+      - {source: official, name: "Road Runner (Middle)"}
+      - {source: osm, name: "Upper Road Runner"}
+      - {source: openskimap, name: "Upper Road Runner"}
+  - id: trail:lower-road-runner
+    kind: trail
+    canonical_name: "Lower Road Runner"
+    members:
+      - {source: official, name: "Road Runner Lower (Top Half)"}
+      - {source: official, name: "Road Runner Lower (Bottom Half)"}
+      - {source: osm, name: "Lower Road Runner"}
+      - {source: openskimap, name: "Lower Road Runner"}
+  # Mapped as Upper Dry Creek, Dry Creek and Lower Dry Creek.
+  - id: trail:upper-dry-creek
+    kind: trail
+    canonical_name: "Upper Dry Creek"
+    members:
+      - {source: official, name: "Dry Creek (Upper)"}
+      - {source: osm, name: "Upper Dry Creek"}
+      - {source: openskimap, name: "Upper Dry Creek"}
+  - id: trail:lower-dry-creek
+    kind: trail
+    canonical_name: "Lower Dry Creek"
+    members:
+      - {source: official, name: "Dry Creek (Lower)"}
+      - {source: osm, name: "Lower Dry Creek"}
+      - {source: openskimap, name: "Lower Dry Creek"}
+  # Mapped as Viva and Lower Viva.
+  - id: trail:viva
+    kind: trail
+    canonical_name: "Viva"
+    members:
+      - {source: official, name: "Viva (Upper)"}
+      - {source: osm, name: "Viva"}
+      - {source: openskimap, name: "Viva"}
+  - id: trail:lower-viva
+    kind: trail
+    canonical_name: "Lower Viva"
+    members:
+      - {source: official, name: "Viva (Lower)"}
+      - {source: osm, name: "Lower Viva"}
+      - {source: openskimap, name: "Lower Viva"}
+  # Mapped as Grizzly and Lower Grizzly.
+  - id: trail:grizzly
+    kind: trail
+    canonical_name: "Grizzly"
+    members:
+      - {source: official, name: "Grizzly (Upper)"}
+      - {source: osm, name: "Grizzly"}
+      - {source: openskimap, name: "Grizzly"}
+  - id: trail:lower-grizzly
+    kind: trail
+    canonical_name: "Lower Grizzly"
+    members:
+      - {source: official, name: "Grizzly Lower"}
+      - {source: osm, name: "Lower Grizzly"}
+      - {source: openskimap, name: "Lower Grizzly"}
+  # Spelling differences between the list and the mapped name.
+  - id: trail:saint-moritz
+    kind: trail
+    canonical_name: "Saint Moritz"
+    members:
+      - {source: official, name: "St. Moritz"}
+      - {source: osm, name: "Saint Moritz"}
+      - {source: openskimap, name: "Saint Moritz"}
+  - id: trail:kiwi-flat
+    kind: trail
+    canonical_name: "Kiwi Flat"
+    members:
+      - {source: official, name: "Kiwi Flats"}
+      - {source: osm, name: "Kiwi Flat"}
+      - {source: openskimap, name: "Kiwi Flat"}
+  - id: trail:daves-glade
+    kind: trail
+    canonical_name: "Dave's Glade"
+    members:
+      - {source: official, name: "Dave's Glades"}
+      - {source: osm, name: "Dave's Glade"}
+      - {source: openskimap, name: "Dave's Glade"}
+  # Repeat, off Chair 22.
+  - id: trail:repeat
+    kind: trail
+    canonical_name: "Repeat"
+    members:
+      - {source: official, name: "Repeat 22"}
+      - {source: osm, name: "Repeat"}
+      - {source: openskimap, name: "Repeat"}
+  - id: trail:starr-chute
+    kind: trail
+    canonical_name: "Starr Chute"
+    members:
+      - {source: official, name: "Starr Chutes"}
+      - {source: osm, name: "Starr Chute"}
+      - {source: openskimap, name: "Starr Chute"}
+  # The one mapped line of the Avalanche Chutes.
+  - id: trail:avalanche-chute-1
+    kind: trail
+    canonical_name: "Avalanche Chute 1"
+    members:
+      - {source: official, name: "Avalanche Chutes"}
+      - {source: osm, name: "Avalanche Chute 1"}
+      - {source: openskimap, name: "Avalanche Chute 1"}
+  - id: trail:old-comeback-trail
+    kind: trail
+    canonical_name: "Old Comeback Trail"
+    members:
+      - {source: official, name: "Old Comeback"}
+      - {source: osm, name: "Old Comeback Trail"}
+      - {source: openskimap, name: "Old Comeback Trail"}
+  # The map's Ski Back Trail to the Village.
+  - id: trail:ski-back-trail
+    kind: trail
+    canonical_name: "Ski Back Trail"
+    members:
+      - {source: official, name: "Village Ski Back Trail"}
+      - {source: osm, name: "Ski Back Trail"}
+      - {source: openskimap, name: "Ski Back Trail"}
+  # Fascination, off Broadway Express.
+  - id: trail:fascination
+    kind: trail
+    canonical_name: "Fascination"
+    members:
+      - {source: official, name: "The Snowflakes / Fascination"}
+      - {source: osm, name: "Fascination"}
+      - {source: openskimap, name: "Fascination"}
+  - id: trail:chickadee
+    kind: trail
+    canonical_name: "Chickadee"
+    members:
+      - {source: official, name: "Antin Alley / Chickadee"}
+      - {source: osm, name: "Chickadee"}
+      - {source: openskimap, name: "Chickadee"}
+  - id: trail:jibs-more
+    kind: trail
+    canonical_name: "Jibs & More"
+    members:
+      - {source: official, name: "Jibs & More (Trail)"}
+      - {source: osm, name: "Jibs & More"}
+      - {source: openskimap, name: "Jibs & More"}
+  # The map labels the Dropout Chutes as one run; mapped as two lines.
+  - id: trail:dropout-chutes
+    kind: trail
+    canonical_name: "Dropout Chutes"
+    members:
+      - {source: official, name: "Dropout Chutes"}
+      - {source: osm, name: "Dropout Chute 1"}
+      - {source: osm, name: "Dropout Chute 2"}
+      - {source: openskimap, name: "Dropout Chute 1"}
+      - {source: openskimap, name: "Dropout Chute 2"}
+  # The map labels the Wipeout Chutes as one run; mapped as three lines.
+  - id: trail:wipeout-chutes
+    kind: trail
+    canonical_name: "Wipeout Chutes"
+    members:
+      - {source: official, name: "Wipeout Chutes"}
+      - {source: osm, name: "Wipeout Chute 1"}
+      - {source: osm, name: "Wipeout Chute 2"}
+      - {source: osm, name: "Wipeout Chute 3"}
+      - {source: openskimap, name: "Wipeout Chute 1"}
+      - {source: openskimap, name: "Wipeout Chute 2"}
+      - {source: openskimap, name: "Wipeout Chute 3"}

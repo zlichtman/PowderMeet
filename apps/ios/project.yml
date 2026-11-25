@@ -1,0 +1,161 @@
+# Source of truth for PowderMeet.xcodeproj. After editing, run `xcodegen` in
+# this directory and commit the regenerated project.
+name: PowderMeet
+options:
+  bundleIdPrefix: com.powdermeet
+  deploymentTarget:
+    iOS: "26.0"
+configFiles:
+  Debug: Secrets.xcconfig
+  Release: Secrets.xcconfig
+packages:
+  AppCore:
+    path: ../../packages/AppCore
+  PowderMeetAPI:
+    path: ../../packages/PowderMeetAPI
+  SupabaseBackend:
+    path: ../../packages/SupabaseBackend
+  MountainCore:
+    path: ../../packages/MountainCore
+  MeetSolver:
+    path: ../../packages/MeetSolver
+  Support:
+    path: ../../packages/Support
+  MapScene:
+    path: ../../packages/MapScene
+  MapboxAdapter:
+    path: ../../packages/MapboxAdapter
+targets:
+  PowderMeet:
+    type: application
+    platform: iOS
+    scheme: {}
+    sources:
+      - path: PowderMeet
+        type: syncedFolder
+    dependencies:
+      - package: AppCore
+      - package: PowderMeetAPI
+      - package: SupabaseBackend
+      - package: MountainCore
+      - package: MeetSolver
+      - package: Support
+        product: PMLogging
+      - package: MapScene
+      - package: MapboxAdapter
+    # Info.plist and the entitlements live beside the synced folder, not in it,
+    # so the folder holds only sources and resources.
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: PowderMeet
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        SupabaseURL: $(SUPABASE_URL)
+        SupabasePublishableKey: $(SUPABASE_PUBLISHABLE_KEY)
+        MBXAccessToken: $(MAPBOX_ACCESS_TOKEN)
+        ITSAppUsesNonExemptEncryption: false
+        # powdermeet://auth-callback: email confirmation and password reset links.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.powdermeet.PowderMeet.auth
+            CFBundleURLSchemes:
+              - powdermeet
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        # `location`: friends keep seeing you, and meets and live recording keep
+        # tracking, with the phone locked (specs/07-CLIENT.md section 4). Used
+        # only at a resort with its map open, during a meet or while recording,
+        # always with the blue indicator; off away from resorts.
+        UIBackgroundModes:
+          - location
+        # "Open in PowderMeet": activity exports and PowderMeet backups are read
+        # once and never edited, so iOS hands over a copy.
+        LSSupportsOpeningDocumentsInPlace: false
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Ski Activity
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - com.topografix.gpx
+              - com.garmin.tcx
+              - com.garmin.fit
+              - com.consumedbycode.slopes
+              - com.corecoders.skitracks.skiz
+          - CFBundleTypeName: PowderMeet Backup
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Owner
+            LSItemContentTypes:
+              - com.powdermeet.backup
+        # The backup Activity → Back up writes (`ActivityBackup`, JSON).
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.powdermeet.backup
+            UTTypeDescription: PowderMeet Backup
+            UTTypeConformsTo: [public.json, public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [powdermeet]
+              public.mime-type: [application/vnd.powdermeet.backup+json]
+        # None of these has a system type; the apps that own them may not be installed.
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.topografix.gpx
+            UTTypeDescription: GPS Exchange Format
+            UTTypeConformsTo: [public.xml]
+            UTTypeTagSpecification:
+              public.filename-extension: [gpx]
+              public.mime-type: [application/gpx+xml]
+          - UTTypeIdentifier: com.garmin.tcx
+            UTTypeDescription: Training Center XML
+            UTTypeConformsTo: [public.xml]
+            UTTypeTagSpecification:
+              public.filename-extension: [tcx]
+              public.mime-type: [application/vnd.garmin.tcx+xml]
+          - UTTypeIdentifier: com.garmin.fit
+            UTTypeDescription: FIT Activity
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [fit]
+          - UTTypeIdentifier: com.consumedbycode.slopes
+            UTTypeDescription: Slopes Recording
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [slopes]
+          - UTTypeIdentifier: com.corecoders.skitracks.skiz
+            UTTypeDescription: Ski Tracks Recording
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [skiz]
+        NSLocationWhenInUseUsageDescription: PowderMeet uses your location to show where you are on the mountain, share your position with friends you choose, and find the best meeting spot. At a resort it keeps sharing with your phone locked, shown by the blue location indicator.
+        NSLocationAlwaysAndWhenInUseUsageDescription: During a meet, and while live run recording is on, PowderMeet keeps using your location with your phone locked so your friend can still find you and your runs are recorded, and notices when you arrive at a resort to start recording. Away from resorts it does not track you.
+        NSHealthShareUsageDescription: PowderMeet reads your downhill skiing and snowboarding workouts and their routes from Apple Health to add those runs to your history and learn your pace.
+        NSHealthUpdateUsageDescription: PowderMeet does not write to Apple Health. It only reads ski and snowboard workouts you choose to import.
+        NSContactsUsageDescription: "PowderMeet checks your contacts' email addresses to suggest friends already on the app. Only scrambled (hashed) email addresses are sent to find them; names and numbers stay on your phone."
+        NSCameraUsageDescription: PowderMeet uses the camera to take your profile photo.
+    entitlements:
+      path: PowderMeet.entitlements
+      properties:
+        aps-environment: development
+        # Meet pushes are sent time-sensitive, so they reach a phone in a Focus.
+        com.apple.developer.usernotifications.time-sensitive: true
+        com.apple.developer.applesignin:
+          - Default
+        # Read-only: ski and snowboard workouts and their routes.
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.powdermeet.PowderMeet
+        DEVELOPMENT_TEAM: 28LJG7MXT3
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        # Views and projections are main-actor code; anything else says so.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "3.0.0"
+        CURRENT_PROJECT_VERSION: "2026112401"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        # The alternate icons, as `Theme/AppIcon.swift` lists them and
+        # `Tools/make_app_icons.py` keeps them.
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: NO
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: AppIcon-Powder AppIcon-Carbon AppIcon-Whiteout AppIcon-Retro AppIcon-RetroIce AppIcon-Alpenglow AppIcon-Aurora AppIcon-AuroraDawn AppIcon-AuroraEmber AppIcon-AuroraIce AppIcon-AuroraRose

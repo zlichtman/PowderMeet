@@ -1,0 +1,307 @@
+{
+  "note": "Ground truth for the GPS corpus. Nothing here is DescentKit's own output. truth=file: the count and vertical are the file's own (a Slopes run list and its header total). truth=reading: taken by hand from the raw elevation profile, because the file has no run list or its list is physically wrong; file_descents and file_vertical_m keep what the file said, and note says why it was overruled.",
+  "tolerance": {
+    "descents": "within 1, or 5 % of the truth if that is more",
+    "vertical": "within 8 % of the truth",
+    "track_only": "Slopes days re-read with the run list ignored: within 2 descents, or 10 %, of the truth"
+  },
+  "hash_digest": "76586e826454f7d0f9188687ba5f0fd18e2436772aa89574faf32c397c359cb2",
+  "files": {
+    "2024-01-09-whistler-blackcomb.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 3,
+      "vertical_m": 1496,
+      "truth": "file"
+    },
+    "2024-01-10-whistler-blackcomb.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 9,
+      "vertical_m": 3726,
+      "truth": "file"
+    },
+    "2024-01-14-breckenridge.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 5,
+      "vertical_m": 1389,
+      "truth": "file"
+    },
+    "2024-01-16-breckenridge.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 7,
+      "vertical_m": 2366,
+      "truth": "file"
+    },
+    "2024-01-17-keystone.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 14,
+      "vertical_m": 6595,
+      "truth": "file"
+    },
+    "2024-02-03-whitetail.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 4,
+      "vertical_m": 1074,
+      "truth": "file"
+    },
+    "2025-01-03-big-sky.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 13,
+      "vertical_m": 4978,
+      "truth": "file"
+    },
+    "2025-01-04-big-sky.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 12,
+      "vertical_m": 4600,
+      "truth": "file"
+    },
+    "2025-01-06-big-sky.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 10,
+      "vertical_m": 4537,
+      "truth": "reading",
+      "file_descents": 9,
+      "file_vertical_m": 4078,
+      "note": "Slopes lists 9 runs. The profile shows one more: after the lift to 2,751 m, a 459 m descent at ski speed that Slopes left out."
+    },
+    "2025-01-07-big-sky.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 3,
+      "vertical_m": 693,
+      "truth": "file"
+    },
+    "2025-01-10-copper-mountain.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 7,
+      "vertical_m": 2721,
+      "truth": "file"
+    },
+    "2025-01-11-copper-mountain.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 3,
+      "vertical_m": 1665,
+      "truth": "file"
+    },
+    "2025-01-12-arapahoe-basin-keystone-copper-mountain.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 3,
+      "vertical_m": 731,
+      "truth": "reading",
+      "file_descents": 4,
+      "file_vertical_m": 1381,
+      "note": "Slopes lists 4 runs; one is a 38 km drive (top speed 31.8 m/s, 650 m of vertical)."
+    },
+    "2025-01-13-copper-mountain.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 16,
+      "vertical_m": 5845,
+      "truth": "file"
+    },
+    "2025-01-14-arapahoe-basin.slopes": {
+      "source_app": "Slopes",
+      "format": "slopes",
+      "descents": 13,
+      "vertical_m": 3553,
+      "truth": "file"
+    },
+    "2025-12-25-alpine-valley-wisconsin.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 78,
+      "vertical_m": 6183,
+      "truth": "file"
+    },
+    "2026-01-08-heavenly.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 26,
+      "vertical_m": 8479,
+      "truth": "file"
+    },
+    "2026-01-10-sierra-at-tahoe-heavenly.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 17,
+      "vertical_m": 5780,
+      "truth": "file"
+    },
+    "2026-01-10-sierra-at-tahoe.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 7,
+      "vertical_m": 2256,
+      "truth": "file"
+    },
+    "2026-01-11-palisades-tahoe-granlibakken-homewood-heavenly.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 17,
+      "vertical_m": 6632,
+      "truth": "file"
+    },
+    "2026-01-11-palisades-tahoe.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 13,
+      "vertical_m": 3447,
+      "truth": "reading",
+      "file_descents": 15,
+      "file_vertical_m": 3792,
+      "note": "Slopes lists 15 runs; two of them (323 m and 22 m) are a lift ridden down: a straight line at a constant 4.3 m/s."
+    },
+    "2026-01-12-kirkwood-2.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 16,
+      "vertical_m": 4945,
+      "truth": "file"
+    },
+    "2026-01-12-kirkwood.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 16,
+      "vertical_m": 3784,
+      "truth": "file"
+    },
+    "2026-01-14-snowbasin.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 9,
+      "vertical_m": 4914,
+      "truth": "file"
+    },
+    "2026-01-14-whistler-blackcomb.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 10,
+      "vertical_m": 4563,
+      "truth": "file"
+    },
+    "2026-01-15-alta.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 19,
+      "vertical_m": 8231,
+      "truth": "file"
+    },
+    "2026-01-15-whistler-blackcomb.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 9,
+      "vertical_m": 5290,
+      "truth": "file"
+    },
+    "2026-01-16-snowbird.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 23,
+      "vertical_m": 9500,
+      "truth": "reading",
+      "file_descents": 22,
+      "file_vertical_m": 8579,
+      "note": "Slopes lists 22 runs and ends on a lift ride to 3,337 m. The profile then descends without a break to the valley: about 920 m of it at a 20 % grade and ski speed, before the drive down the canyon. That last run is not in the list."
+    },
+    "2026-01-16-whistler-blackcomb.slopes": {
+      "source_app": "Slopes (iPhone17,2)",
+      "format": "slopes",
+      "descents": 11,
+      "vertical_m": 5297,
+      "truth": "file"
+    },
+    "2026-01-17-brighton.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 20,
+      "vertical_m": 7439,
+      "truth": "file"
+    },
+    "2026-01-19-solitude.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 18,
+      "vertical_m": 5868,
+      "truth": "reading",
+      "file_descents": 17,
+      "file_vertical_m": 5607,
+      "note": "Slopes lists 17 runs. The profile shows one more lift-served descent (2,757 m to 2,496 m, peak 19.5 m/s) that Slopes left out."
+    },
+    "2026-01-20-snowbird.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 24,
+      "vertical_m": 10460,
+      "truth": "reading",
+      "file_descents": 23,
+      "file_vertical_m": 9826,
+      "note": "Slopes lists 23 runs and ends on a lift ride to 3,038 m. The profile then descends about 630 m at ski speed before the drive down the canyon; that last run is not in the list."
+    },
+    "2026-01-23-park-city.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 16,
+      "vertical_m": 5661,
+      "truth": "file"
+    },
+    "2026-02-01-whitetail.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 24,
+      "vertical_m": 6236,
+      "truth": "file"
+    },
+    "2026-03-12-whistler-blackcomb.gpx": {
+      "source_app": "Garmin Explore App",
+      "format": "gpx",
+      "descents": 7,
+      "vertical_m": 4151,
+      "truth": "reading",
+      "note": "No run list in the file. Read from the raw elevation profile: seven lift rides (3 to 4 m/s, 430 to 960 s) each followed by a descent."
+    },
+    "2026-03-17-snow-king.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 20,
+      "vertical_m": 8170,
+      "truth": "reading",
+      "file_descents": 10,
+      "file_vertical_m": 3897,
+      "note": "Slopes lists 10 runs, but one listed lift ride (54 min, 11.4 km, top speed 22.8 m/s) and one listed run (39 min, 7.7 km for 479 m of vertical) each hide several laps. The raw elevation profile shows 20 lift-served descents."
+    },
+    "2026-03-18-jackson-hole-snow-king.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 19,
+      "vertical_m": 9828,
+      "truth": "file"
+    },
+    "2026-03-20-jackson-hole.slopes": {
+      "source_app": "Slopes (iPhone17,1)",
+      "format": "slopes",
+      "descents": 27,
+      "vertical_m": 12323,
+      "truth": "file"
+    },
+    "2026-04-25-whistler-blackcomb.gpx": {
+      "source_app": "Garmin Explore App",
+      "format": "gpx",
+      "descents": 8,
+      "vertical_m": 4322,
+      "truth": "reading",
+      "note": "No run list in the file. Read from the raw elevation profile: the recording starts at the top, then seven lift rides; eight descents."
+    }
+  }
+}

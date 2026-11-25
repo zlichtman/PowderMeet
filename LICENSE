@@ -1,0 +1,51 @@
+MIT License
+
+Copyright (c) 2026 Zach Lichtman
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+THIRD-PARTY MATERIAL
+
+Third-party material keeps its own terms and is not covered by the MIT License
+above:
+
+- Map and resort data are derived from OpenStreetMap and OpenSkiMap,
+  (c) OpenStreetMap contributors, available under the Open Database License
+  (https://opendatacommons.org/licenses/odbl/).
+- Map tiles, terrain and the Mapbox Maps SDK are provided by Mapbox under the
+  Mapbox Terms of Service.
+- Bundled theme palettes are MIT-licensed; their notices are in
+  docs/THIRD_PARTY_NOTICES.md.
+- Ski topsheet images belong to their manufacturers and are NOT covered by the
+  MIT License. The brand artwork is kept in its own catalog,
+  apps/ios/PowderMeet/Resources/SkisTopsheets.xcassets, and comes out on
+  request by deleting that folder.
+- Swift and other open-source dependencies are under their own licenses, as
+  declared by each package.
+
+NOT A SAFETY TOOL. USE AT YOUR OWN RISK. PowderMeet is a hobby project. Its
+maps, routes, run difficulties, lift and run status, snow and weather
+conditions, arrival times and meeting points come from community and third-
+party data and automated processing. They may be incomplete, out of date or
+wrong, and nothing in the app is checked for safety. Do not rely on PowderMeet
+to decide where it is safe to ski or ride. Always obey the resort's signs,
+closures, trail ratings and ski patrol, stay within your ability, and use your
+own judgment. Skiing and snowboarding are dangerous. To the fullest extent
+permitted by law, the copyright holder accepts no liability for any injury,
+death, loss or damage arising from the use of PowderMeet or its data.

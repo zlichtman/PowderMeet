@@ -1,0 +1,13 @@
+resort_id: courmayeur
+# Skyway Monte Bianco is the cable car to Punta Helbronner. No patrolled or
+# groomed run leaves it: everything from the top is glacier travel off-piste
+# (https://www.powderhounds.com/europe/italy/courmayeur/ski-resort2.aspx;
+# the Aosta Valley tourist office lists the Vallée Blanche as an "off-slope
+# descent", https://www.lovevda.it/en/database/5/downhill-skiing/courmayeur/off-slope-descent-on-the-vallee-blanche-glacier/3118).
+# OSM maps three of those descents as freeride lines; none leads back to the
+# lifts, so the cable car and they are not part of the skiing two people meet on.
+reject:
+  - lift:skyway-monte-bianco
+  - trail:ghiacciaio-toula
+  - trail:vallee-blanche
+  - trail:du-col-du-geant

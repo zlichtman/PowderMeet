@@ -1,0 +1,12 @@
+resort_id: kimberley
+# Kimberley's trail map
+# (https://skikimberley.com/wp-content/uploads/2024/04/Kimberley-Trail-Map-23-inside-production.pdf)
+# shows the Owl T-Bar (Owl 2: 270 m, 54 m of vertical) serving the Owl Learning
+# Area, one open beginner slope beside the Owlette Magic Carpet (Owl 1). No run
+# is mapped down that slope, so riders of the T-bar had no way back down.
+add_runs:
+  - name: Owl Learning Area
+    difficulty: green
+    from: n1169420706          # top of the Owl T-Bar
+    to: n1169420641            # bottom of the Owl T-Bar
+    source: "https://skikimberley.com/wp-content/uploads/2024/04/Kimberley-Trail-Map-23-inside-production.pdf"

@@ -1,0 +1,234 @@
+resort_id: heavenly
+# Read from Heavenly's own winter trail map, shown on
+# https://www.skiheavenly.com/the-mountain/about-the-mountain/trail-map.aspx:
+# https://scene7.vailresorts.com/is/image/vailresorts/20241105_HV_winter-trail_map_001
+# The status list drops "Express" from lift names and splits runs into Upper and
+# Lower; each name joins the lift or run the map shows. Carpets, the tubing hill,
+# parks and the Mott and Killebrew canyon areas are left as they are.
+
+merges:
+  # Lifts as the map names them.
+  - id: lift:aerial-tramway
+    kind: lift
+    canonical_name: "Aerial Tramway"
+    members:
+      - {source: official, name: "The Tram"}
+      - {source: osm, name: "Aerial Tramway"}
+      - {source: openskimap, name: "Aerial Tramway"}
+  - id: lift:mott-canyon
+    kind: lift
+    canonical_name: "Mott Canyon"
+    members:
+      - {source: official, name: "Mott"}
+      - {source: osm, name: "Mott Canyon"}
+      - {source: openskimap, name: "Mott Canyon"}
+  - id: lift:canyon-express
+    kind: lift
+    canonical_name: "Canyon Express"
+    members:
+      - {source: official, name: "Canyon"}
+      - {source: osm, name: "Canyon Express"}
+      - {source: openskimap, name: "Canyon Express"}
+  - id: lift:comet-express
+    kind: lift
+    canonical_name: "Comet Express"
+    members:
+      - {source: official, name: "Comet"}
+      - {source: osm, name: "Comet Express"}
+      - {source: openskimap, name: "Comet Express"}
+  - id: lift:dipper-express
+    kind: lift
+    canonical_name: "Dipper Express"
+    members:
+      - {source: official, name: "Dipper"}
+      - {source: osm, name: "Dipper Express"}
+      - {source: openskimap, name: "Dipper Express"}
+  - id: lift:heavenly-gondola
+    kind: lift
+    canonical_name: "Heavenly Gondola"
+    members:
+      - {source: official, name: "Gondola"}
+      - {source: osm, name: "Heavenly Gondola"}
+      - {source: openskimap, name: "Heavenly Gondola"}
+  - id: lift:gunbarrel-express
+    kind: lift
+    canonical_name: "Gunbarrel Express"
+    members:
+      - {source: official, name: "Gunbarrel"}
+      - {source: osm, name: "Gunbarrel Express"}
+      - {source: openskimap, name: "Gunbarrel Express"}
+  - id: lift:north-bowl-express
+    kind: lift
+    canonical_name: "North Bowl Express"
+    members:
+      - {source: official, name: "North Bowl"}
+      - {source: osm, name: "North Bowl Express"}
+      - {source: openskimap, name: "North Bowl Express"}
+  - id: lift:olympic-express
+    kind: lift
+    canonical_name: "Olympic Express"
+    members:
+      - {source: official, name: "Olympic"}
+      - {source: osm, name: "Olympic Express"}
+      - {source: openskimap, name: "Olympic Express"}
+  - id: lift:powderbowl-express
+    kind: lift
+    canonical_name: "Powderbowl Express"
+    members:
+      - {source: official, name: "Powderbowl"}
+      - {source: osm, name: "Powderbowl Express"}
+      - {source: openskimap, name: "Powderbowl Express"}
+  - id: lift:sky-express
+    kind: lift
+    canonical_name: "Sky Express"
+    members:
+      - {source: official, name: "Sky"}
+      - {source: osm, name: "Sky Express"}
+      - {source: openskimap, name: "Sky Express"}
+  - id: lift:stagecoach-express
+    kind: lift
+    canonical_name: "Stagecoach Express"
+    members:
+      - {source: official, name: "Stagecoach"}
+      - {source: osm, name: "Stagecoach Express"}
+      - {source: openskimap, name: "Stagecoach Express"}
+  - id: lift:tamarack-express
+    kind: lift
+    canonical_name: "Tamarack Express"
+    members:
+      - {source: official, name: "Tamarack"}
+      - {source: osm, name: "Tamarack Express"}
+      - {source: openskimap, name: "Tamarack Express"}
+  # Runs the map draws as one line, listed in sections.
+  - id: trail:california-trail
+    kind: trail
+    canonical_name: "California Trail"
+    members:
+      - {source: official, name: "California Trail Upper"}
+      - {source: official, name: "California Trail Lower"}
+      - {source: osm, name: "California Trail"}
+      - {source: openskimap, name: "California Trail"}
+  - id: trail:canyonland
+    kind: trail
+    canonical_name: "Canyonland"
+    members:
+      - {source: official, name: "Canyonland Left"}
+      - {source: official, name: "Canyonland Right"}
+      - {source: osm, name: "Canyonland"}
+      - {source: openskimap, name: "Canyonland"}
+  - id: trail:comstock
+    kind: trail
+    canonical_name: "Comstock"
+    members:
+      - {source: official, name: "Comstock Upper"}
+      - {source: official, name: "Comstock Lower"}
+      - {source: osm, name: "Comstock"}
+      - {source: openskimap, name: "Comstock"}
+  - id: trail:gunbarrel
+    kind: trail
+    canonical_name: "Gunbarrel"
+    members:
+      - {source: official, name: "Gunbarrel Upper"}
+      - {source: official, name: "Gunbarrel Lower"}
+      - {source: osm, name: "Gunbarrel"}
+      - {source: openskimap, name: "Gunbarrel"}
+  - id: trail:lizs
+    kind: trail
+    canonical_name: "Liz's"
+    members:
+      - {source: official, name: "Liz's Upper"}
+      - {source: official, name: "Liz's Lower"}
+      - {source: osm, name: "Liz's"}
+      - {source: openskimap, name: "Liz's"}
+  - id: trail:mineshaft
+    kind: trail
+    canonical_name: "Mineshaft"
+    members:
+      - {source: official, name: "Mineshaft Upper"}
+      - {source: official, name: "Mineshaft Lower"}
+      - {source: osm, name: "Mineshaft"}
+      - {source: openskimap, name: "Mineshaft"}
+  - id: trail:olympic-downhill
+    kind: trail
+    canonical_name: "Olympic Downhill"
+    members:
+      - {source: official, name: "Olympic Down Hill Upper"}
+      - {source: official, name: "Olympic Down Hill Lower"}
+      - {source: osm, name: "Olympic Downhill"}
+      - {source: openskimap, name: "Olympic Downhill"}
+  - id: trail:ridge-run
+    kind: trail
+    canonical_name: "Ridge Run"
+    members:
+      - {source: official, name: "Ridge Run Upper"}
+      - {source: official, name: "Ridge Run Lower"}
+      - {source: osm, name: "Ridge Run"}
+      - {source: openskimap, name: "Ridge Run"}
+  - id: trail:von-schmidt
+    kind: trail
+    canonical_name: "Von Schmidt"
+    members:
+      - {source: official, name: "Von Schmidt Upper"}
+      - {source: official, name: "Von Schmidt Lower"}
+      - {source: osm, name: "Von Schmidt"}
+      - {source: openskimap, name: "Von Schmidt"}
+  # Mapped with Upper and Lower in front of the name.
+  - id: trail:upper-dipper-return
+    kind: trail
+    canonical_name: "Upper Dipper Return"
+    members:
+      - {source: official, name: "Dipper Return Upper"}
+      - {source: osm, name: "Upper Dipper Return"}
+      - {source: openskimap, name: "Upper Dipper Return"}
+  - id: trail:lower-dipper-return
+    kind: trail
+    canonical_name: "Lower Dipper Return"
+    members:
+      - {source: official, name: "Dipper Return Lower"}
+      - {source: osm, name: "Lower Dipper Return"}
+      - {source: openskimap, name: "Lower Dipper Return"}
+  - id: trail:upper-north-bowl
+    kind: trail
+    canonical_name: "Upper North Bowl"
+    members:
+      - {source: official, name: "North Bowl Upper"}
+      - {source: osm, name: "Upper North Bowl"}
+      - {source: openskimap, name: "Upper North Bowl"}
+  # Mapped as Stagecoach and Lower Stagecoach.
+  - id: trail:stagecoach
+    kind: trail
+    canonical_name: "Stagecoach"
+    members:
+      - {source: official, name: "Stagecoach Upper"}
+      - {source: osm, name: "Stagecoach"}
+      - {source: openskimap, name: "Stagecoach"}
+  - id: trail:lower-stagecoach
+    kind: trail
+    canonical_name: "Lower Stagecoach"
+    members:
+      - {source: official, name: "Stagecoach Lower"}
+      - {source: osm, name: "Lower Stagecoach"}
+      - {source: openskimap, name: "Lower Stagecoach"}
+  # Mapped as Upper Mombo and Mombo.
+  - id: trail:mombo
+    kind: trail
+    canonical_name: "Mombo"
+    members:
+      - {source: official, name: "Mombo Lower"}
+      - {source: osm, name: "Mombo"}
+      - {source: openskimap, name: "Mombo"}
+  # Spelling differences between the list and the mapped name.
+  - id: trail:cloud-9
+    kind: trail
+    canonical_name: "Cloud 9"
+    members:
+      - {source: official, name: "Cloud Nine"}
+      - {source: osm, name: "Cloud 9"}
+      - {source: openskimap, name: "Cloud 9"}
+  - id: trail:ski-ways-glades
+    kind: trail
+    canonical_name: "Ski Ways Glades"
+    members:
+      - {source: official, name: "Ski Way Glades"}
+      - {source: osm, name: "Ski Ways Glades"}
+      - {source: openskimap, name: "Ski Ways Glades"}

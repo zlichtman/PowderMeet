@@ -1,0 +1,9 @@
+resort_id: hakuba-cortina
+# Alps No. 11 Pair Lift. Hakuba Alps Hotel, which runs the Hakuba Norikura Onsen
+# ski area, says in its press release
+# (https://prtimes.jp/main/html/rd/p/000000006.000101433.html):
+# "※第１１ペアリフトはスキー場管理区域外の山岳観光リフトです。通常のゲレンデ専用リフトとは異なります。"
+# (No. 11 is a mountain sightseeing lift outside the ski area's managed zone,
+# not an ordinary slope lift.) No run is mapped from its top.
+reject:
+  - lift:11

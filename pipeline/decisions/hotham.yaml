@@ -1,0 +1,5 @@
+resort_id: hotham
+# Big D is Hotham's separate beginner and night-skiing area beside the Great
+# Alpine Road, with its own runs back to its own chair. Hotham is upside down
+# (the village is on top), so Big D's base is not in the lowest 15 %.
+areas: [n2244518038]   # bottom of Big D Express

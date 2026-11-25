@@ -1,0 +1,39 @@
+# Xcode
+*.xcuserdata
+xcuserdata/
+DerivedData/
+build/
+
+# SwiftPM (build with --scratch-path outside iCloud; see AGENTS.md)
+.build/
+.swiftpm/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Supabase CLI scratch
+backend/supabase/.temp/
+backend/supabase/.branches/
+
+# macOS
+.DS_Store
+
+# Agent worktrees and editor state
+.claude/
+.cursor/
+
+# Local-only files that must never enter the repo:
+#   _local/media/    demo captures and marketing assets
+#   _local/secrets/  APNs .p8 keys and any other private credentials
+_local/
+# Client-public, but kept out of the public repository so the tokens aren't
+# scraped; copy Secrets.xcconfig.example to make one.
+apps/ios/Secrets.xcconfig
+
+# Pipeline stage outputs and caches (set PM_PIPELINE_WORKDIR to keep them out of iCloud)
+pipeline/.work/
+*\ [0-9].xcodeproj/
+* [0-9].plist

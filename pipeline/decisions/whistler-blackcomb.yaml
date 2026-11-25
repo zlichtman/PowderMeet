@@ -1,0 +1,447 @@
+resort_id: whistler-blackcomb
+# Read from Whistler Blackcomb's own 2025-26 winter trail map:
+# https://www.whistlerblackcomb.com/-/aemasset/sitecore/whistler-blackcomb/maps/winter-2025-2026/20251023_WB_winter-trail_map_001.pdf
+# The resort's status list splits long runs into Upper, Mid and Lower sections
+# that the map draws and names as one run; each section's name joins that run, so
+# its status reaches it. Carpets, parks, pipes, kids-only zones and the bowls and
+# entrances the map labels without a line are left as they are.
+
+merges:
+  # Sections of one run on the map.
+  - id: trail:burnt-stew-trail
+    kind: trail
+    canonical_name: "Burnt Stew Trail"
+    members:
+      - {source: official, name: "Burnt Stew Trail Upper"}
+      - {source: official, name: "Burnt Stew Trail Lower"}
+      - {source: osm, name: "Burnt Stew Trail"}
+      - {source: openskimap, name: "Burnt Stew Trail"}
+  - id: trail:cloud-nine
+    kind: trail
+    canonical_name: "Cloud Nine"
+    members:
+      - {source: official, name: "Cloud Nine Upper"}
+      - {source: official, name: "Cloud Nine Lower"}
+      - {source: osm, name: "Cloud Nine"}
+      - {source: openskimap, name: "Cloud Nine"}
+  - id: trail:ego-bowl
+    kind: trail
+    canonical_name: "Ego Bowl"
+    members:
+      - {source: official, name: "Ego Bowl Upper"}
+      - {source: official, name: "Ego Bowl Lower"}
+      - {source: osm, name: "Ego Bowl"}
+      - {source: openskimap, name: "Ego Bowl"}
+  - id: trail:fisheye
+    kind: trail
+    canonical_name: "Fisheye"
+    members:
+      - {source: official, name: "Fisheye Upper"}
+      - {source: official, name: "Fisheye Lower"}
+      - {source: osm, name: "Fisheye"}
+      - {source: openskimap, name: "Fisheye"}
+  - id: trail:franzs
+    kind: trail
+    canonical_name: "Franz's"
+    members:
+      - {source: official, name: "Franz's Upper"}
+      - {source: official, name: "Franz's Mid"}
+      - {source: official, name: "Franz's Lower"}
+      - {source: osm, name: "Franz's"}
+      - {source: openskimap, name: "Franz's"}
+  - id: trail:glacier-drive
+    kind: trail
+    canonical_name: "Glacier Drive"
+    members:
+      - {source: official, name: "Glacier Drive Upper"}
+      - {source: official, name: "Glacier Drive Lower"}
+      - {source: osm, name: "Glacier Drive"}
+      - {source: openskimap, name: "Glacier Drive"}
+  - id: trail:glacier-road
+    kind: trail
+    canonical_name: "Glacier Road"
+    members:
+      - {source: official, name: "Glacier Road Upper"}
+      - {source: official, name: "Glacier Road Mid"}
+      - {source: official, name: "Glacier Road Lower"}
+      - {source: osm, name: "Glacier Road"}
+      - {source: openskimap, name: "Glacier Road"}
+  - id: trail:highway-86
+    kind: trail
+    canonical_name: "Highway 86"
+    members:
+      - {source: official, name: "Highway 86 Upper"}
+      - {source: official, name: "Highway 86 Mid"}
+      - {source: official, name: "Highway 86 Lower"}
+      - {source: osm, name: "Highway 86"}
+      - {source: openskimap, name: "Highway 86"}
+  - id: trail:honeycomb
+    kind: trail
+    canonical_name: "Honeycomb"
+    members:
+      - {source: official, name: "Honeycomb Upper"}
+      - {source: official, name: "Honeycomb Lower"}
+      - {source: osm, name: "Honeycomb"}
+      - {source: openskimap, name: "Honeycomb"}
+  - id: trail:hughs-heaven
+    kind: trail
+    canonical_name: "Hugh's Heaven"
+    members:
+      - {source: official, name: "Hugh's Heaven Upper"}
+      - {source: official, name: "Hugh's Heaven Lower"}
+      - {source: osm, name: "Hugh's Heaven"}
+      - {source: openskimap, name: "Hugh's Heaven"}
+  - id: trail:jeffs-ode-to-joy
+    kind: trail
+    canonical_name: "Jeff's Ode To Joy"
+    members:
+      - {source: official, name: "Jeff's Ode to Joy Upper"}
+      - {source: official, name: "Jeff's Ode to Joy Lower"}
+      - {source: osm, name: "Jeff's Ode To Joy"}
+      - {source: openskimap, name: "Jeff's Ode To Joy"}
+  - id: trail:jersey-cream
+    kind: trail
+    canonical_name: "Jersey Cream"
+    members:
+      - {source: official, name: "Jersey Cream Upper"}
+      - {source: official, name: "Jersey Cream Lower"}
+      - {source: osm, name: "Jersey Cream"}
+      - {source: openskimap, name: "Jersey Cream"}
+  - id: trail:little-red-run
+    kind: trail
+    canonical_name: "Little Red Run"
+    members:
+      - {source: official, name: "Little Red Run Upper"}
+      - {source: official, name: "Little Red Run Lower"}
+      - {source: osm, name: "Little Red Run"}
+      - {source: openskimap, name: "Little Red Run"}
+  - id: trail:panorama
+    kind: trail
+    canonical_name: "Panorama"
+    members:
+      - {source: official, name: "Panorama Upper"}
+      - {source: official, name: "Panorama Mid"}
+      - {source: official, name: "Panorama Lower"}
+      - {source: osm, name: "Panorama"}
+      - {source: openskimap, name: "Panorama"}
+  - id: trail:ridge-runner
+    kind: trail
+    canonical_name: "Ridge Runner"
+    members:
+      - {source: official, name: "Ridge Runner Upper"}
+      - {source: official, name: "Ridge Runner Lower"}
+      - {source: osm, name: "Ridge Runner"}
+      - {source: openskimap, name: "Ridge Runner"}
+  - id: trail:trapline
+    kind: trail
+    canonical_name: "Trapline"
+    members:
+      - {source: official, name: "Trapline Upper"}
+      - {source: official, name: "Trapline Lower"}
+      - {source: osm, name: "Trapline"}
+      - {source: openskimap, name: "Trapline"}
+  - id: trail:white-light
+    kind: trail
+    canonical_name: "White Light"
+    members:
+      - {source: official, name: "White Light Upper"}
+      - {source: official, name: "White Light Lower"}
+      - {source: osm, name: "White Light"}
+      - {source: openskimap, name: "White Light"}
+  - id: trail:zig-zag
+    kind: trail
+    canonical_name: "Zig Zag"
+    members:
+      - {source: official, name: "Zig Zag Upper"}
+      - {source: official, name: "Zig Zag Lower"}
+      - {source: osm, name: "Zig Zag"}
+      - {source: openskimap, name: "Zig Zag"}
+  # The two entrances are the top of Emerald Forest.
+  - id: trail:emerald-forest
+    kind: trail
+    canonical_name: "Emerald Forest"
+    members:
+      - {source: official, name: "Emerald Forest Upper Entrance"}
+      - {source: official, name: "Emerald Forest Lower Entrance"}
+      - {source: osm, name: "Emerald Forest"}
+      - {source: openskimap, name: "Emerald Forest"}
+  - id: trail:green-acres
+    kind: trail
+    canonical_name: "Green Acres"
+    members:
+      - {source: official, name: "Green Acres Main"}
+      - {source: official, name: "Green Acres Right"}
+      - {source: osm, name: "Green Acres"}
+      - {source: openskimap, name: "Green Acres"}
+  # The mapped Cruiser is the upper part; Cruiser - Lower already matches.
+  - id: trail:cruiser
+    kind: trail
+    canonical_name: "Cruiser"
+    members:
+      - {source: official, name: "Cruiser Upper"}
+      - {source: osm, name: "Cruiser"}
+      - {source: openskimap, name: "Cruiser"}
+  - id: trail:ptarmigan
+    kind: trail
+    canonical_name: "Ptarmigan"
+    members:
+      - {source: official, name: "Ptarmigan Upper"}
+      - {source: osm, name: "Ptarmigan"}
+      - {source: openskimap, name: "Ptarmigan"}
+  - id: trail:northern-lights
+    kind: trail
+    canonical_name: "Northern Lights"
+    members:
+      - {source: official, name: "Northern Lights Lower"}
+      - {source: osm, name: "Northern Lights"}
+      - {source: openskimap, name: "Northern Lights"}
+  # Blackcomb's Green Line from 7th Heaven to the base, spelled Greenline in the list.
+  - id: trail:green-line
+    kind: trail
+    canonical_name: "Green Line"
+    members:
+      - {source: official, name: "Greenline Upper"}
+      - {source: official, name: "Greenline Mid"}
+      - {source: official, name: "Greenline Lower"}
+      - {source: osm, name: "Green Line"}
+      - {source: openskimap, name: "Green Line"}
+  # Mid and Middle sections, mapped with a dash.
+  - id: trail:adagio-middle
+    kind: trail
+    canonical_name: "Adagio - Middle"
+    members:
+      - {source: official, name: "Adagio Mid"}
+      - {source: osm, name: "Adagio - Middle"}
+      - {source: openskimap, name: "Adagio - Middle"}
+  - id: trail:crabapple-middle
+    kind: trail
+    canonical_name: "Crabapple - Middle"
+    members:
+      - {source: official, name: "Crabapple Mid"}
+      - {source: osm, name: "Crabapple - Middle"}
+      - {source: openskimap, name: "Crabapple - Middle"}
+  - id: trail:pony-trail-middle
+    kind: trail
+    canonical_name: "Pony Trail - Middle"
+    members:
+      - {source: official, name: "Pony Trail Mid"}
+      - {source: osm, name: "Pony Trail - Middle"}
+      - {source: openskimap, name: "Pony Trail - Middle"}
+  # Upper and Lower written before the name on the map.
+  - id: trail:lower-straight-shot
+    kind: trail
+    canonical_name: "Lower Straight Shot"
+    members:
+      - {source: official, name: "Straight Shot Lower"}
+      - {source: osm, name: "Lower Straight Shot"}
+      - {source: openskimap, name: "Lower Straight Shot"}
+  - id: trail:upper-straight-shot
+    kind: trail
+    canonical_name: "Upper Straight Shot"
+    members:
+      - {source: official, name: "Straight Shot Upper"}
+      - {source: osm, name: "Upper Straight Shot"}
+      - {source: openskimap, name: "Upper Straight Shot"}
+  - id: trail:lower-whiskey-jack
+    kind: trail
+    canonical_name: "Lower Whiskey Jack"
+    members:
+      - {source: official, name: "Whiskey Jack Lower"}
+      - {source: osm, name: "Lower Whiskey Jack"}
+      - {source: openskimap, name: "Lower Whiskey Jack"}
+  - id: trail:upper-whiskey-jack
+    kind: trail
+    canonical_name: "Upper Whiskey Jack"
+    members:
+      - {source: official, name: "Whiskey Jack Upper"}
+      - {source: osm, name: "Upper Whiskey Jack"}
+      - {source: openskimap, name: "Upper Whiskey Jack"}
+  - id: trail:lower-mcconkeys
+    kind: trail
+    canonical_name: "Lower McConkey's"
+    members:
+      - {source: official, name: "McConkey's - Lower"}
+      - {source: osm, name: "Lower McConkey's"}
+      - {source: openskimap, name: "Lower McConkey's"}
+  - id: trail:upper-mcconkeys
+    kind: trail
+    canonical_name: "Upper McConkeys"
+    members:
+      - {source: official, name: "McKonkey's - Upper"}
+      - {source: osm, name: "Upper McConkeys"}
+      - {source: openskimap, name: "Upper McConkeys"}
+  - id: trail:lower-ratfink
+    kind: trail
+    canonical_name: "Lower Ratfink"
+    members:
+      - {source: official, name: "Ratfink - Lower"}
+      - {source: osm, name: "Lower Ratfink"}
+      - {source: openskimap, name: "Lower Ratfink"}
+  - id: trail:rock-nroll-upper
+    kind: trail
+    canonical_name: "Rock N'Roll - Upper"
+    members:
+      - {source: official, name: "Rock & Roll Upper"}
+      - {source: osm, name: "Rock N'Roll - Upper"}
+      - {source: openskimap, name: "Rock N'Roll - Upper"}
+  - id: trail:rock-nroll-lower
+    kind: trail
+    canonical_name: "Rock N'Roll - Lower"
+    members:
+      - {source: official, name: "Rock & Roll Lower"}
+      - {source: osm, name: "Rock N'Roll - Lower"}
+      - {source: openskimap, name: "Rock N'Roll - Lower"}
+  # The list has Seppo's and Seppo's Lower; plain Seppo's is the upper part.
+  - id: trail:seppos-upper
+    kind: trail
+    canonical_name: "Seppo's - Upper"
+    members:
+      - {source: official, name: "Seppo's"}
+      - {source: osm, name: "Seppo's - Upper"}
+      - {source: openskimap, name: "Seppo's - Upper"}
+  # Spelling differences between the list and the mapped name.
+  - id: trail:grande-finale
+    kind: trail
+    canonical_name: "Grande Finale"
+    members:
+      - {source: official, name: "Grand Finale"}
+      - {source: osm, name: "Grande Finale"}
+      - {source: openskimap, name: "Grande Finale"}
+  - id: trail:rosss-gold
+    kind: trail
+    canonical_name: "Ross's Gold"
+    members:
+      - {source: official, name: "Ross' Gold"}
+      - {source: osm, name: "Ross's Gold"}
+      - {source: openskimap, name: "Ross's Gold"}
+  - id: trail:matthews-traverse
+    kind: trail
+    canonical_name: "Matthew's Traverse"
+    members:
+      - {source: official, name: "Mathews' Traverse"}
+      - {source: osm, name: "Matthew's Traverse"}
+      - {source: openskimap, name: "Matthew's Traverse"}
+  - id: trail:glissando-glades
+    kind: trail
+    canonical_name: "Glissando Glades"
+    members:
+      - {source: official, name: "Glissando"}
+      - {source: osm, name: "Glissando Glades"}
+      - {source: openskimap, name: "Glissando Glades"}
+  - id: trail:sylvain-big-bang
+    kind: trail
+    canonical_name: "Sylvain / Big Bang"
+    members:
+      - {source: official, name: "Sylvain"}
+      - {source: osm, name: "Sylvain / Big Bang"}
+      - {source: openskimap, name: "Sylvain / Big Bang"}
+  - id: trail:twist-and-shout
+    kind: trail
+    canonical_name: "Twist and Shout"
+    members:
+      - {source: official, name: "Twist & Shout"}
+      - {source: osm, name: "Twist and Shout"}
+      - {source: openskimap, name: "Twist and Shout"}
+  - id: trail:main-flute-bowl
+    kind: trail
+    canonical_name: "Main Flute Bowl"
+    members:
+      - {source: official, name: "Flute Bowl"}
+      - {source: osm, name: "Main Flute Bowl"}
+      - {source: openskimap, name: "Main Flute Bowl"}
+  - id: trail:cougar-chutes
+    kind: trail
+    canonical_name: "Cougar Chutes"
+    members:
+      - {source: official, name: "Cougar Chutes"}
+      - {source: osm, name: "Cougar Chutes"}
+      - {source: openskimap, name: "Cougar Chutes"}
+      - {source: openskimap, name: "Cougar Chute"}
+  # The blue and green runs past the Magic Castle in the Catskinner zone.
+  - id: trail:castle-blue
+    kind: trail
+    canonical_name: "Castle Blue"
+    members:
+      - {source: official, name: "Magic Castle Blue"}
+      - {source: osm, name: "Castle Blue"}
+      - {source: openskimap, name: "Castle Blue"}
+  - id: trail:castle-green
+    kind: trail
+    canonical_name: "Castle Green"
+    members:
+      - {source: official, name: "Magic Castle Green"}
+      - {source: osm, name: "Castle Green"}
+      - {source: openskimap, name: "Castle Green"}
+  # The map's Sea to Sky Railway Adventure Trail in Blackcomb's Catskinner zone.
+  - id: trail:railroad-adventure-run
+    kind: trail
+    canonical_name: "Railroad Adventure Run"
+    members:
+      - {source: official, name: "Sea to Sky Railway"}
+      - {source: osm, name: "Railroad Adventure Run"}
+      - {source: openskimap, name: "Railroad Adventure Run"}
+  # The Enchanted Forest Adventure Trail in Whistler's Emerald Zone.
+  - id: trail:enchanted-forest-adventure-zone
+    kind: trail
+    canonical_name: "Enchanted Forest Adventure Zone"
+    members:
+      - {source: official, name: "Enchanted Forest Adventure Trail"}
+      - {source: osm, name: "Enchanted Forest Adventure Zone"}
+      - {source: openskimap, name: "Enchanted Forest Adventure Zone"}
+  # The map labels the three humps below Harmony as one run, Camel Humps.
+  - id: trail:camel-humps
+    kind: trail
+    canonical_name: "Camel Humps"
+    members:
+      - {source: official, name: "Camel Humps"}
+      - {source: osm, name: "Camel Hump West"}
+      - {source: osm, name: "Camel Hump Center"}
+      - {source: osm, name: "Camel Hump East"}
+      - {source: openskimap, name: "Camel Hump West"}
+      - {source: openskimap, name: "Camel Hump Center"}
+      - {source: openskimap, name: "Camel Hump East"}
+  # Kadenwood Trail from the top of the Kadenwood Gondola, mapped in two parts.
+  - id: trail:kadenwood-trail
+    kind: trail
+    canonical_name: "Kadenwood Trail"
+    members:
+      - {source: official, name: "Kadenwood Trail"}
+      - {source: osm, name: "Upper Kadenwood Trail"}
+      - {source: osm, name: "Lower Kadenwood Trail"}
+      - {source: openskimap, name: "Upper Kadenwood Trail"}
+      - {source: openskimap, name: "Lower Kadenwood Trail"}
+  - id: trail:flute-north-bowl
+    kind: trail
+    canonical_name: "Flute North Bowl"
+    members:
+      - {source: official, name: "North Flute Bowl"}
+      - {source: osm, name: "Flute North Bowl"}
+      - {source: openskimap, name: "Flute North Bowl"}
+  # The one mapped line in Secret Bowl, below Secret Bowl Traverse.
+  - id: trail:secret-bowl-run
+    kind: trail
+    canonical_name: "Secret Bowl Run"
+    members:
+      - {source: official, name: "Secret Bowl"}
+      - {source: osm, name: "Secret Bowl Run"}
+  # Garnet Bowl, off the Spanky's Ladder entrance, mapped as three lines.
+  - id: trail:garnet-bowl
+    kind: trail
+    canonical_name: "Garnet Bowl"
+    members:
+      - {source: official, name: "Garnet Bowl"}
+      - {source: osm, name: "Garnet Bowl Left"}
+      - {source: osm, name: "Garnet Bowl Center"}
+      - {source: osm, name: "Garnet Bowl Right"}
+      - {source: openskimap, name: "Garnet Bowl"}
+      - {source: openskimap, name: "Garnet Bowl Center"}
+      - {source: openskimap, name: "Garnet Bowl Right"}
+  # The GS race run on Whistler, listed in two sections.
+  - id: trail:gs-run
+    kind: trail
+    canonical_name: "GS Run"
+    members:
+      - {source: official, name: "GS - Upper"}
+      - {source: official, name: "G.S. - Lower"}
+      - {source: osm, name: "GS Run"}
+      - {source: openskimap, name: "GS Run"}

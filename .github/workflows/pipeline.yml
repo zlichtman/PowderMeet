@@ -1,0 +1,30 @@
+name: pipeline
+on:
+  push:
+    branches: [main]
+    paths: ["pipeline/**", ".github/workflows/pipeline.yml"]
+  workflow_dispatch:
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv run pytest -rs
+      - run: uv run pm-pipeline --version
+      - name: Whistler from the frozen extract, through the CLI
+        run: |
+          extract=$(ls fixtures/whistler-blackcomb/extract-*.json)
+          uv run pm-pipeline reconcile whistler-blackcomb --extract "$extract"
+          bundle=$(uv run pm-pipeline build whistler-blackcomb --manifest v1 --extract "$extract" | sed -n 's/^bundle_id=//p')
+          uv run pm-pipeline validate "$bundle"
+          echo "built $bundle; reference $(cat fixtures/whistler-blackcomb/expected-bundle.sha)"

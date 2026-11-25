@@ -1,0 +1,52 @@
+resort_id: snow-valley
+# Read from Snow Valley's own 2026 winter trail map, linked from
+# https://www.bigbearmountainresort.com/mountain-information/trail-maps:
+# https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/2026-snow-valley-winter-trail-map-1965x1400.jpg
+
+merges:
+  # Surprise Run, mapped under the misspelling Suprise Run.
+  - id: trail:surprise-run
+    kind: trail
+    canonical_name: "Surprise Run"
+    members:
+      - {source: official, name: "Surprise Run"}
+      - {source: osm, name: "Suprise Run"}
+      - {source: openskimap, name: "Surprise Run"}
+  # The map and the list say Wine Rock; the mapped lines say Wine Rocks.
+  - id: trail:upper-wine-rocks
+    kind: trail
+    canonical_name: "Upper Wine Rocks"
+    members:
+      - {source: official, name: "Upper Wine Rock"}
+      - {source: osm, name: "Upper Wine Rocks"}
+      - {source: openskimap, name: "Upper Wine Rock"}
+  - id: trail:lower-wine-rocks
+    kind: trail
+    canonical_name: "Lower Wine Rocks"
+    members:
+      - {source: official, name: "Lower Wine Rock"}
+      - {source: osm, name: "Lower Wine Rocks"}
+      - {source: openskimap, name: "Lower Wine Rock"}
+
+# Chairs 4 and 10 are mapped but are not on the 2026 map or the resort's lift list.
+exclude_ways: [258003289, 258004025]
+# Runs on the list and the map with no mapped line.
+add_runs:
+  # Snake Run: expert, from the top of Chair 11 down beside it to the top of Chair 9.
+  - name: "Snake Run"
+    difficulty: double_black
+    from: n1206789468    # top of Chair 11
+    to: n1206789406      # top of Chair 9
+    source: "https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/2026-snow-valley-winter-trail-map-1965x1400.jpg"
+  # The EDGE: blue, beside Chair 3 from its top to its bottom.
+  - name: "The EDGE"
+    difficulty: blue
+    from: n9407861902    # top of Chair 3
+    to: n9407861901      # bottom of Chair 3
+    source: "https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/2026-snow-valley-winter-trail-map-1965x1400.jpg"
+  # West Run: black, from the foot of Bubble Gum down to Lower Wine Rock.
+  - name: "West Run"
+    difficulty: black
+    from: n2302654057    # end of Bubble Gum on the Cat Track
+    to: n1206789397      # end of Lower Wine Rocks
+    source: "https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/2026-snow-valley-winter-trail-map-1965x1400.jpg"

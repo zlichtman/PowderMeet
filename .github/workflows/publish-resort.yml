@@ -1,0 +1,97 @@
+name: publish-resort
+# Extract, reconcile, build and validate one resort, and publish it when asked.
+# The report and the manifest are uploaded as an artifact either way.
+on:
+  workflow_dispatch:
+    inputs:
+      resort_id:
+        description: Resort id from pipeline/resorts.yaml
+        required: true
+        type: string
+      publish:
+        description: Publish the bundle if validation passes
+        required: true
+        type: boolean
+        default: false
+      date:
+        description: Read OSM as of this date (YYYY-MM-DD); empty for now
+        required: false
+        type: string
+concurrency:
+  group: publish-resort-${{ inputs.resort_id }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  resort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: pipeline
+    env:
+      RESORT_ID: ${{ inputs.resort_id }}
+      OSM_DATE: ${{ inputs.date }}
+      PM_PIPELINE_WORKDIR: ${{ github.workspace }}/pipeline/.work
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: DEM tile cache
+        uses: actions/cache@v4
+        with:
+          path: pipeline/.work/.cache/dem
+          key: dem-${{ inputs.resort_id }}
+      - name: Extract
+        id: extract
+        run: |
+          uv run pm-pipeline extract "$RESORT_ID" ${OSM_DATE:+--date "$OSM_DATE"} | tee extract.out
+          sed -n 's/^extract_id=/extract_id=/p' extract.out >> "$GITHUB_OUTPUT"
+      - name: Reconcile
+        id: reconcile
+        env:
+          EXTRACT_ID: ${{ steps.extract.outputs.extract_id }}
+        run: |
+          uv run pm-pipeline reconcile "$RESORT_ID" --extract "$EXTRACT_ID" | tee reconcile.out
+          sed -n 's/^manifest=/manifest=/p' reconcile.out >> "$GITHUB_OUTPUT"
+      - name: Build
+        id: build
+        env:
+          EXTRACT_ID: ${{ steps.extract.outputs.extract_id }}
+          MANIFEST: ${{ steps.reconcile.outputs.manifest }}
+        run: |
+          uv run pm-pipeline build "$RESORT_ID" --manifest "$MANIFEST" --extract "$EXTRACT_ID" | tee build.out
+          sed -n 's/^bundle_id=/bundle_id=/p' build.out >> "$GITHUB_OUTPUT"
+      - name: Validate
+        id: validate
+        continue-on-error: true
+        env:
+          BUNDLE_ID: ${{ steps.build.outputs.bundle_id }}
+        run: |
+          uv run pm-pipeline validate "$BUNDLE_ID" | tee validate.out
+          {
+            echo "### $RESORT_ID"
+            echo '```'
+            cat validate.out
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload report and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resort-${{ inputs.resort_id }}
+          path: |
+            pipeline/.work/report/
+            pipeline/.work/manifest/
+          if-no-files-found: warn
+      - name: Stop if validation failed
+        if: steps.validate.outcome != 'success'
+        run: |
+          echo "::error::The bundle is not publishable. The report in the artifact says which decisions would fix it."
+          exit 1
+      - name: Publish
+        if: inputs.publish
+        env:
+          BUNDLE_ID: ${{ steps.build.outputs.bundle_id }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: uv run pm-pipeline publish "$RESORT_ID" --bundle "$BUNDLE_ID"

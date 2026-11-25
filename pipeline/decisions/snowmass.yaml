@@ -1,0 +1,12 @@
+resort_id: snowmass
+# Read from Snowmass's own 2026/27 winter trail map:
+# https://www.aspensnowmass.com/-/media/aspen-snowmass/documents/pdfs/2026-2027/2627-trail-maps/2627snowmass-map-layeredfinalweb.pdf
+# Pines Upper and Pines Lower (OSM ways 1210150814, 1210150815) are two short
+# platters east of Two Creeks, 4 m and 16 m of rise. The map shows neither of them
+# and no run near them: it ends at the Two Creeks base. The proposed links (248 m
+# from Pines Upper's top back to its own bottom, 229 m off East Branch past the
+# Two Creeks base) cross no terrain the map draws, so they are not part of the
+# skiing.
+reject:
+  - lift:pines-lower
+  - lift:pines-upper

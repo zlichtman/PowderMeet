@@ -1,0 +1,5 @@
+resort_id: verbier
+# Moulins is a village platter; the nearest mapped run is 230 m away.
+links:
+  - {from: n2189023960, to: n310532730}
+  - {from: n310532730, to: n2189023960}

@@ -1,0 +1,40 @@
+resort_id: big-bear
+# Read from Big Bear Mountain Resort's own winter trail maps, linked from
+# https://www.bigbearmountainresort.com/mountain-information/trail-maps:
+# Bear Mountain: https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/bear-mountain-winter-trail-map-2500x1770-v2.jpg
+# Snow Summit: https://www.bigbearmountainresort.com/-/media/big-bear-mountain-resort-media/brand-assets/maps/winter-trail-maps/2026-snow-summit-winter-trail-map-2400x1790.jpg
+# Both mountains are in the catalog's ski_areas. They number their chairs 1 to
+# 11 and their carpets MC1 up, and the status list names lifts only "Chair N", so
+# no lift status name is set here.
+
+# Both maps number a Chair 3, 4, 7 and 8 and carpets MC1 to MC4, which OSM maps
+# under the same names; each takes its mountain's name so the two stay apart.
+way_names:
+  257995920: Bear Mountain Chair 3
+  257995916: Bear Mountain Chair 4
+  257995912: Bear Mountain Chair 7
+  257995914: Bear Mountain Chair 8
+  257992650: Bear Mountain MC1
+  257992653: Bear Mountain MC2
+  1348307561: Bear Mountain MC3
+  1348307562: Bear Mountain MC4
+  257998194: Snow Summit Chair 3
+  257997022: Snow Summit Chair 4
+  257998192: Snow Summit Chair 7
+  257997024: Snow Summit Chair 8
+  257997021: Snow Summit MC1
+  257997020: Snow Summit MC2
+  1348307563: Snow Summit MC3
+  257997023: Snow Summit MC4
+
+merges:
+  # Bear Mountain map: Park Run (Upper), (Face) and (Lower) down Bear Mountain Xpress, mapped as one run.
+  - id: trail:park-run
+    kind: trail
+    canonical_name: "Park Run"
+    members:
+      - {source: official, name: "Park Run (Upper)"}
+      - {source: official, name: "Park Run (Face)"}
+      - {source: official, name: "Park Run (Lower)"}
+      - {source: osm, name: "Park Run"}
+      - {source: openskimap, name: "Park Run"}

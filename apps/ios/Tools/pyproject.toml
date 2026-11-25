@@ -1,0 +1,14 @@
+# The app's asset tools: the icon maker and the topsheet fetcher.
+# Run from this folder with the environment outside iCloud Drive:
+#   UV_PROJECT_ENVIRONMENT=~/Library/Caches/PowderMeet/tools-venv uv run make_app_icons.py
+[project]
+name = "powdermeet-asset-tools"
+version = "0"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "pillow>=11.0",
+]
+
+[tool.uv]
+package = false

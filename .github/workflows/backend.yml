@@ -1,0 +1,67 @@
+name: backend
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", ".github/workflows/backend.yml"]
+  workflow_dispatch:
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  pgtap:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+    steps:
+      - uses: actions/checkout@v4
+      # Pinned: resolving `latest` is an unauthenticated GitHub API call that
+      # fails when the shared runner is rate limited.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.1.0
+      - name: Start local database
+        run: supabase db start
+      - name: Apply migrations
+        run: supabase db reset --no-seed
+      # The seed is the pgTAP suite's users and helpers. It is applied here by
+      # name so the suite does not depend on how the CLI discovers seed files.
+      - name: Seed test users
+        run: psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f supabase/seed/users.sql
+      - name: pgTAP
+        run: supabase test db
+      - name: Database facts
+        if: always()
+        run: |
+          psql "$DB_URL" -P pager=off <<'SQL' || true
+          select version();
+          select rolname, rolsuper, rolbypassrls from pg_roles
+            where rolname in ('postgres', 'supabase_admin', 'authenticator', 'authenticated', 'anon', 'service_role');
+          select extname, extversion from pg_extension order by 1;
+          select n.nspname, c.relname, c.relkind, pg_get_userbyid(c.relowner) as owner, c.relrowsecurity
+            from pg_class c join pg_namespace n on n.oid = c.relnamespace
+            where n.nspname = 'realtime' and c.relkind in ('r', 'p') order by 2;
+          select schemaname, tablename, policyname, cmd, roles from pg_policies
+            where schemaname in ('realtime', 'storage') order by 1, 2, 3;
+          select evtname, evtevent, evtowner::regrole from pg_event_trigger;
+          select jobname, schedule from cron.job order by 1;
+          select id, public from storage.buckets order by 1;
+          SQL
+  functions:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/supabase/functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check and lint
+        run: deno check . && deno lint
+      - name: Tests
+        run: deno test

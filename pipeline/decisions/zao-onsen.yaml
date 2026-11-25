@@ -1,0 +1,5 @@
+resort_id: zao-onsen
+# Paradise No. 3 Pair (パラダイス第３ペア): its OSM way 309920442 and its bottom
+# station are tagged operational_status=closed.
+reject:
+  - lift:3-2

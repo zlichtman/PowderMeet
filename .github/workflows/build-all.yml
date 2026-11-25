@@ -1,0 +1,86 @@
+name: build-all
+# Every catalog resort through extract, reconcile, build and validate, unattended.
+# Dispatch only: it uses metered minutes (about 160 on Linux for the whole catalog).
+# Nothing is published here; the merged summary says which resorts would pass.
+on:
+  workflow_dispatch:
+concurrency:
+  group: build-all
+  cancel-in-progress: false
+permissions:
+  contents: read
+env:
+  PM_PIPELINE_WORKDIR: ${{ github.workspace }}/pipeline/.work
+jobs:
+  openskimap:
+    # One download of the two world files, shared with every shard.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: |
+          uv run python -c "
+          from powdermeet_pipeline import catalog
+          from powdermeet_pipeline.sources import openskimap
+          print(openskimap.ensure_world(catalog.cache_dir()))"
+      - uses: actions/cache/save@v4
+        with:
+          path: pipeline/.work/.cache/openskimap
+          key: openskimap-${{ github.run_id }}
+  shard:
+    needs: openskimap
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/cache/restore@v4
+        with:
+          path: pipeline/.work/.cache/openskimap
+          key: openskimap-${{ github.run_id }}
+          fail-on-cache-miss: true
+      - name: Build shard ${{ matrix.shard }} of 8
+        run: uv run pm-pipeline build-all --shard "${{ matrix.shard }}/8"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-all-${{ matrix.shard }}
+          path: |
+            pipeline/.work/report/
+            pipeline/.work/bundle/
+            pipeline/.work/manifest/
+          if-no-files-found: warn
+  summary:
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: build-all-*
+          path: pipeline/shards
+      - name: Merge the shard summaries
+        run: |
+          uv run pm-pipeline summary shards/*/report/summary-*.json
+          cat .work/report/summary.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-all-summary
+          path: pipeline/.work/report/summary.*

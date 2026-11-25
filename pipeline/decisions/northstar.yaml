@@ -1,0 +1,25 @@
+resort_id: northstar
+# Read from Northstar's own 2025-26 winter trail map, linked from
+# https://www.northstarcalifornia.com/the-mountain/about-the-mountain/trail-map.aspx:
+# https://www.northstarcalifornia.com/-/aemasset/sitecore/northstar/maps/winter-2025-2026/20251022_NS_winter-trail_map_001.pdf
+# The status list's five carpets (Hemlock, Jeffrey Pines, Juniper, Sugar Pine,
+# The Spruces) are not named on the map, so the four mapped carpets keep no status
+# name. Kids Adventure Zone trails, parks and glades are left as they are.
+
+merges:
+  # Spelled Axe Handle on the map and the list, Ax Handle in the mapped line.
+  - id: trail:axe-handle
+    kind: trail
+    canonical_name: "Axe Handle"
+    members:
+      - {source: official, name: "Axe Handle"}
+      - {source: osm, name: "Ax Handle"}
+      - {source: openskimap, name: "Ax Handle"}
+  # Upper Main Street from the Lodge at Big Springs.
+  - id: trail:upper-main-street
+    kind: trail
+    canonical_name: "Upper Main Street"
+    members:
+      - {source: official, name: "Upper Main St."}
+      - {source: osm, name: "Upper Main Street"}
+      - {source: openskimap, name: "Upper Main Street"}

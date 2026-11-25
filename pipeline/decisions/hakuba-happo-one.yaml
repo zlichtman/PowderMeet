@@ -1,0 +1,8 @@
+resort_id: hakuba-happo-one
+# The Jumping Stadium Chair carries visitors up the slope of the Hakuba Ski
+# Jumping Stadium to its tower, as the village office that runs the stadium
+# describes it (https://hakuba.com/stories/olympic-tracks/). The only pistes OSM
+# maps beside it are the two ski jumps (ways 1307426986 and 1307426987), and the
+# nearest run is 165 m from its top.
+reject:
+  - lift:jumping-stadium-chair
